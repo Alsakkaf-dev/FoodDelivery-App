@@ -1,0 +1,16 @@
+# Minimal Supabase CLI config. Region for the hosted project is Singapore (set in the
+# dashboard). Phone-OTP auth is enabled; configure an SMS provider in the dashboard.
+project_id = "fahman-orders"
+
+[auth]
+enabled = true
+[auth.sms]
+enable_signup = true
+enable_confirmations = true
+
+[db]
+port = 54322
+
+[api]
+port = 54321
+schemas = ["public"]
