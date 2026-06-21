@@ -27,6 +27,7 @@ html[dir='rtl'] body { font-family: var(--font-arabic); }
   .btn-primary { @apply btn bg-rust text-white hover:bg-rust-dark; }
   .btn-secondary { @apply btn border border-line bg-white text-slate hover:bg-cream; }
   .btn-open { @apply btn bg-open text-white; }
+  .btn-ghost { @apply btn bg-cream text-slate hover:bg-line; }
   .card { @apply rounded-card border border-line bg-white p-4 shadow-sm; }
   .field { @apply min-h-tap w-full rounded-control border border-line bg-white px-3 py-2 outline-none focus:border-rust; }
   .badge { @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-semibold; }
