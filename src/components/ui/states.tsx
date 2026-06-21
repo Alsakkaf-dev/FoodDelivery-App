@@ -12,6 +12,19 @@ export function Loading({ label = 'Loading…' }: { label?: string }) {
   );
 }
 
+// Skeleton — content-shaped loading placeholder (D-15 §5, Fig. 16-4 loading state).
+// Distinct from the spinner `Loading`: use for list/card screens while data streams in.
+export function Skeleton({ lines = 3, className = '' }: { lines?: number; className?: string }) {
+  return (
+    <div className={`space-y-3 ${className}`} role="status" aria-busy="true" aria-live="polite">
+      {Array.from({ length: lines }).map((_, i) => (
+        <div key={i} className="h-5 w-full animate-pulse rounded-control bg-cream" aria-hidden />
+      ))}
+      <span className="sr-only">Loading…</span>
+    </div>
+  );
+}
+
 export function EmptyState({ title, hint, icon = '🍽️' }: { title: string; hint?: string; icon?: string }) {
   return (
     <div className="flex flex-col items-center justify-center gap-2 py-16 text-center">
