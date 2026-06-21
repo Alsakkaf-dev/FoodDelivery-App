@@ -8,8 +8,8 @@
 /out/
 next-env.d.ts
 
-# production
-/build
+# production — Next.js outputs to .next/ and out/ (ignored above); no /build dir is produced.
+# (Removed the generic /build rule: on case-insensitive filesystems it also hid the BUILD/ docs folder.)
 
 # secrets & env — NEVER commit (see D-22 §7, Risk R9)
 .env
