@@ -18,7 +18,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if ((isOperator || isRider) && user) {
+  if ((isOperator || isRider) && user && supabase) {
     const { data: profile } = await supabase.from('users').select('role').eq('id', user.id).single();
     const role = profile?.role;
     if (isOperator && role !== 'operator') return NextResponse.redirect(new URL('/', request.url));
