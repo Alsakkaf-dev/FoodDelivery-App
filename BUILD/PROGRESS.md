@@ -12,10 +12,10 @@ Status: ☐ not started · ◐ in progress · ✅ done · ⚠ blocked (see note)
 - ☐ 1-2 Design tokens + shared UI + 4 states + RTL
 - ☐ 1-3 App shell & role layouts + bottom nav
 - ☐ 1-4 i18n completeness + language switcher
-- ☐ 1-5 Customer Home / Live Status
+- ✅ 1-5 Customer Home / Live Status — built early (interactive session); verify & polish only, do NOT rebuild
 
 ## Day 2 — 2026-06-23
-- ☐ 2-1 Menu list + item detail
+- ✅ 2-1 Menu list + item detail — built early (interactive session); verify & polish only, do NOT rebuild
 - ☐ 2-2 Cart
 - ☐ 2-3 Checkout: fulfilment + zone + address
 - ☐ 2-4 Checkout: payment + gate + place order
@@ -45,3 +45,4 @@ Status: ☐ not started · ◐ in progress · ✅ done · ⚠ blocked (see note)
 ---
 ## Notes log
 - (foundation) Base green on Node; Next 14.2.15 has a flagged security advisory — bump to patched 14.2.x in task 5-3.
+- (21 Jun · interactive session) Built early & pushed — verify/polish only, do NOT rebuild: middleware env-guard (app boots without Supabase env); login phone normalize (strips spaces/dashes); Customer Home `/` (SCR-C-01) + `customer/status-hero`; Menu `/menu` + `/menu/[id]` (SCR-C-02/03) + `customer/menu-card`. Added `supabase/setup.sql` (combined schema+seed). `.env.local` exists locally with real Supabase (new `sb_publishable`/`sb_secret` keys mapped onto NEXT_PUBLIC_SUPABASE_* / SUPABASE_SERVICE_ROLE_KEY — keep this mapping; do NOT switch to @supabase/server). Pending owner action: run setup.sql in Supabase SQL editor; configure a phone provider/test number for OTP.
