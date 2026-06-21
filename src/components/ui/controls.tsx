@@ -7,9 +7,9 @@ export function Stepper({
 }: { value: number; onChange: (v: number) => void; min?: number; max?: number }) {
   return (
     <div className="inline-flex items-center gap-2">
-      <button className="btn-secondary h-9 w-9 !p-0" aria-label="decrease" onClick={() => onChange(Math.max(min, value - 1))} disabled={value <= min}>−</button>
+      <button className="btn-secondary min-h-tap min-w-tap !p-0" aria-label="decrease" onClick={() => onChange(Math.max(min, value - 1))} disabled={value <= min}>−</button>
       <span className="min-w-[2ch] text-center font-semibold tabular-nums">{value}</span>
-      <button className="btn-secondary h-9 w-9 !p-0" aria-label="increase" onClick={() => onChange(Math.min(max, value + 1))} disabled={value >= max}>+</button>
+      <button className="btn-secondary min-h-tap min-w-tap !p-0" aria-label="increase" onClick={() => onChange(Math.min(max, value + 1))} disabled={value >= max}>+</button>
     </div>
   );
 }
