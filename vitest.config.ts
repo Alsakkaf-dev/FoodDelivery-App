@@ -7,6 +7,8 @@ export default defineConfig({
     include: ['tests/unit/**/*.test.ts'],
     globals: true,
   },
+  // Components use the automatic JSX runtime (no `import React`), matching Next.
+  esbuild: { jsx: 'automatic' },
   resolve: {
     alias: { '@': path.resolve(__dirname, 'src') },
   },
