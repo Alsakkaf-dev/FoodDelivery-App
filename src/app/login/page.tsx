@@ -2,20 +2,31 @@
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-// SCR-C-08 / UC-C-01 — phone-OTP login for all roles. Redirects by role on success.
+type Method = 'phone' | 'email';
+
+// SCR-C-08 / UC-C-01 — login for all roles. Two free channels: phone OTP (delivered
+// over WhatsApp via the Supabase Send-SMS hook in prod) and email OTP (built-in).
 export default function LoginPage() {
   const router = useRouter();
   const params = useSearchParams();
-  const [step, setStep] = useState<'phone' | 'code'>('phone');
+  const [method, setMethod] = useState<Method>('phone');
+  const [step, setStep] = useState<'input' | 'code'>('input');
   const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [consent, setConsent] = useState(true);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
+  const cleanPhone = phone.replace(/[\s-]/g, '');
+  const missing = method === 'phone' ? !cleanPhone : !email;
+
   async function requestCode() {
-    setBusy(true); setError('');
-    const res = await fetch('/api/auth/otp/request', { method: 'POST', body: JSON.stringify({ phone: phone.replace(/[\s-]/g, '') }) });
+    setBusy(true);
+    setError('');
+    const url = method === 'phone' ? '/api/auth/otp/request' : '/api/auth/email/request';
+    const payload = method === 'phone' ? { phone: cleanPhone } : { email };
+    const res = await fetch(url, { method: 'POST', body: JSON.stringify(payload) });
     const j = await res.json();
     setBusy(false);
     if (!j.ok) return setError(j.error?.message ?? 'Could not send the code.');
@@ -23,8 +34,11 @@ export default function LoginPage() {
   }
 
   async function verify() {
-    setBusy(true); setError('');
-    const res = await fetch('/api/auth/otp/verify', { method: 'POST', body: JSON.stringify({ phone: phone.replace(/[\s-]/g, ''), code }) });
+    setBusy(true);
+    setError('');
+    const url = method === 'phone' ? '/api/auth/otp/verify' : '/api/auth/email/verify';
+    const payload = method === 'phone' ? { phone: cleanPhone, code } : { email, code };
+    const res = await fetch(url, { method: 'POST', body: JSON.stringify(payload) });
     const j = await res.json();
     setBusy(false);
     if (!j.ok) return setError(j.error?.message ?? 'Invalid code.');
@@ -38,21 +52,51 @@ export default function LoginPage() {
     <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-5 p-6">
       <div className="text-center">
         <h1 className="text-2xl font-bold text-rust">Fahman Orders</h1>
-        <p className="text-muted">Sign in with your phone — فهمان أوردرز</p>
+        <p className="text-muted">Sign in — فهمان أوردرز</p>
       </div>
 
-      {step === 'phone' ? (
+      {step === 'input' ? (
         <div className="card space-y-4">
-          <label className="block text-sm font-semibold">Phone number / رقم الهاتف</label>
-          <input
-            className="field" inputMode="tel" placeholder="+60 12-345 6789"
-            value={phone} onChange={(e) => setPhone(e.target.value)}
-          />
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              className={`${method === 'phone' ? 'btn-primary' : 'btn-secondary'} text-sm`}
+              onClick={() => { setMethod('phone'); setError(''); }}
+            >
+              WhatsApp · هاتف
+            </button>
+            <button
+              type="button"
+              className={`${method === 'email' ? 'btn-primary' : 'btn-secondary'} text-sm`}
+              onClick={() => { setMethod('email'); setError(''); }}
+            >
+              Email · بريد
+            </button>
+          </div>
+
+          {method === 'phone' ? (
+            <>
+              <label className="block text-sm font-semibold">Phone number / رقم الهاتف</label>
+              <input
+                className="field" inputMode="tel" placeholder="+60 12-345 6789"
+                value={phone} onChange={(e) => setPhone(e.target.value)}
+              />
+            </>
+          ) : (
+            <>
+              <label className="block text-sm font-semibold">Email / البريد الإلكتروني</label>
+              <input
+                className="field" inputMode="email" type="email" placeholder="you@example.com"
+                value={email} onChange={(e) => setEmail(e.target.value)}
+              />
+            </>
+          )}
+
           <label className="flex items-start gap-2 text-sm text-muted">
             <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-1" />
             I agree to receive order updates and accept the privacy notice (PDPA). / أوافق على استلام تحديثات الطلب وسياسة الخصوصية.
           </label>
-          <button className="btn-primary w-full" disabled={busy || !phone || !consent} onClick={requestCode}>
+          <button className="btn-primary w-full" disabled={busy || missing || !consent} onClick={requestCode}>
             {busy ? 'Sending…' : 'Send code / إرسال الرمز'}
           </button>
         </div>
@@ -66,7 +110,9 @@ export default function LoginPage() {
           <button className="btn-primary w-full" disabled={busy || code.length !== 6} onClick={verify}>
             {busy ? 'Verifying…' : 'Verify / تأكيد'}
           </button>
-          <button className="btn-secondary w-full" onClick={() => setStep('phone')}>Change number</button>
+          <button className="btn-secondary w-full" onClick={() => { setStep('input'); setCode(''); }}>
+            {method === 'phone' ? 'Change number' : 'Change email'}
+          </button>
         </div>
       )}
 
