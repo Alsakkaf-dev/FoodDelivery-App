@@ -7,6 +7,10 @@ const phone = z.string().regex(/^\+?[0-9]{8,15}$/, 'invalid_phone');
 export const otpRequestSchema = z.object({ phone });
 export const otpVerifySchema = z.object({ phone, code: z.string().length(6) });
 
+// Email OTP (free, built-in Supabase channel — no SMS provider needed).
+export const emailRequestSchema = z.object({ email: z.string().email() });
+export const emailVerifySchema = z.object({ email: z.string().email(), code: z.string().length(6) });
+
 export const cartItemSchema = z.object({
   menu_item_id: z.string().uuid(),
   qty: z.number().int().positive().max(50),
