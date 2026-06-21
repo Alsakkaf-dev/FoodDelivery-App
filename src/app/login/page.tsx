@@ -15,7 +15,7 @@ export default function LoginPage() {
 
   async function requestCode() {
     setBusy(true); setError('');
-    const res = await fetch('/api/auth/otp/request', { method: 'POST', body: JSON.stringify({ phone }) });
+    const res = await fetch('/api/auth/otp/request', { method: 'POST', body: JSON.stringify({ phone: phone.replace(/[\s-]/g, '') }) });
     const j = await res.json();
     setBusy(false);
     if (!j.ok) return setError(j.error?.message ?? 'Could not send the code.');
@@ -24,7 +24,7 @@ export default function LoginPage() {
 
   async function verify() {
     setBusy(true); setError('');
-    const res = await fetch('/api/auth/otp/verify', { method: 'POST', body: JSON.stringify({ phone, code }) });
+    const res = await fetch('/api/auth/otp/verify', { method: 'POST', body: JSON.stringify({ phone: phone.replace(/[\s-]/g, ''), code }) });
     const j = await res.json();
     setBusy(false);
     if (!j.ok) return setError(j.error?.message ?? 'Invalid code.');
