@@ -66,6 +66,6 @@ export async function riderDeliver(id: string): Promise<ApiResult<Order>> {
 
 /** Build a Google Maps deep-link from a saved pin or address (FR-R-04; no paid API). */
 export async function mapsLink(lat: number | null, lng: number | null, address: string | null): Promise<string> {
-  if (lat != null && lng != null) return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+  if (lat !== null && lng !== null) return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address ?? '')}`;
 }
