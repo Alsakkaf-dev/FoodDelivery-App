@@ -2,6 +2,9 @@ import type { Metadata, Viewport } from 'next';
 import { cookies } from 'next/headers';
 import './globals.css';
 import { DEFAULT_LOCALE, dir, isLocale, type Locale } from '@/lib/i18n/config';
+import { RegisterSW } from '@/components/pwa/register-sw';
+import { InstallPrompt } from '@/components/pwa/install-prompt';
+import { PushOptIn } from '@/components/pwa/push-optin';
 
 export const metadata: Metadata = {
   title: 'Fahman Orders',
@@ -24,11 +27,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang={locale} dir={dir(locale)}>
       <body>
         {children}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){})})}`,
-          }}
-        />
+        <RegisterSW />
+        <InstallPrompt lang={locale} />
+        <PushOptIn lang={locale} />
       </body>
     </html>
   );
