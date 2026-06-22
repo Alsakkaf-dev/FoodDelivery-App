@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { useState, useTransition } from 'react';
 import type { Order, OrderStatus } from '@/types/db';
 import { ORDER_TRANSITIONS } from '@/types/db';
@@ -64,7 +65,12 @@ export function OrderChip({
   return (
     <article className="card space-y-2" data-order-status={order.status}>
       <div className="flex items-center justify-between gap-2">
-        <span className="font-bold tabular-nums text-slate">{order.order_no}</span>
+        <Link
+          href={`/operator/orders/${order.id}`}
+          className="font-bold tabular-nums text-slate underline-offset-2 hover:underline"
+        >
+          {order.order_no}
+        </Link>
         <OrderStatusChip status={order.status} lang={lang} />
       </div>
       <div className="flex items-center justify-between text-sm text-muted">
