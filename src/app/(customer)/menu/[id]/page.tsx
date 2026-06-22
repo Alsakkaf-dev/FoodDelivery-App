@@ -19,7 +19,8 @@ export default async function ItemPage({ params }: { params: { id: string } }) {
   const desc = ar ? item.description_ar : item.description_en;
 
   return (
-    <main className="mx-auto max-w-md space-y-4 p-4 pb-28">
+    // The (customer) group layout owns the shell `main` frame + bottom nav.
+    <>
       <Link href="/menu" className="inline-block text-sm text-muted">
         {ar ? '→ المنيو' : '← Menu'}
       </Link>
@@ -46,6 +47,6 @@ export default async function ItemPage({ params }: { params: { id: string } }) {
       ) : (
         <p className="badge bg-muted/15 text-muted">{ar ? 'غير متوفر حاليًا' : 'Currently unavailable'}</p>
       )}
-    </main>
+    </>
   );
 }
