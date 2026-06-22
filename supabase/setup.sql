@@ -120,11 +120,13 @@ create table if not exists notifications (
   lang         text not null check (lang in ('en','ar')),
   status       text not null default 'queued' check (status in ('queued','sent','delivered','failed')),
   retry_count  int not null default 0,
+  provider_message_id text,                                 -- WhatsApp message id (FR-S-15)
   sent_at      timestamptz,
   created_at   timestamptz not null default now()
 );
 -- exactly one notification per order transition (FR-S-09)
 create unique index if not exists uq_notif_order_event on notifications(order_id, event) where order_id is not null;
+create index if not exists idx_notif_provider on notifications(provider_message_id) where provider_message_id is not null;
 
 -- payments (v2 — designed, not used in v1) --------------------------------------
 create table if not exists payments (
