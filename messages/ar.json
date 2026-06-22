@@ -1,6 +1,8 @@
 {
   "app_name": "فهمان أوردرز",
   "tagline": "شاورما طازجة، بطلب سريع.",
+  "home": "الرئيسية",
+  "orders": "الطلبات",
   "status_open": "مفتوح",
   "status_closed": "مغلق",
   "status_sold_out": "نفدت الكمية",
