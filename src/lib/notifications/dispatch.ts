@@ -38,7 +38,7 @@ export async function dispatchOrderEvent(opts: {
   if (wa.ok) {
     await db
       .from('notifications')
-      .update({ status: 'sent', sent_at: new Date().toISOString() })
+      .update({ status: 'sent', sent_at: new Date().toISOString(), provider_message_id: wa.id ?? null })
       .eq('order_id', opts.orderId)
       .eq('event', opts.event);
     return { ok: true, channel: 'whatsapp' };
