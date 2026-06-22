@@ -3,6 +3,7 @@ import { getI18n } from '@/lib/i18n/server';
 import { requireRole, RoleError, homeForRole } from '@/lib/auth/roles';
 import { OfflineBanner } from '@/components/ui/states';
 import { BottomNav } from '@/components/ui/nav';
+import { LangSwitch } from '@/components/ui/lang-switch';
 import { operatorNav } from '@/lib/nav/items';
 
 // Operator route-group shell. Same frame as the customer/rider shells plus a
@@ -12,7 +13,7 @@ import { operatorNav } from '@/lib/nav/items';
 export const dynamic = 'force-dynamic';
 
 export default async function OperatorLayout({ children }: { children: React.ReactNode }) {
-  const { t } = getI18n();
+  const { locale, t } = getI18n();
 
   try {
     await requireRole('operator');
@@ -27,7 +28,12 @@ export default async function OperatorLayout({ children }: { children: React.Rea
   return (
     <>
       <OfflineBanner label={t.offline} />
-      <main className="mx-auto min-h-dvh max-w-md space-y-4 p-4 pb-24">{children}</main>
+      <main className="mx-auto min-h-dvh max-w-md space-y-4 p-4 pb-24">
+        <div className="flex justify-end">
+          <LangSwitch current={locale} />
+        </div>
+        {children}
+      </main>
       <BottomNav items={operatorNav(t)} />
     </>
   );
