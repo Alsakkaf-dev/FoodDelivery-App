@@ -153,5 +153,9 @@
   "items_sold": "Items sold",
   "revenue": "Revenue (MYR)",
   "eod_hint": "Delivered orders only.",
-  "eod_empty": "No completed orders yet today."
+  "eod_empty": "No completed orders yet today.",
+  "install_app": "Install app",
+  "install_hint": "Add Fahman Orders to your home screen.",
+  "enable_notifications": "Enable notifications",
+  "dismiss": "Dismiss"
 }
