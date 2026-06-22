@@ -1,5 +1,6 @@
 'use client';
 import { useTransition } from 'react';
+import { setLocaleCookie } from './lang-switch';
 
 // CMP-U-08 — Stepper (quantity ±).
 export function Stepper({
@@ -14,12 +15,14 @@ export function Stepper({
   );
 }
 
-// Language toggle — flips the NEXT_LOCALE cookie and reloads (FR-C-14).
+// Language toggle — compact chip variant. Flips the NEXT_LOCALE cookie and
+// reloads (FR-C-14) via the shared `setLocaleCookie` (the single cookie
+// mechanism, defined in lang-switch.tsx). `LangSwitch` is the labelled variant.
 export function LangToggle({ current }: { current: 'en' | 'ar' }) {
   const [pending, start] = useTransition();
   const next = current === 'en' ? 'ar' : 'en';
   function switchLang() {
-    document.cookie = `NEXT_LOCALE=${next}; path=/; max-age=31536000`;
+    setLocaleCookie(next);
     start(() => window.location.reload());
   }
   return (
