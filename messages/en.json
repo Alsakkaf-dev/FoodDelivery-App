@@ -1,6 +1,8 @@
 {
   "app_name": "Fahman Orders",
   "tagline": "Fresh shawarma, ordered in taps.",
+  "home": "Home",
+  "orders": "Orders",
   "status_open": "Open",
   "status_closed": "Closed",
   "status_sold_out": "Sold out",
