@@ -1,8 +1,14 @@
 'use client';
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { getDictionary } from '@/lib/i18n/dictionaries';
 
 type Method = 'phone' | 'email';
+
+// The login screen shows both languages at once, so it sources the PDPA consent
+// copy from both dictionaries rather than a single active locale.
+const tEn = getDictionary('en');
+const tAr = getDictionary('ar');
 
 // SCR-C-08 / UC-C-01 — login for all roles. Two free channels: phone OTP (delivered
 // over WhatsApp via the Supabase Send-SMS hook in prod) and email OTP (built-in).
@@ -14,7 +20,7 @@ export default function LoginPage() {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
-  const [consent, setConsent] = useState(true);
+  const [consent, setConsent] = useState(false); // PDPA: opt-in, default off (US-007)
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
@@ -93,8 +99,16 @@ export default function LoginPage() {
           )}
 
           <label className="flex items-start gap-2 text-sm text-muted">
-            <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-1" />
-            I agree to receive order updates and accept the privacy notice (PDPA). / أوافق على استلام تحديثات الطلب وسياسة الخصوصية.
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+              className="mt-1"
+              aria-label={tEn.consent_agree}
+            />
+            <span>
+              {tEn.consent_agree} / {tAr.consent_agree}
+            </span>
           </label>
           <button className="btn-primary w-full" disabled={busy || missing || !consent} onClick={requestCode}>
             {busy ? 'Sending…' : 'Send code / إرسال الرمز'}
