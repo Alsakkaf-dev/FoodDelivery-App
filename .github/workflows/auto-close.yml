@@ -1,0 +1,26 @@
+name: auto-close-ordering
+
+# Free-tier scheduler (no Vercel cron / paid Supabase cron needed): poke a
+# secret-guarded route every 5 minutes during the MYT trading window so ordering
+# auto-closes at the cut-off and at 19:00 MYT (FR-S-04/05). 13:00–19:59 MYT (UTC+8)
+# == 05:00–11:59 UTC. GitHub cron runs in UTC.
+on:
+  schedule:
+    - cron: '*/5 5-11 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  close:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger auto-close
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          AUTO_CLOSE_SECRET: ${{ secrets.AUTO_CLOSE_SECRET }}
+        run: |
+          if [ -z "$APP_URL" ] || [ -z "$AUTO_CLOSE_SECRET" ]; then
+            echo "APP_URL / AUTO_CLOSE_SECRET secrets not set — skipping."
+            exit 0
+          fi
+          curl -fsS -X POST "$APP_URL/api/admin/auto-close" \
+            -H "x-auto-close-secret: $AUTO_CLOSE_SECRET"
