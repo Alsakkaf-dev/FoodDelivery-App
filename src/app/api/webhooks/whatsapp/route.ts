@@ -24,8 +24,12 @@ export async function POST(req: NextRequest) {
     const db = createAdminClient();
     for (const s of statuses) {
       const mapped = s.status === 'failed' ? 'failed' : s.status === 'delivered' ? 'delivered' : 'sent';
-      // best-effort: mark the most recent matching notification (by recipient handled upstream)
-      await db.from('notifications').update({ status: mapped }).eq('status', 'sent').limit(1);
+      // Map the receipt to its exact notification by the WhatsApp message id we
+      // stored on send (FR-S-15). Without an id we cannot scope it safely, so skip
+      // rather than touch an unrelated row.
+      if (s.id) {
+        await db.from('notifications').update({ status: mapped }).eq('provider_message_id', s.id);
+      }
     }
     return NextResponse.json({ ok: true });
   } catch {
