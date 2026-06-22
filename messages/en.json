@@ -95,5 +95,17 @@
   "no_orders": "No orders yet",
   "no_orders_hint": "Your orders will appear here.",
   "final_status": "Final status",
-  "order_not_found": "Order not found"
+  "order_not_found": "Order not found",
+  "today": "Today",
+  "save_setup": "Save setup",
+  "saving": "Saving…",
+  "setup_saved": "Today's setup is saved.",
+  "setup_error": "Couldn't save the setup. Please try again.",
+  "setup_invalid": "Add a quantity, cut-off time and delivery window first.",
+  "setup_autoclose_hint": "Ordering auto-closes at the cut-off time.",
+  "no_zones": "No delivery zones yet",
+  "no_zones_hint": "Add zones to enable delivery orders.",
+  "delivery_window_placeholder": "e.g. 2:00 PM – 7:00 PM",
+  "zone_active": "Active",
+  "zone_inactive": "Inactive"
 }
