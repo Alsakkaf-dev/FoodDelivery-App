@@ -157,5 +157,6 @@
   "install_app": "Install app",
   "install_hint": "Add Fahman Orders to your home screen.",
   "enable_notifications": "Enable notifications",
-  "dismiss": "Dismiss"
+  "dismiss": "Dismiss",
+  "consent_agree": "I agree to receive order updates and accept the privacy notice (PDPA)."
 }
