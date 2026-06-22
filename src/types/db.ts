@@ -42,7 +42,7 @@ export interface OrderItem {
 export interface Notification {
   id: string; order_id: string | null; user_id: string | null; event: string;
   channel: Channel; template: string; lang: Lang; status: 'queued' | 'sent' | 'delivered' | 'failed';
-  retry_count: number; sent_at: string | null; created_at: string;
+  retry_count: number; provider_message_id: string | null; sent_at: string | null; created_at: string;
 }
 
 // Order lifecycle transitions (mirrors SDD §4.1; enforced in domain + DB).
