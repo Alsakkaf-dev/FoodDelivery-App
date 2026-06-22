@@ -35,13 +35,22 @@ export function EmptyState({ title, hint, icon = '🍽️' }: { title: string; h
   );
 }
 
-export function ErrorState({ message, onRetry }: { message: string; onRetry?: () => void }) {
+export function ErrorState({ message, onRetry, retryLabel }: { message: string; onRetry?: () => void; retryLabel?: string }) {
+  // Localise the retry label (the only user-facing string this primitive owns) so
+  // AR users don't see English on every error. Read <html lang> set by the root
+  // layout, post-mount to avoid a hydration mismatch; callers may pass `retryLabel`
+  // to override. Matches the inline AR/EN pattern used across the customer screens.
+  const [retry, setRetry] = useState(retryLabel ?? 'Try again');
+  useEffect(() => {
+    if (retryLabel) return;
+    setRetry(document.documentElement.lang === 'ar' ? 'حاول مرة أخرى' : 'Try again');
+  }, [retryLabel]);
   return (
     <div className="flex flex-col items-center justify-center gap-3 py-16 text-center" role="alert">
       <div className="text-4xl" aria-hidden>⚠️</div>
       <p className="max-w-xs text-slate">{message}</p>
       {onRetry ? (
-        <button className="btn-secondary" onClick={onRetry}>Try again</button>
+        <button className="btn-secondary" onClick={onRetry}>{retry}</button>
       ) : null}
     </div>
   );
