@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useShopStatus } from '@/lib/realtime/hooks';
 import { StatusBadge, QtyCounter } from '@/components/ui/status';
+import { AUTH_DISABLED } from '@/lib/auth/dev-bypass';
 import type { DailySession } from '@/types/db';
 
 type Props = {
@@ -49,9 +50,13 @@ export function StatusHero({ initial, qtyTotal, deliveryWindow, lang }: Props) {
         <Link href="/menu" className="btn-primary text-center">
           {ar ? 'تصفّح المنيو' : 'Browse the menu'}
         </Link>
-        <Link href="/login" className="btn-secondary text-center">
-          {ar ? 'تسجيل الدخول' : 'Sign in'}
-        </Link>
+        {/* Sign-in is disabled for preview (lib/auth/dev-bypass.ts) — hide the
+            CTA so it doesn't lead to the unused /login page. */}
+        {!AUTH_DISABLED ? (
+          <Link href="/login" className="btn-secondary text-center">
+            {ar ? 'تسجيل الدخول' : 'Sign in'}
+          </Link>
+        ) : null}
       </div>
     </div>
   );

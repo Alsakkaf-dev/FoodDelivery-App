@@ -1,9 +1,14 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { updateSession } from '@/lib/supabase/middleware';
+import { AUTH_DISABLED } from '@/lib/auth/dev-bypass';
 
 // Refreshes the auth session and guards role-scoped route groups (FR-S-12).
 // Fine-grained authorization is re-checked in server actions (RBAC) and the DB (RLS).
 export async function middleware(request: NextRequest) {
+  // Preview mode: sign-in is disabled, so let every route through without the
+  // /login redirect or role check (see lib/auth/dev-bypass.ts).
+  if (AUTH_DISABLED) return NextResponse.next({ request });
+
   const { response, supabase, user } = await updateSession(request);
   const path = request.nextUrl.pathname;
 
