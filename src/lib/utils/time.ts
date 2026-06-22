@@ -20,17 +20,15 @@ export function nowMyt(): { date: string; hour: number; minute: number; time: st
   };
 }
 
-/** Whether the current MYT time is inside trading hours. */
-export function withinTradingHours(): boolean {
-  const { hour } = nowMyt();
-  return hour >= OPEN_HOUR && hour < CLOSE_HOUR;
+/** Whether the given (default: current) MYT time is inside trading hours. */
+export function withinTradingHours(now: { hour: number } = nowMyt()): boolean {
+  return now.hour >= OPEN_HOUR && now.hour < CLOSE_HOUR;
 }
 
-/** True if `hhmm` (e.g. "18:00") cut-off has passed in MYT. */
-export function pastCutoff(cutoff: string | null): boolean {
+/** True if `hhmm` (e.g. "18:00") cut-off has passed at the given (default: now) MYT time. */
+export function pastCutoff(cutoff: string | null, now: { time: string } = nowMyt()): boolean {
   if (!cutoff) return false;
-  const { time } = nowMyt();
-  return time > cutoff.slice(0, 5);
+  return now.time > cutoff.slice(0, 5);
 }
 
 /** Short localized MYT date + time for order rows, e.g. "18 Jun, 1:40 PM". */
