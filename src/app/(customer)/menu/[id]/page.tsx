@@ -1,15 +1,16 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { listMenu } from '@/lib/domain/menu';
-import { getLocale } from '@/lib/i18n/server';
+import { getI18n } from '@/lib/i18n/server';
 import { formatMYR } from '@/lib/utils/money';
+import { AddToCart } from '@/components/customer/add-to-cart';
 
-// SCR-C-03 — menu item detail (FR-C-04). The real Add-to-cart is wired by task-2-2;
-// until then the CTA routes to sign-in. Public; no auth required.
+// SCR-C-03 — menu item detail (FR-C-04). Add-to-cart is wired into the client
+// cart store (task-2-2). Public; no auth required.
 export const dynamic = 'force-dynamic';
 
 export default async function ItemPage({ params }: { params: { id: string } }) {
-  const locale = getLocale();
+  const { locale, t } = getI18n();
   const ar = locale === 'ar';
   const res = await listMenu();
   const item = res.ok ? res.data.find((m) => m.id === params.id) : null;
@@ -41,9 +42,7 @@ export default async function ItemPage({ params }: { params: { id: string } }) {
       {desc ? <p className="text-muted">{desc}</p> : null}
 
       {item.available ? (
-        <Link href="/login" className="btn-primary block text-center">
-          {ar ? 'سجّل الدخول للطلب' : 'Sign in to order'}
-        </Link>
+        <AddToCart item={item} lang={locale} t={t} />
       ) : (
         <p className="badge bg-muted/15 text-muted">{ar ? 'غير متوفر حاليًا' : 'Currently unavailable'}</p>
       )}
