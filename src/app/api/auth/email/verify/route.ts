@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { emailVerifySchema } from '@/lib/utils/schemas';
+import { CONSENT_VERSION } from '@/lib/utils/consent';
 
 // POST /api/auth/email/verify — verify the emailed code, create the session, and
 // provision a profile with PDPA consent on first sign-in (mirrors the phone flow).
@@ -31,7 +32,7 @@ export async function POST(req: NextRequest) {
     await admin
       .from('users')
       .upsert(
-        { id: data.user.id, phone: data.user.email ?? data.user.id, consent_at: new Date().toISOString() },
+        { id: data.user.id, phone: data.user.email ?? data.user.id, consent_at: new Date().toISOString(), consent_version: CONSENT_VERSION },
         { onConflict: 'id', ignoreDuplicates: false },
       );
     const { data: profile } = await admin.from('users').select('role, lang').eq('id', data.user.id).single();
