@@ -104,6 +104,8 @@ describe('shell nav: each group renders its own bottom nav', () => {
     expect(en).toContain('Order history');
     expect(en).not.toContain('/operator');
     expect(en).toContain('min-h-tap');
+    // The shell mounts the public language switcher (US-012, handed off by 1-4).
+    expect(en).toContain('Switch language to Arabic');
 
     h.state.locale = 'ar';
     const ar = renderToStaticMarkup(
@@ -111,6 +113,7 @@ describe('shell nav: each group renders its own bottom nav', () => {
     );
     expect(ar).toContain('الرئيسية');
     expect(ar).toContain('سجل الطلبات');
+    expect(ar).toContain('Switch language to English');
   });
 
   it('operator layout renders the operator nav for an operator', async () => {
@@ -122,6 +125,7 @@ describe('shell nav: each group renders its own bottom nav', () => {
     expect(html).toContain('Order board');
     expect(html).toContain('href="/operator/board"');
     expect(html).not.toContain('href="/menu"');
+    expect(html).toContain('Switch language');
     expect(redirectMock).not.toHaveBeenCalled();
   });
 });
