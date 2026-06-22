@@ -7,6 +7,7 @@ import { OrderStatusChip } from '@/components/ui/status';
 import { formatMYR } from '@/lib/utils/money';
 import { buildMapsLink } from '@/components/rider/delivery-card';
 import { RiderActions } from '@/components/rider/rider-actions';
+import type { PaymentStatus } from '@/types/db';
 
 // SCR-R-02 — Delivery detail with the pickup / deliver actions (FR-R-05/06).
 // There is no single-delivery server fn, so we reuse riderDeliveries() and locate
@@ -60,6 +61,12 @@ export default async function RiderDeliveryDetailPage({
 
   const { order, zone_name, address_line, pin_lat, pin_lng, customer_phone, items } = delivery;
   const mapsHref = buildMapsLink(pin_lat, pin_lng, address_line);
+  const payLabel: Record<PaymentStatus, string> = {
+    pending: t.pay_pending,
+    submitted: t.pay_submitted,
+    verified: t.pay_verified,
+    rejected: t.pay_rejected,
+  };
 
   return (
     <>
@@ -108,6 +115,14 @@ export default async function RiderDeliveryDetailPage({
             <span className="text-muted">{order.item_count}</span>
             <span className="tabular-nums text-slate">{formatMYR(order.total, locale)}</span>
           </div>
+        </section>
+
+        {/* Payment method + status (US-040) — the rider must know if cash is due. */}
+        <section className="card flex items-center justify-between text-sm" data-payment={order.payment_method}>
+          <span className="text-muted">{t.payment}</span>
+          <span className="font-semibold text-slate">
+            {order.payment_method === 'cod' ? t.cod : t.duitnow} · {payLabel[order.payment_status]}
+          </span>
         </section>
 
         <RiderActions
