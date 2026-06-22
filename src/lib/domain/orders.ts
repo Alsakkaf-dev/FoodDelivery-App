@@ -130,6 +130,8 @@ export async function verifyPayment(id: string, decision: 'verified' | 'rejected
     const sb = createClient();
     const { error } = await sb.from('orders').update({ payment_status: decision }).eq('id', id);
     if (error) return fail('not_found', error.message);
+    // US-035 / FR-O-14 — notify the customer of the payment verdict (esp. a rejection).
+    await firePaymentEvent(id, decision);
     return ok(true);
   } catch (e) {
     return e instanceof RoleError ? fail(e.code, e.code) : fail('internal', 'error');
@@ -168,6 +170,23 @@ export async function endOfDay(): Promise<ApiResult<{ orders: number; items_sold
   } catch (e) {
     return e instanceof RoleError ? fail(e.code, e.code) : fail('internal', 'error');
   }
+}
+
+// Notify the customer of a payment verdict (EVT-11 payment_status). Service role.
+async function firePaymentEvent(orderId: string, decision: 'verified' | 'rejected') {
+  const db = createAdminClient();
+  const { data: order } = await db.from('orders').select('order_no, customer_id').eq('id', orderId).single();
+  if (!order) return;
+  const { data: cust } = await db.from('users').select('phone, lang, name').eq('id', order.customer_id).single();
+  if (!cust) return;
+  await dispatchOrderEvent({
+    orderId,
+    userId: order.customer_id,
+    phone: cust.phone,
+    lang: cust.lang,
+    event: 'payment_status',
+    vars: { name: cust.name ?? '', order_no: order.order_no, status: decision },
+  });
 }
 
 // Fire the notification for a status using the order's customer (service role).
