@@ -13,7 +13,8 @@ export default async function MenuPage() {
   const res = await listMenu();
 
   return (
-    <main className="mx-auto max-w-md space-y-4 p-4 pb-24">
+    // The (customer) group layout owns the shell `main` frame + bottom nav.
+    <>
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-rust">{ar ? 'المنيو' : 'Menu'}</h1>
         <Link href="/" className="text-sm text-muted">
@@ -37,6 +38,6 @@ export default async function MenuPage() {
           ))}
         </div>
       )}
-    </main>
+    </>
   );
 }
