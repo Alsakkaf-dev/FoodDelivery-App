@@ -1,9 +1,16 @@
 /* Fahman Orders — minimal PWA service worker (free, no build step).
    Strategy: precache the app shell; network-first for navigations with an offline
-   fallback so the live-status page still renders the last cached shell (NFR-C-04).
-   Web Push: show notifications pushed from the server (FR-S-11). */
-const CACHE = 'fahman-shell-v1';
-const SHELL = ['/', '/offline', '/manifest.webmanifest'];
+   fallback so the live-status page still renders the last cached shell (NFR-C-04);
+   stale-while-revalidate for the public menu/status GET data so the menu shell
+   renders offline. Authed mutations (non-GET) and user-specific reads are never
+   cached. Web Push: show notifications pushed from the server (FR-S-11). */
+const CACHE = 'fahman-shell-v2';
+const SHELL = ['/', '/menu', '/offline', '/manifest.webmanifest'];
+
+// Public, cacheable GET data (stale-while-revalidate). NOT board/orders (user-specific).
+function isStaleWhileRevalidate(url) {
+  return url.pathname === '/api/status' || url.pathname.startsWith('/api/menu');
+}
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -17,7 +24,10 @@ self.addEventListener('activate', (e) => {
 
 self.addEventListener('fetch', (e) => {
   const { request } = e;
-  if (request.method !== 'GET') return;
+  if (request.method !== 'GET') return; // never cache authed mutations
+  const url = new URL(request.url);
+
+  // Navigations: network-first, fall back to cached shell, then /offline.
   if (request.mode === 'navigate') {
     e.respondWith(
       fetch(request)
@@ -30,6 +40,25 @@ self.addEventListener('fetch', (e) => {
     );
     return;
   }
+
+  // Public menu/status data: stale-while-revalidate (instant from cache, refresh in bg).
+  if (url.origin === self.location.origin && isStaleWhileRevalidate(url)) {
+    e.respondWith(
+      caches.open(CACHE).then(async (c) => {
+        const cached = await c.match(request);
+        const network = fetch(request)
+          .then((res) => {
+            c.put(request, res.clone());
+            return res;
+          })
+          .catch(() => cached);
+        return cached || network;
+      }),
+    );
+    return;
+  }
+
+  // Everything else: cache-first, then network.
   e.respondWith(caches.match(request).then((cached) => cached || fetch(request)));
 });
 
