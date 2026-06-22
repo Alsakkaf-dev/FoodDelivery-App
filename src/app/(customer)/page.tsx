@@ -14,7 +14,9 @@ export default async function HomePage() {
     : { status: 'closed' as const, qty_remaining: 0, qty_total: 0, delivery_window: null };
 
   return (
-    <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-5 p-6">
+    // The (customer) group layout owns the shell `main` + bottom nav; this page
+    // supplies content only. Centre the hero within the available height.
+    <div className="flex min-h-[70dvh] flex-col justify-center gap-5">
       <header className="text-center">
         <h1 className="text-3xl font-bold text-rust">Fahman Orders</h1>
         <p className="text-muted">
@@ -32,6 +34,6 @@ export default async function HomePage() {
       />
 
       <p className="text-center text-xs text-muted">فهمان أوردرز · Fahman Orders</p>
-    </main>
+    </div>
   );
 }
