@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { OrderType } from '@/types/db';
 
 // All server-action inputs are validated with Zod (SDD §6.1).
 
@@ -67,6 +68,17 @@ export const broadcastSchema = z.object({
   message_en: z.string().min(1).max(500),
   message_ar: z.string().min(1).max(500),
 });
+
+// Client-side checkout gate (US-014/US-015) — mirrors `createOrderSchema.refine`:
+// a delivery order needs BOTH an active zone and a saved address; pickup needs
+// neither. Used to block "Continue to payment" until step 1 is complete.
+export function deliveryReady(
+  type: OrderType,
+  zoneId: string | null | undefined,
+  addressId: string | null | undefined,
+): boolean {
+  return type === 'pickup' || Boolean(zoneId && addressId);
+}
 
 export type CreateOrderInput = z.infer<typeof createOrderSchema>;
 export type ConfigureSessionInput = z.infer<typeof configureSessionSchema>;
