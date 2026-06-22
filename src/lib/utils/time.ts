@@ -32,3 +32,15 @@ export function pastCutoff(cutoff: string | null): boolean {
   const { time } = nowMyt();
   return time > cutoff.slice(0, 5);
 }
+
+/** Short localized MYT date + time for order rows, e.g. "18 Jun, 1:40 PM". */
+export function formatMyt(iso: string, locale: 'en' | 'ar' = 'en'): string {
+  return new Intl.DateTimeFormat(locale === 'ar' ? 'ar-MY' : 'en-MY', {
+    timeZone: TZ,
+    day: 'numeric',
+    month: 'short',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  }).format(new Date(iso));
+}
