@@ -130,5 +130,8 @@
   "change_photo": "تغيير الصورة",
   "photo_hint": "JPG أو PNG أو WebP — حتى ٥ ميجابايت.",
   "mark_available": "تعليم كمتوفر",
-  "mark_unavailable": "تعليم كغير متوفر"
+  "mark_unavailable": "تعليم كغير متوفر",
+  "advance": "تقديم",
+  "board_hint": "تظهر الطلبات الجديدة هنا تلقائياً.",
+  "err_invalid_transition": "تغيير الحالة هذا غير مسموح."
 }
