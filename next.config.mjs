@@ -9,11 +9,25 @@ const nextConfig = {
     ],
   },
   async headers() {
-    // Baseline security headers (see D-22 §7). Tighten CSP per environment at deploy.
+    // Baseline security headers (see D-22 §7). The CSP allows the app, Supabase
+    // REST + realtime (wss) and Storage images; 'unsafe-inline' covers Next's
+    // hydration bootstrap (no nonce pipeline). Tighten per environment at deploy.
+    const csp = [
+      "default-src 'self'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'none'",
+      "img-src 'self' data: blob: https://*.supabase.co",
+      "font-src 'self' data:",
+      "style-src 'self' 'unsafe-inline'",
+      "script-src 'self' 'unsafe-inline'",
+      "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
+    ].join('; ');
     return [
       {
         source: '/:path*',
         headers: [
+          { key: 'Content-Security-Policy', value: csp },
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'X-Frame-Options', value: 'DENY' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
