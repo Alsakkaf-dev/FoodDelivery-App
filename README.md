@@ -81,21 +81,21 @@ See **D-09 (SDD)** for the full architecture, ERD and the ten ADRs.
 
 Baseline = **minimum supported**; upgrade within the same major line unless a deliberate migration is planned. **Free tier only.**
 
-| Area | Technology | Baseline |
+| Area | Technology | Version (as built) |
 |---|---|---|
-| Framework | Next.js (App Router) | 15.x |
-| Language | TypeScript (strict) | 5.x |
-| UI runtime | React | 19.x |
+| Framework | Next.js (App Router) | 14.2.x (patched) |
+| Language | TypeScript (strict) | 5.6.x |
+| UI runtime | React | 18.3.x |
 | Styling | Tailwind CSS | 3.4.x |
-| Backend SDK | @supabase/supabase-js | 2.x |
+| Backend SDK | @supabase/supabase-js + @supabase/ssr | 2.x / 0.5.x |
 | Database | Supabase Postgres | 15 (managed) |
-| Auth | Supabase Auth (phone-OTP) | 2.x |
-| PWA / SW | next-pwa + Workbox | 5.x / 7.x |
+| Auth | Supabase Auth (phone + email OTP) | 2.x |
+| PWA / SW | Hand-written service worker (`public/sw.js`) | — |
 | Unit tests | Vitest | 2.x |
 | E2E tests | Playwright | 1.4x |
 | Validation | Zod | 3.x |
 | Runtime | Node.js | 20 LTS |
-| Package manager | pnpm (npm compatible) | 9.x / 10+ |
+| Package manager | npm (`package-lock.json`) | 10+ |
 
 ---
 
@@ -147,10 +147,15 @@ All config comes from env vars — **no secret is ever hard-coded**. `.env*` is 
 | `WHATSAPP_PHONE_NUMBER_ID` | server | ID of the WhatsApp Business sending number. |
 | `WHATSAPP_VERIFY_TOKEN` | server | Verifies the inbound WhatsApp webhook hub challenge. |
 | `WHATSAPP_APP_SECRET` | server | Validates the signature on inbound WhatsApp receipts. |
-| `VAPID_PUBLIC_KEY` | public | Web Push public key for the browser subscription. |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | public | Web Push public key for the browser subscription. |
 | `VAPID_PRIVATE_KEY` | server | Web Push private key the server signs with. Secret. |
 | `VAPID_SUBJECT` | server | `mailto:` contact identifying the push sender. |
 | `NEXT_PUBLIC_DEFAULT_LOCALE` | public | Default UI locale (`en` or `ar`); AR mirrors EN. |
+| `NEXT_PUBLIC_APP_URL` | public | The app's base URL (used by e2e + links). |
+| `OTP_RATE_LIMIT_PER_HOUR` | server | OTP requests per phone per hour (FR-S-14). |
+| `BROADCAST_RATE_LIMIT_PER_DAY` | server | Operator broadcasts per day (FR-O-12). |
+| `AUTO_CLOSE_SECRET` | server | Shared secret guarding `/api/admin/auto-close` (GitHub Actions cron). |
+| `TZ` | server | `Asia/Kuala_Lumpur` — all trading logic is MYT (UTC+8). |
 
 > Any value that lets someone act as the system (service-role key, WhatsApp token/app secret, VAPID private key) is **server-scoped** and lives only in secret storage. A secret behind a `NEXT_PUBLIC_` prefix is a leaked credential — rotate it.
 
@@ -185,10 +190,11 @@ components/          Reusable UI (CMP-U-01..15): status badge, status chip, qty 
                      cards, status timeline, bottom nav, skeleton/empty states
 lib/
   supabase/          Browser (anon) + server (service-role) clients and SSR helpers
-  actions/           Server actions = business logic: orders, session/status, menu, rider, admin
-  notifications/     WhatsApp Cloud API + Web Push senders; bilingual template catalogue (EVT-01..11)
-  realtime/          Supabase channel subscriptions (shop:status, shop:qty, board:orders, order:{id}, rider:feed)
+  domain/            Server actions = business logic: orders, session, menu, rider, zones, addresses, notify, privacy
+  notifications/     WhatsApp Cloud API + Web Push senders; bilingual template catalogue (EVT-01..11); dispatch
+  realtime/          Supabase channel subscriptions (shop:status, board:orders, order:{id}, rider:feed) + reconnect/poll fallback
   i18n/              Locale loading, dir resolution, message helpers
+  utils/             money, time (MYT), schemas (Zod), api envelope, cart, consent
 supabase/
   migrations/        Forward-only SQL: schema, constraints, RLS policies, indexes
   seed.sql           Reference/seed data (zones, sample menu, operator)
@@ -252,8 +258,18 @@ Git-driven; full guide in **D-21 (Deployment & Release Runbook)**.
 - **GitHub Actions** gates promotion with typecheck + lint + tests.
 - **Supabase** holds the database/storage; schema changes ship as migrations.
 - **Secrets** live in Vercel project settings and the Supabase dashboard — never in the repo.
+- **Going live:** follow **[`BUILD/GO_LIVE_CHECKLIST.md`](BUILD/GO_LIVE_CHECKLIST.md)** — the actionable list of accounts/secrets/config the owner must supply (Supabase, WhatsApp, VAPID, Vercel, auto-close cron, trading config) plus the 3-role smoke test.
+- **Auto-close** runs free via `.github/workflows/auto-close.yml` (a cron that pokes a secret-guarded route during MYT trading hours) — no paid scheduler needed.
 
 For monitoring, backup, rollback and the security/PDPA checklist, see **D-22**.
+
+### DB migrate + seed order
+
+Migrations are forward-only and applied in order: `0001_init` (schema) → `0002_rls`
+(row-level security) → `0003_functions` (the race-safe `place_order` RPC, restock
+trigger, auto-close) → `0004_notifications_provider_id` → `0005_consent_retention`.
+Run `npm run db:migrate` then `npm run db:seed`, **or** paste `supabase/setup.sql`
+(combined schema + seed) into the Supabase SQL editor for a one-shot setup.
 
 ---
 
