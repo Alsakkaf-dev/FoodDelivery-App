@@ -127,6 +127,14 @@ create table if not exists notifications (
 -- exactly one notification per order transition (FR-S-09)
 create unique index if not exists uq_notif_order_event on notifications(order_id, event) where order_id is not null;
 create index if not exists idx_notif_provider on notifications(provider_message_id) where provider_message_id is not null;
+-- PDPA consent versioning + erasure audit (migration 0005, US-007/US-057)
+alter table users add column if not exists consent_version text;
+create table if not exists erasure_audit (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references users(id) on delete set null,
+  fields text not null,
+  created_at timestamptz not null default now()
+);
 
 -- payments (v2 — designed, not used in v1) --------------------------------------
 create table if not exists payments (
