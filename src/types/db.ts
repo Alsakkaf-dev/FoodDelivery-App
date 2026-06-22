@@ -12,7 +12,7 @@ export type Channel = 'whatsapp' | 'web_push';
 
 export interface UserProfile {
   id: string; phone: string; role: Role; name: string | null; lang: Lang;
-  consent_at: string | null; created_at: string;
+  consent_at: string | null; consent_version: string | null; created_at: string;
 }
 export interface Zone { id: string; name: string; active: boolean; sort_order: number; }
 export interface Address {
