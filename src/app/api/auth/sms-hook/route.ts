@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendWhatsApp } from '@/lib/notifications/whatsapp';
+import { verifySmsHook } from '@/lib/auth/verify-sms-hook';
 
 // Supabase "Send SMS Hook" target. Supabase generates & verifies the phone OTP and
 // owns the session; this endpoint only DELIVERS the code — over WhatsApp instead of SMS.
@@ -7,10 +8,8 @@ import { sendWhatsApp } from '@/lib/notifications/whatsapp';
 //
 // IMPORTANT: Supabase (cloud) can only reach this once the app is DEPLOYED — not on
 // localhost. For local testing use the Email channel. Set WHATSAPP_TOKEN +
-// WHATSAPP_PHONE_NUMBER_ID (Meta) so sendWhatsApp() is live.
-//
-// TODO(deploy): verify the StandardWebhooks signature using the hook secret
-// (headers webhook-id / webhook-timestamp / webhook-signature) before trusting the body.
+// WHATSAPP_PHONE_NUMBER_ID (Meta) so sendWhatsApp() is live, and SEND_SMS_HOOK_SECRET
+// (from the hook config) so the request signature can be verified below.
 
 type SmsHookPayload = {
   user?: { phone?: string };
@@ -21,6 +20,17 @@ type SmsHookPayload = {
 
 export async function POST(req: NextRequest) {
   const raw = await req.text();
+
+  // Reject any request that isn't a signed Supabase hook call (StandardWebhooks).
+  // Without this, anyone could POST a phone+otp here and burn your WhatsApp quota.
+  const verified = verifySmsHook(req.headers, raw);
+  if (!verified.ok) {
+    return NextResponse.json(
+      { error: { http_code: 401, message: `unauthorized_${verified.reason}` } },
+      { status: 401 },
+    );
+  }
+
   let payload: SmsHookPayload;
   try {
     payload = JSON.parse(raw) as SmsHookPayload;
