@@ -46,3 +46,49 @@ describe('ui primitives: bilingual labels (en + ar)', () => {
   });
 });
 
+describe('ui primitives: the four UI states render from the shared kit', () => {
+  it('Loading shows the caller-translated label in a polite live region', () => {
+    const out = html(createElement(Loading, { label: 'جارٍ التحميل…' }));
+    expect(out).toContain('جارٍ التحميل…');
+    expect(out).toContain('role="status"');
+  });
+
+  it('EmptyState shows the title and hint', () => {
+    const out = html(createElement(EmptyState, { title: 'لا توجد طلبات', hint: 'ستظهر طلباتك هنا' }));
+    expect(out).toContain('لا توجد طلبات');
+    expect(out).toContain('ستظهر طلباتك هنا');
+  });
+
+  it('ErrorState shows the message', () => {
+    expect(html(createElement(ErrorState, { message: 'تعذر التحميل' }))).toContain('تعذر التحميل');
+  });
+
+  it('Skeleton renders the requested number of shimmer bars', () => {
+    const out = html(createElement(Skeleton, { lines: 3 }));
+    expect((out.match(/animate-pulse/g) ?? []).length).toBe(3);
+    expect(out).toContain('aria-busy="true"');
+  });
+});
+
+describe('ui primitives: >=44px tap targets (EP-13)', () => {
+  it('Stepper +/- controls carry the 44px tap-target utilities', () => {
+    const out = html(createElement(Stepper, { value: 1, onChange: () => {} }));
+    expect(out).toContain('min-h-tap');
+    expect(out).toContain('min-w-tap');
+    expect(out).toContain('aria-label="decrease"');
+    expect(out).toContain('aria-label="increase"');
+  });
+
+  it('BottomNav items carry the 44px min-height tap target', () => {
+    // Icons are IconName strings (#04 BottomNav v2 resolves them via #05's <Icon name>),
+    // so emoji literals would throw on an unknown registry key — use real names. The
+    // assertions (min-h-tap, 'Home') are unchanged. Lockstep with #04 (ledger ACTION-NEEDED).
+    const items: { href: string; label: string; icon: IconName }[] = [
+      { href: '/', label: 'Home', icon: 'home' },
+      { href: '/menu', label: 'Menu', icon: 'utensils' },
+    ];
+    const out = html(createElement(BottomNav, { items }));
+    expect(out).toContain('min-h-tap');
+    expect(out).toContain('Home');
+  });
+});
