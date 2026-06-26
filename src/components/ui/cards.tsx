@@ -116,3 +116,34 @@ export function RestaurantHeroCard({
   );
 }
 
+/**
+ * ReviewCard (R-7: primitive lives here; #13's review-card.tsx composes it).
+ * Header = avatar slot + author + date + stars; body = comment. `rating` renders the
+ * shared RatingRow so star styling never forks.
+ */
+export function ReviewCard({
+  author, avatar, rating, comment, date, className,
+}: {
+  author: ReactNode;
+  avatar?: ReactNode;
+  rating: number;
+  comment?: ReactNode;
+  date?: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cx('card', className)}>
+      <div className="flex items-center gap-3">
+        {avatar ? <span className="shrink-0">{avatar}</span> : null}
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-title font-bold text-ink">{author}</p>
+          {date ? <p className="text-caption text-muted">{date}</p> : null}
+        </div>
+        <RatingRow value={rating} size="sm" />
+      </div>
+      {comment ? <p className="mt-3 text-sm leading-relaxed text-body">{comment}</p> : null}
+    </div>
+  );
+}
+
+/** PromoCard — warm amber→orange gradient banner (offers/coupons). */
