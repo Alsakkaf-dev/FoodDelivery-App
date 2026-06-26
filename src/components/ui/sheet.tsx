@@ -101,3 +101,48 @@ export function PinnedBar({ children, className }: { children: ReactNode; classN
 }
 
 /** Modal — centered dialog (confirmations, promos). */
+export function Modal({
+  open, onClose, title, footer, closeLabel = 'Close', children, className,
+}: {
+  open: boolean;
+  onClose: () => void;
+  title?: ReactNode;
+  footer?: ReactNode;
+  closeLabel?: string;
+  children: ReactNode;
+  className?: string;
+}) {
+  const panelRef = useRef<HTMLDivElement>(null);
+  const entered = useOverlay(open, onClose, panelRef);
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-5">
+      <div
+        className={cx('absolute inset-0 bg-black/50 transition-opacity duration-200 motion-reduce:transition-none', entered ? 'opacity-100' : 'opacity-0')}
+        onClick={onClose}
+        aria-hidden
+      />
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={typeof title === 'string' ? title : undefined}
+        tabIndex={-1}
+        className={cx(
+          'relative w-full max-w-sm rounded-xl bg-surface p-5 shadow-sheet outline-none transition-all duration-200 motion-reduce:transition-none',
+          entered ? 'scale-100 opacity-100' : 'scale-95 opacity-0',
+          className,
+        )}
+      >
+        {title ? (
+          <div className="mb-2 flex items-center justify-between">
+            <h2 className="text-h2 font-bold text-ink">{title}</h2>
+            <IconButton variant="nav" icon="close" aria-label={closeLabel} onClick={onClose} />
+          </div>
+        ) : null}
+        <div className="text-body">{children}</div>
+        {footer ? <div className="mt-5">{footer}</div> : null}
+      </div>
+    </div>
+  );
+}
