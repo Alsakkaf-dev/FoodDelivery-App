@@ -194,3 +194,39 @@ export function Scrim({
 
 /* ─────────────────── (5) Promo / success + confetti ────────────────── */
 /** Scale-in entrance for promo/success cards. */
+export function ScaleIn({
+  children,
+  className,
+  delay = 0,
+}: {
+  children: ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  const reduced = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    animateVariant(ref.current, scaleInVariant, { override: { delay } });
+  }, [delay]);
+  return (
+    <div ref={ref} className={className} style={{ opacity: reduced ? 1 : 0 }}>
+      {children}
+    </div>
+  );
+}
+
+/** Check-circle spring (wrap a check/check-circle icon). */
+export function SuccessCheck({ children, className }: { children?: ReactNode; className?: string }) {
+  const reduced = useReducedMotion();
+  const ref = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    animateVariant(ref.current, checkSpringVariant);
+  }, []);
+  return (
+    <span ref={ref} className={cx('inline-flex', className)} style={{ opacity: reduced ? 1 : 0 }}>
+      {children}
+    </span>
+  );
+}
+
+/** Confetti burst (SUCCESS only — spec §6 palette). Render inside a `relative` container. */
