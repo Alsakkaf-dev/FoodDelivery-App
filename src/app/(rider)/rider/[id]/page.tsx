@@ -7,6 +7,7 @@ import { EmptyIllustration } from '@/components/brand';
 import { Icon } from '@/components/icons';
 import { formatMYR } from '@/lib/utils/money';
 import { buildMapsLink } from '@/components/rider/delivery-card';
+import { buildDirectionsLink } from '@/lib/maps/links';
 import { RiderActions } from '@/components/rider/rider-actions';
 import type { PaymentStatus } from '@/types/db';
 
