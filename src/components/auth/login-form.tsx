@@ -5,7 +5,6 @@
 // bilingual PDPA are PRESERVED verbatim; only the presentation moves into the new shell.
 // AUTH_DISABLED stays untouched (no guards added here).
 import { useState } from 'react';
-import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import type { Locale } from '@/lib/i18n/config';
@@ -101,7 +100,7 @@ export function LoginForm({ locale }: { locale: Locale }) {
           inputMode="tel"
           placeholder="+60 12-345 6789"
           value={phone}
-          onChange={setPhone}
+          onChange={(e) => setPhone(e.target.value)}
         />
       ) : (
         <FilledInput
@@ -110,7 +109,7 @@ export function LoginForm({ locale }: { locale: Locale }) {
           inputMode="email"
           placeholder="you@example.com"
           value={email}
-          onChange={setEmail}
+          onChange={(e) => setEmail(e.target.value)}
         />
       )}
 
@@ -134,7 +133,7 @@ export function LoginForm({ locale }: { locale: Locale }) {
 
       <p className="text-center text-caption text-body">
         {t.no_account}{' '}
-        <TextAction as={Link} href="/signup" tone="brand">
+        <TextAction href="/signup" tone="brand">
           {t.sign_up}
         </TextAction>
       </p>
