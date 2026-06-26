@@ -113,3 +113,46 @@ const ICON_BTN: Record<IconButtonVariant, string> = {
  * IconButton — gray rounded-square (nav) / dark circle (cart) / orange circle ("+").
  * `aria-label` is required (icon-only). Directional icons auto-mirror under RTL.
  */
+export const IconButton = forwardRef<
+  HTMLButtonElement,
+  ButtonHTMLAttributes<HTMLButtonElement> & { variant?: IconButtonVariant; icon?: IconName; children?: ReactNode }
+>(function IconButton({ variant = 'nav', icon, className, children, type = 'button', ...rest }, ref) {
+  return (
+    <button
+      ref={ref}
+      type={type}
+      className={cx(
+        'inline-flex min-h-tap min-w-tap items-center justify-center transition active:scale-95 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40',
+        ICON_BTN[variant],
+        className,
+      )}
+      {...rest}
+    >
+      {icon ? <Icon name={icon} className="h-5 w-5" aria-hidden /> : children}
+    </button>
+  );
+});
+
+/**
+ * FloatingIconButton — circular control floating over imagery (back, favorite).
+ * Translucent white by default; `active` turns a favorite glyph brand-orange.
+ */
+export const FloatingIconButton = forwardRef<
+  HTMLButtonElement,
+  ButtonHTMLAttributes<HTMLButtonElement> & { icon: IconName; active?: boolean }
+>(function FloatingIconButton({ icon, active, className, type = 'button', ...rest }, ref) {
+  return (
+    <button
+      ref={ref}
+      type={type}
+      className={cx(
+        'inline-flex min-h-tap min-w-tap items-center justify-center rounded-full bg-white/85 shadow-card backdrop-blur transition active:scale-95 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40',
+        active ? 'text-brand' : 'text-ink',
+        className,
+      )}
+      {...rest}
+    >
+      <Icon name={icon} className="h-5 w-5" aria-hidden />
+    </button>
+  );
+});
