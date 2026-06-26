@@ -15,7 +15,7 @@ export default async function BoardPage() {
   return (
     <section className="space-y-4">
       <header>
-        <h1 className="text-h1 font-bold text-slate">{t.order_board}</h1>
+        <h1 className="text-h1 font-bold text-ink">{t.order_board}</h1>
       </header>
 
       {res.ok ? (
