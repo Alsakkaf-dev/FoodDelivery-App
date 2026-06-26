@@ -448,3 +448,46 @@ export function OnboardingSlide({
 }
 
 /** Carousel page dots; the active dot grows. Pass `onDotClick` for tappable (≥44px) dots. */
+export function CarouselDots({
+  count,
+  index,
+  onDotClick,
+  className,
+}: {
+  count: number;
+  index: number;
+  onDotClick?: (i: number) => void;
+  className?: string;
+}) {
+  return (
+    <div className={cx('flex items-center gap-2', className)}>
+      {Array.from({ length: count }).map((_, i) => {
+        const active = i === index;
+        const dot = (
+          <span
+            className={cx(
+              'block h-2 rounded-pill transition-all duration-200 ease-out motion-reduce:transition-none',
+              active ? 'w-5 bg-brand' : 'w-2 bg-line',
+            )}
+          />
+        );
+        return onDotClick ? (
+          <button
+            key={i}
+            type="button"
+            aria-label={String(i + 1)}
+            aria-current={active ? 'true' : undefined}
+            onClick={() => onDotClick(i)}
+            className="grid min-h-tap min-w-tap place-items-center"
+          >
+            {dot}
+          </button>
+        ) : (
+          <span key={i} aria-hidden>
+            {dot}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
