@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { getStatus } from '@/lib/domain/session';
 import { getLocale } from '@/lib/i18n/server';
+import { getDictionary } from '@/lib/i18n/dictionaries';
+import { Icon } from '@/components/icons';
 import { CheckoutPayment } from '@/components/customer/payment-section';
 
 // SCR-C-05 part 2 — Payment + ordering gate + place order (US-016/017, FR-C-08/09/10).
@@ -12,7 +14,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function CheckoutPaymentPage() {
   const locale = getLocale();
-  const ar = locale === 'ar';
+  const t = getDictionary(locale);
   const res = await getStatus();
   const s = res.ok
     ? res.data
@@ -20,11 +22,15 @@ export default async function CheckoutPaymentPage() {
 
   return (
     <>
-      <header className="flex items-center justify-between gap-2">
-        <Link href="/checkout" className="inline-block text-sm text-muted">
-          {ar ? '→ إتمام الطلب' : '← Checkout'}
+      <header className="mb-6 flex items-center gap-3">
+        <Link
+          href="/checkout"
+          aria-label={t.back}
+          className="inline-flex min-h-tap min-w-tap items-center justify-center rounded-md bg-surface-alt text-ink transition hover:bg-surface-input active:scale-95"
+        >
+          <Icon name="chevron-left" className="h-5 w-5" aria-hidden />
         </Link>
-        <h1 className="text-2xl font-bold text-slate">{ar ? 'الدفع' : 'Payment'}</h1>
+        <h1 className="text-headerTitle font-bold text-ink">{t.payment}</h1>
       </header>
 
       <CheckoutPayment
