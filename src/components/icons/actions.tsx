@@ -180,3 +180,45 @@ export function ArrowLeftIcon(props: IconProps) {
   );
 }
 
+export function SendIcon(props: IconProps) {
+  return (
+    <IconBase mirror {...props}>
+      <path d="M21.5 3.5 2.5 11l7 2.6 2.6 7Z" />
+      <path d="M9.5 13.6 21.5 3.5" />
+    </IconBase>
+  );
+}
+
+export function HeartIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M12 20.5S3.5 15 3.5 8.8A4.3 4.3 0 0 1 12 7a4.3 4.3 0 0 1 8.5 1.8C20.5 15 12 20.5 12 20.5Z" />
+    </IconBase>
+  );
+}
+
+export function HeartFilledIcon(props: IconProps) {
+  return (
+    <IconBase filled {...props}>
+      <path d="M12 20.6 10.5 19.3C5.4 14.7 3.5 12.4 3.5 9.3A4.3 4.3 0 0 1 12 7a4.3 4.3 0 0 1 8.5 2.3c0 3.1-1.9 5.4-7 10Z" />
+    </IconBase>
+  );
+}
+
+export function RefreshIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M20 11a8 8 0 1 0-2.2 6.2" />
+      <path d="M20 5v6h-6" />
+    </IconBase>
+  );
+}
+
+export function ResetIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M4 13a8 8 0 1 0 2.2-6.2" />
+      <path d="M4 5v6h6" />
+    </IconBase>
+  );
+}
