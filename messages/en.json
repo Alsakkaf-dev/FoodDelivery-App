@@ -414,5 +414,22 @@
   "nav_new": "New order",
   "cart_open": "Open cart",
   "cart_items_count": "{{n}} items in cart",
-  "notifications_hint": "Order updates and offers will appear here."
+  "notifications_hint": "Order updates and offers will appear here.",
+  "password_mismatch": "Passwords don't match",
+  "password_too_short": "Use at least 8 characters",
+  "check_your_email": "Check your email to confirm your account.",
+  "reset_link_sent": "If that email is registered, a reset link is on its way.",
+  "invalid_credentials": "Incorrect email or password.",
+  "email_taken": "That email already has an account.",
+  "new_password": "New password",
+  "update_password": "Update password",
+  "password_updated": "Password updated — please sign in.",
+  "reset_password": "Reset password",
+  "use_password": "Use password",
+  "use_code": "Email me a code instead",
+  "continue_with_google": "Continue with Google",
+  "signed_out": "You've been signed out.",
+  "complete_profile": "Complete your profile",
+  "welcome_add_name": "Add your name so we can personalize your experience.",
+  "create_account": "Create account"
 }
