@@ -36,3 +36,32 @@ export interface AnimateOptions {
  * or `null` when skipped/unsupported. When skipped, `onFinish` still fires so callers can treat
  * "animation done" and "animation skipped" uniformly.
  */
+export function animateVariant(
+  el: Element | null | undefined,
+  variant: MotionVariant,
+  opts: AnimateOptions = {},
+): Animation | null {
+  const { respectReducedMotion = true, override, onFinish } = opts;
+  if (!el || !supportsWAAPI() || (respectReducedMotion && reduceMotion())) {
+    onFinish?.();
+    return null;
+  }
+  const animation = el.animate(variant.keyframes, { ...variant.options, ...override });
+  if (onFinish) animation.addEventListener('finish', onFinish, { once: true });
+  return animation;
+}
+
+export interface FlyArcOptions {
+  /** Element to fly (e.g. a clone of the product image). Defaults to a small brand dot. */
+  ghost?: HTMLElement;
+  durationMs?: number;
+  /** Fires when the ghost reaches the cart — and immediately when the fly is skipped. */
+  onArrive?: () => void;
+}
+
+/**
+ * Add-to-cart "fly to cart": animate a ghost element along a quadratic arc from `fromEl` to
+ * `toEl`. Direction-agnostic — it uses live bounding rects, so it mirrors correctly under RTL for
+ * free. No-op (calls `onArrive` immediately) under reduced motion or when a target is missing,
+ * so the caller can always pop the badge / increment the count regardless.
+ */
