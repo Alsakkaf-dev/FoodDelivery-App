@@ -70,3 +70,49 @@ export function SelectChip({
  * Orange border + check badge when selected. `role="radio"` by default; pass your own
  * for checkbox semantics. Leading slot holds a logo/icon; text starts (RTL-safe).
  */
+export function SelectTile({
+  selected, onSelect, title, subtitle, leading, trailing, disabled, role = 'radio', className,
+}: {
+  selected?: boolean;
+  onSelect?: () => void;
+  title: ReactNode;
+  subtitle?: ReactNode;
+  leading?: ReactNode;
+  trailing?: ReactNode;
+  disabled?: boolean;
+  role?: string;
+  className?: string;
+}) {
+  return (
+    <button
+      type="button"
+      role={role}
+      aria-checked={selected}
+      onClick={onSelect}
+      disabled={disabled}
+      className={cx(
+        'flex w-full items-center gap-3 rounded-lg border-2 p-4 text-start transition disabled:opacity-50',
+        selected ? 'border-brand bg-brand-faint' : 'border-line bg-white hover:border-brand/40',
+        className,
+      )}
+    >
+      {leading ? <span className="shrink-0">{leading}</span> : null}
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-title font-bold text-ink">{title}</span>
+        {subtitle ? <span className="block truncate text-caption text-muted">{subtitle}</span> : null}
+      </span>
+      {trailing}
+      <span
+        className={cx(
+          'flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2',
+          selected ? 'border-brand bg-brand text-onColor' : 'border-line',
+        )}
+        aria-hidden
+      >
+        {selected ? <Icon name="check" className="h-3 w-3" /> : null}
+      </span>
+    </button>
+  );
+}
+
+/** CategoryChip — icon over label; active state = gradient disc + floating glow. */
