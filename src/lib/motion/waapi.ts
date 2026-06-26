@@ -65,3 +65,57 @@ export interface FlyArcOptions {
  * free. No-op (calls `onArrive` immediately) under reduced motion or when a target is missing,
  * so the caller can always pop the badge / increment the count regardless.
  */
+export function flyToCart(
+  fromEl: Element | null | undefined,
+  toEl: Element | null | undefined,
+  opts: FlyArcOptions = {},
+): void {
+  const { durationMs = DURATION.slow + 200, onArrive } = opts;
+  if (!fromEl || !toEl || typeof document === 'undefined' || !supportsWAAPI() || reduceMotion()) {
+    onArrive?.();
+    return;
+  }
+  const from = fromEl.getBoundingClientRect();
+  const to = toEl.getBoundingClientRect();
+  const startX = from.left + from.width / 2;
+  const startY = from.top + from.height / 2;
+  const dx = to.left + to.width / 2 - startX;
+  const dy = to.top + to.height / 2 - startY;
+  const lift = Math.min(-80, dy * 0.5 - 60); // arc apex rises above the straight line
+
+  const ghost = opts.ghost ?? defaultGhost();
+  ghost.style.position = 'fixed';
+  ghost.style.left = `${startX}px`;
+  ghost.style.top = `${startY}px`;
+  ghost.style.zIndex = String(Z_FLOATING);
+  ghost.style.pointerEvents = 'none';
+  ghost.style.margin = '0';
+  ghost.style.transform = 'translate(-50%, -50%)';
+  ghost.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(ghost);
+
+  const anim = ghost.animate(
+    [
+      { transform: 'translate(-50%, -50%) scale(1)', opacity: 1, offset: 0 },
+      {
+        transform: `translate(calc(-50% + ${dx * 0.5}px), calc(-50% + ${lift}px)) scale(0.9)`,
+        opacity: 1,
+        offset: 0.5,
+      },
+      {
+        transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(0.4)`,
+        opacity: 0.5,
+        offset: 1,
+      },
+    ],
+    { duration: durationMs, easing: EASE.standard, fill: 'forwards' },
+  );
+  anim.addEventListener(
+    'finish',
+    () => {
+      ghost.remove();
+      onArrive?.();
+    },
+    { once: true },
+  );
+}
