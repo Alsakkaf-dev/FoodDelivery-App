@@ -84,3 +84,17 @@ export function draftToInput(d: MenuDraft) {
   };
 }
 
+function toDraft(item: MenuItem): MenuDraft {
+  return {
+    id: item.id,
+    name_en: item.name_en,
+    name_ar: item.name_ar,
+    description_en: item.description_en ?? '',
+    description_ar: item.description_ar ?? '',
+    price: String(item.price),
+    photo_url: item.photo_url,
+    sort_order: item.sort_order,
+    available: item.available,
+  };
+}
+
