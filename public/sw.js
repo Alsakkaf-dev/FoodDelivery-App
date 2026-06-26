@@ -25,3 +25,53 @@ self.addEventListener('activate', (e) => {
   );
 });
 
+self.addEventListener('fetch', (e) => {
+  const { request } = e;
+  if (request.method !== 'GET') return; // never cache authed mutations
+  const url = new URL(request.url);
+
+  // Navigations: network-first, fall back to cached shell, then /offline.
+  if (request.mode === 'navigate') {
+    e.respondWith(
+      fetch(request)
+        .then((res) => {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(request, copy));
+          return res;
+        })
+        .catch(() => caches.match(request).then((r) => r || caches.match('/offline'))),
+    );
+    return;
+  }
+
+  // Public menu/status data: stale-while-revalidate (instant from cache, refresh in bg).
+  if (url.origin === self.location.origin && isStaleWhileRevalidate(url)) {
+    e.respondWith(
+      caches.open(CACHE).then(async (c) => {
+        const cached = await c.match(request);
+        const network = fetch(request)
+          .then((res) => {
+            c.put(request, res.clone());
+            return res;
+          })
+          .catch(() => cached);
+        return cached || network;
+      }),
+    );
+    return;
+  }
+
+  // Everything else: cache-first, then network.
+  e.respondWith(caches.match(request).then((cached) => cached || fetch(request)));
+});
+
+self.addEventListener('push', (e) => {
+  let data = { title: 'Fahman Orders', body: '', url: '/' };
+  try { data = { ...data, ...e.data.json() }; } catch (_) {}
+  e.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body, icon: '/icons/icon-192.png', badge: '/icons/icon-192.png', data: { url: data.url },
+    }),
+  );
+});
+
