@@ -48,3 +48,35 @@ import { HomeIcon } from '@/components/icons';
 
 > Need a name not here? File a request in `TEAM_STATUS.md` → REQUESTS. #05 adds
 > it (never invent a parallel set in a consumer).
+
+## Emoji → icon migration map (for the owning engineers)
+
+#05 ships the icons; the **file owner** swaps the emoji in their own lane
+(#04 nav/items.ts, #02 ui/states.tsx EmptyState, feature plans for their
+screens). Recommended replacements:
+
+| Emoji | Where (today) | Replace with |
+|---|---|---|
+| 🏠 | nav home | `name="home"` |
+| 🔍 | nav menu/search | `name="search"` (or `menu`) |
+| 🛍️ | nav orders | `name="bag"` |
+| 👤 | nav account/history | `name="user"` |
+| 📋 | operator board | `name="clipboard"` |
+| ⚙️ | operator setup | `name="settings"` |
+| 🍽️ | operator menu / EmptyState default | `name="utensils"` / `<EmptyIllustration variant="menu"/>` |
+| 🌙 | operator end-of-day | `name="moon"` |
+| 🛵 | rider nav / empty | `name="scooter"` / `<EmptyIllustration/>` |
+| 🌯 | menu photo fallback | `<FoodImage/>` (built-in SVG fallback) |
+| ✓ ✅ 🏁 | status / timeline / rider done | `name="check"` or `name="check-circle"` |
+| 📍 | location button / zones empty | `name="map-pin"` / `<EmptyIllustration variant="zones"/>` |
+| 📷 | photo upload | `name="camera"` |
+| 🗺️ | open map | `name="navigation"` (or `map-pin`) |
+| 📞 | call | `name="phone"` |
+| 🔔 | notifications opt-in | `name="bell"` |
+| ⚠️ | ErrorState | `name="alert"` / `<ErrorIllustration/>` |
+| ✕ | dismiss | `name="close"` |
+| 🛒 | empty cart | `name="cart"` / `<EmptyIllustration variant="cart"/>` |
+| 🙏 | sold-out copy | remove glyph; keep dict copy only |
+
+Files: `icon-base.tsx` (shell) · `nav/actions/meta/social/food.tsx` (glyphs) ·
+`registry.ts` (`IconName` + `ICON_REGISTRY` + `<Icon>`) · `index.ts` (barrel).
