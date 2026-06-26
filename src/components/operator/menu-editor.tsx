@@ -43,3 +43,44 @@ const ACCEPTED = ['image/jpeg', 'image/png', 'image/webp'];
 export type MenuUpsertAction = (input: unknown) => Promise<ApiResult<MenuItem>>;
 export type AvailabilityAction = (id: string, available: boolean) => Promise<ApiResult<true>>;
 
+export type MenuDraft = {
+  id?: string;
+  name_en: string;
+  name_ar: string;
+  description_en: string;
+  description_ar: string;
+  price: string; // text field; parsed to a number on submit
+  photo_url: string | null;
+  sort_order: number;
+  available: boolean;
+};
+
+/** A fresh empty draft for the "add item" form. */
+export function blankDraft(sort_order = 0): MenuDraft {
+  return {
+    name_en: '',
+    name_ar: '',
+    description_en: '',
+    description_ar: '',
+    price: '',
+    photo_url: null,
+    sort_order,
+    available: true,
+  };
+}
+
+/** Map the form draft onto the `menuUpsertSchema` shape (id present ⇒ update). */
+export function draftToInput(d: MenuDraft) {
+  return {
+    ...(d.id ? { id: d.id } : {}),
+    name_en: d.name_en.trim(),
+    name_ar: d.name_ar.trim(),
+    description_en: d.description_en.trim() || null,
+    description_ar: d.description_ar.trim() || null,
+    price: Number(d.price),
+    photo_url: d.photo_url || null,
+    available: d.available,
+    sort_order: Number(d.sort_order) || 0,
+  };
+}
+
