@@ -43,3 +43,21 @@ export function IconChip({
   );
 }
 
+export function IconTile({
+  icon, caption, subCaption, className,
+}: {
+  icon: IconName;
+  caption?: ReactNode;
+  subCaption?: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cx('flex flex-col items-center gap-1 text-center', className)}>
+      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-brand-tint text-brand" aria-hidden>
+        <Icon name={icon} className="h-6 w-6" />
+      </span>
+      {caption ? <span className="text-caption font-semibold text-ink">{caption}</span> : null}
+      {subCaption ? <span className="text-caption text-muted">{subCaption}</span> : null}
+    </div>
+  );
+}
