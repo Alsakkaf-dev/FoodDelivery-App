@@ -45,3 +45,11 @@ adds the amber gradient "plate" (`bg-hero-gradient` + `shadow-card`), circular/
 rounded/hero crops, dish overhang, and an **SVG fallback replacing `🌯`**. Pass
 `alt` as a dict string.
 
+## Colour note for the SVG assets
+React components use **Plan 01 token classes** (`fill-brand`, `text-ink`,
+`bg-hero-gradient`, `stroke-onColor`). The raw `/public/illustrations/*` and
+`/public/textures/*` SVGs **bake the spec-exact hex** internally because static
+assets cannot read Tailwind tokens — these values mirror the §1 palette
+(`brand #F5811F`, `brand.deep #E5721A`, `amber.from #FFB347`, `ink #1B1C2A`,
+`brand.tint #FCE3D3`, `success #27AE60`, `danger #EF4444`, confetti
+lavender/yellow/peach). If Plan 01 ever re-tunes a hex, update the assets here.
