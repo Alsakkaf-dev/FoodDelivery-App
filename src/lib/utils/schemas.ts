@@ -12,6 +12,15 @@ export const otpVerifySchema = z.object({ phone, code: z.string().length(6) });
 export const emailRequestSchema = z.object({ email: z.string().email() });
 export const emailVerifySchema = z.object({ email: z.string().email(), code: z.string().length(6) });
 
+// Profile self-service edit. All fields optional — only changed ones are sent.
+// RLS (users_update_own) restricts the write to the caller's own row.
+export const profileUpdateSchema = z.object({
+  name: z.string().trim().min(1, 'name_required').max(80).optional(),
+  email: z.string().email().optional(),
+  bio: z.string().max(300).optional(),
+  avatar_url: z.string().url().optional(),
+});
+
 export const cartItemSchema = z.object({
   menu_item_id: z.string().uuid(),
   qty: z.number().int().positive().max(50),
