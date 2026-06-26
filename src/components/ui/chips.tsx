@@ -40,3 +40,33 @@ export function Chip({
 export const Pill = Chip;
 
 /** SelectChip — circular gray↔orange toggle (sizes 10"/14"/16", $ / $$ / $$$). */
+export function SelectChip({
+  selected, onToggle, disabled, className, children, ...rest
+}: {
+  selected?: boolean;
+  onToggle?: (next: boolean) => void;
+  children: ReactNode;
+} & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onToggle'>) {
+  return (
+    <button
+      type="button"
+      aria-pressed={onToggle ? !!selected : undefined}
+      onClick={(e) => { onToggle?.(!selected); rest.onClick?.(e); }}
+      disabled={disabled}
+      className={cx(
+        'flex min-h-tap min-w-tap items-center justify-center rounded-full px-3 text-sm font-bold transition active:scale-95 motion-reduce:transition-none disabled:opacity-50',
+        selected ? 'bg-brand text-onColor shadow-floating' : 'bg-surface-input text-body hover:bg-brand-tint',
+        className,
+      )}
+      {...rest}
+    >
+      {children}
+    </button>
+  );
+}
+
+/**
+ * SelectTile — full-width selectable row (payment method, address, fulfilment).
+ * Orange border + check badge when selected. `role="radio"` by default; pass your own
+ * for checkbox semantics. Leading slot holds a logo/icon; text starts (RTL-safe).
+ */
