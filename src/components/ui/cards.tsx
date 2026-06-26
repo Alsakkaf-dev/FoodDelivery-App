@@ -69,3 +69,50 @@ export function ProductCard({
 }
 
 /** CategoryPhotoCard — photo with a name label over a bottom gradient scrim. */
+export function CategoryPhotoCard({
+  name, media, href, onClick, className,
+}: {
+  name: ReactNode;
+  media?: ReactNode;
+  href?: string;
+  onClick?: () => void;
+  className?: string;
+}) {
+  return (
+    <Surface href={href} onClick={onClick} className={cx('relative block overflow-hidden rounded-lg', className)}>
+      {media}
+      <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-3 text-start text-title font-bold text-onColor">
+        {name}
+      </span>
+    </Surface>
+  );
+}
+
+/** RestaurantHeroCard — hero image + vendor name + meta row (pass a <MetaStat/>). */
+export function RestaurantHeroCard({
+  name, media, subtitle, meta, trailing, href, onClick, className,
+}: {
+  name: ReactNode;
+  media?: ReactNode;
+  subtitle?: ReactNode;
+  meta?: ReactNode;
+  trailing?: ReactNode;
+  href?: string;
+  onClick?: () => void;
+  className?: string;
+}) {
+  return (
+    <Surface href={href} onClick={onClick} className={cx('card block', className)}>
+      {media ? <div className="mb-3 overflow-hidden rounded-lg">{media}</div> : null}
+      <div className="flex items-start gap-3">
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-title font-bold text-ink">{name}</p>
+          {subtitle ? <p className="mt-0.5 truncate text-caption text-muted">{subtitle}</p> : null}
+          {meta ? <div className="mt-2">{meta}</div> : null}
+        </div>
+        {trailing}
+      </div>
+    </Surface>
+  );
+}
+
