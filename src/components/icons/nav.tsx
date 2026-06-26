@@ -44,3 +44,53 @@ export function BagIcon(props: IconProps) {
   );
 }
 
+export function CartIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="9.5" cy="20" r="1.4" />
+      <circle cx="17" cy="20" r="1.4" />
+      <path d="M3 4h2.2l2.2 11.1a1 1 0 0 0 1 .8h8.2a1 1 0 0 0 1-.78L20.2 8H6.2" />
+    </IconBase>
+  );
+}
+
+export function UserIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="12" cy="8.5" r="3.7" />
+      <path d="M5.5 20a6.5 6.5 0 0 1 13 0" />
+    </IconBase>
+  );
+}
+
+export function ClipboardIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <rect x="5" y="5" width="14" height="15.5" rx="2.2" />
+      <path d="M9 5v-.8A2 2 0 0 1 11 2.2h2a2 2 0 0 1 2 2V5Z" />
+      <path d="M8.5 11h7" />
+      <path d="M8.5 15h5" />
+    </IconBase>
+  );
+}
+
+export function SettingsIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="12" cy="12" r="3.2" />
+      <path d="M12 2.6v2.4M12 19v2.4M21.4 12H19M5 12H2.6M18.6 5.4 16.9 7.1M7.1 16.9 5.4 18.6M18.6 18.6 16.9 16.9M7.1 7.1 5.4 5.4" />
+    </IconBase>
+  );
+}
+
+export function UtensilsIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M7.5 3v4.5" />
+      <path d="M10.5 3v4.5" />
+      <path d="M9 7.5V21" />
+      <path d="M7.5 7.5a1.5 1.5 0 0 0 3 0" />
+      <path d="M15.5 3c2 2 2 6 0 8.5V21" />
+    </IconBase>
+  );
+}
