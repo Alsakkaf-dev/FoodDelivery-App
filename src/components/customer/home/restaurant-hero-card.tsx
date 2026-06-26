@@ -22,3 +22,51 @@ type Props = {
   t: Dictionary;
 };
 
+export function RestaurantHeroCard({
+  status,
+  qtyRemaining,
+  qtyTotal,
+  deliveryWindow,
+  photoUrl,
+  lang,
+  t,
+}: Props) {
+  const isOpen = status === 'open';
+  // MetaStat is built from REAL data only: free delivery (brand-static) + the live
+  // delivery window when configured. No fake rating/fixed-time is invented.
+  const meta = [
+    { icon: 'truck' as const, label: t.meta_free_delivery },
+    ...(deliveryWindow ? [{ icon: 'clock' as const, label: deliveryWindow }] : []),
+  ];
+
+  return (
+    <Link
+      href="/menu"
+      aria-label={`${t.shop_name} — ${t.browse_menu}`}
+      className={`card block space-y-3 ${isOpen ? '' : 'opacity-90'}`}
+    >
+      <div className="relative">
+        <FoodImage shape="hero" src={photoUrl ?? undefined} alt={t.shop_name} className="h-44 w-full" />
+        {/* Live status overlay chip (mirrors at dir=rtl via logical inset). */}
+        <span className="absolute start-3 top-3">
+          <StatusBadge status={status} lang={lang} />
+        </span>
+      </div>
+
+      <div className="flex items-start justify-between gap-2">
+        <h3 className="text-title text-ink">{t.shop_name}</h3>
+        <Icon name="chevron-right" className="mt-1 shrink-0 text-muted" aria-hidden />
+      </div>
+
+      <MetaStat items={meta} />
+
+      {isOpen && qtyTotal > 0 ? (
+        <QtyCounter remaining={qtyRemaining} total={qtyTotal} lang={lang} />
+      ) : (
+        <p className="text-body">
+          {status === 'sold_out' ? t.sold_out_msg : t.shop_closed_msg}
+        </p>
+      )}
+    </Link>
+  );
+}
