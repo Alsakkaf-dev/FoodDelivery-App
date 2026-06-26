@@ -48,3 +48,51 @@ const round = (n: number): number => Math.round(n * 100) / 100;
 const AA_NORMAL = 4.5;
 const AA_LARGE = 3.0;
 
+describe('a11y contrast: WCAG ratio math', () => {
+  it('white-on-black = 21:1 and identical colours = 1:1', () => {
+    expect(round(contrastRatio('#FFFFFF', '#000000'))).toBe(21);
+    expect(round(contrastRatio('#FFFFFF', '#FFFFFF'))).toBe(1);
+  });
+});
+
+// Pairs that MUST keep ≥ AA — regression guard against any future token retune.
+const MUST_PASS: { name: string; fg: string; bg: string; min: number }[] = [
+  { name: 'ink on white (headings)', fg: token('ink.DEFAULT'), bg: WHITE, min: AA_NORMAL },
+  { name: 'body on white (paragraphs)', fg: token('body'), bg: WHITE, min: AA_NORMAL },
+  { name: 'white on ink-header (auth hero)', fg: WHITE, bg: token('ink.header'), min: AA_NORMAL },
+  { name: 'white on dark-cta (dark bar/stepper)', fg: WHITE, bg: token('dark.cta'), min: AA_NORMAL },
+  { name: 'white on bg-dark (immersive cart)', fg: WHITE, bg: token('bg.dark'), min: AA_NORMAL },
+];
+
+describe('a11y contrast: high-contrast pairs stay AA (regression guard)', () => {
+  for (const p of MUST_PASS) {
+    it(`${p.name} >= ${p.min}:1`, () => {
+      expect(contrastRatio(p.fg, p.bg)).toBeGreaterThanOrEqual(p.min);
+    });
+  }
+});
+
+// Token pairs the new orange/amber palette introduces that DO NOT meet AA as
+// small text/glyph on white. Each is logged in QA/DEFECT_LOG.md; remediation is
+// usage-level (ink/dark text on orange CTAs; `text-body` for paragraphs; treat
+// brand/star/info as >=3:1 large/graphical only). Keyed by audited usage -> defect.
+const KNOWN_SUB_AA: Record<string, { fg: string; bg: string; min: number; defect: string }> = {
+  'white on brand (PrimaryButton/CTA text)': { fg: WHITE, bg: token('brand.DEFAULT'), min: AA_NORMAL, defect: 'QA-001' },
+  'brand link text on white': { fg: token('brand.DEFAULT'), bg: WHITE, min: AA_NORMAL, defect: 'QA-002' },
+  'muted text on white (caption/label/placeholder)': { fg: token('muted'), bg: WHITE, min: AA_NORMAL, defect: 'QA-003' },
+  'success text on white': { fg: token('success'), bg: WHITE, min: AA_NORMAL, defect: 'QA-004' },
+  'danger text on white': { fg: token('danger'), bg: WHITE, min: AA_NORMAL, defect: 'QA-005' },
+  'star glyph on white (rating)': { fg: token('star.DEFAULT'), bg: WHITE, min: AA_LARGE, defect: 'QA-006' },
+  'info-blue text on white': { fg: token('info.blue'), bg: WHITE, min: AA_NORMAL, defect: 'QA-007' },
+  'warning text on white': { fg: token('warning'), bg: WHITE, min: AA_NORMAL, defect: 'QA-008' },
+};
+
+describe('a11y contrast: sub-AA palette pairs are real and tracked as defects', () => {
+  for (const [usage, p] of Object.entries(KNOWN_SUB_AA)) {
+    it(`${usage} is below ${p.min}:1 and logged (${p.defect})`, () => {
+      const ratio = contrastRatio(p.fg, p.bg);
+      expect(ratio, `${usage} = ${round(ratio)}:1`).toBeLessThan(p.min);
+      expect(p.defect).toMatch(/^QA-\d{3}$/);
+    });
+  }
+});
