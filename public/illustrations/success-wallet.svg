@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 200" fill="none" aria-hidden="true">
+  <!-- Rich payment-success illustration (design-spec §7) — wallet + coins.
+       Pair with <Confetti/> for the celebratory burst. -->
+  <ellipse cx="150" cy="46" rx="20" ry="19" fill="#F5A623"/>
+  <ellipse cx="150" cy="42" rx="20" ry="19" fill="#FFD23F"/>
+  <ellipse cx="150" cy="42" rx="13" ry="12" fill="none" stroke="#E5901C" stroke-width="2"/>
+  <path d="M150 35v14M153.5 38h-4.5a2.2 2.2 0 0 0 0 4.4h3a2.2 2.2 0 0 1 0 4.4H147" stroke="#E5901C" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="118" y="70" width="80" height="44" rx="6" fill="#FFE7CC" transform="rotate(-10 158 92)"/>
+  <rect x="130" y="82" width="32" height="6" rx="3" fill="#F7C99A" transform="rotate(-10 146 85)"/>
+  <path d="M48 96h120a8 8 0 0 1 8 8v52a10 10 0 0 1-10 10H50a10 10 0 0 1-10-10v-52a8 8 0 0 1 8-8Z" fill="#F5811F"/>
+  <path d="M40 116h128v18a10 10 0 0 1-10 10H50a10 10 0 0 1-10-10Z" fill="#E5721A"/>
+  <rect x="150" y="120" width="22" height="16" rx="8" fill="#FFB347"/>
+  <circle cx="161" cy="128" r="4" fill="#F5811F"/>
+</svg>
