@@ -78,3 +78,32 @@ export function Composer({
   );
 }
 
+function CircleBtn({
+  onClick, ariaLabel, pressed, tone, big, children,
+}: {
+  onClick?: () => void;
+  ariaLabel: string;
+  pressed?: boolean;
+  tone: 'neutral' | 'danger';
+  big?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={ariaLabel}
+      aria-pressed={pressed}
+      className={cx(
+        'inline-flex items-center justify-center rounded-full transition active:scale-95 motion-reduce:transition-none',
+        big ? 'h-16 w-16' : 'h-14 w-14',
+        tone === 'danger'
+          ? 'bg-danger text-onColor hover:opacity-90'
+          : pressed ? 'bg-ink text-onColor' : 'bg-surface-alt text-ink hover:bg-surface-input',
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
