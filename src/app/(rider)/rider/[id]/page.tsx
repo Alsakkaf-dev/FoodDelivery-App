@@ -66,6 +66,7 @@ export default async function RiderDeliveryDetailPage({
 
   const { order, zone_name, address_line, pin_lat, pin_lng, customer_phone, items } = delivery;
   const mapsHref = buildMapsLink(pin_lat, pin_lng, address_line);
+  const navHref = buildDirectionsLink(pin_lat, pin_lng, address_line);
   const payLabel: Record<PaymentStatus, string> = {
     pending: t.pay_pending,
     submitted: t.pay_submitted,
@@ -90,15 +91,26 @@ export default async function RiderDeliveryDetailPage({
           <Icon name="map-pin" className="mt-0.5 h-5 w-5 shrink-0 text-brand" aria-hidden />
           <span>{address_line ?? t.address}</span>
         </p>
-        <a
-          href={mapsHref}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-secondary inline-flex w-full items-center justify-center gap-2"
-        >
-          <Icon name="navigation" className="h-4 w-4" aria-hidden />
-          {t.open_map}
-        </a>
+        <div className="flex gap-2">
+          <a
+            href={navHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-dark inline-flex flex-1 items-center justify-center gap-2"
+          >
+            <Icon name="navigation" className="h-4 w-4" aria-hidden />
+            {t.navigate}
+          </a>
+          <a
+            href={mapsHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-secondary inline-flex flex-1 items-center justify-center gap-2"
+          >
+            <Icon name="map-pin" className="h-4 w-4" aria-hidden />
+            {t.open_map}
+          </a>
+        </div>
         {customer_phone ? (
           <div className="flex gap-2">
             <Link
