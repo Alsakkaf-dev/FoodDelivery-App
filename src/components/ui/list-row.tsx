@@ -39,7 +39,7 @@ export function ListRow({
         <span className="block truncate text-title font-semibold text-ink">{title}</span>
         {subtitle ? <span className="block truncate text-caption text-muted">{subtitle}</span> : null}
       </span>
-      {value != null ? <span className="shrink-0 text-sm font-medium text-muted">{value}</span> : null}
+      {value !== undefined && value !== null ? <span className="shrink-0 text-sm font-medium text-muted">{value}</span> : null}
       {trailing}
       {selectable ? (
         <span
