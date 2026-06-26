@@ -147,3 +147,25 @@ export function ReviewCard({
 }
 
 /** PromoCard — warm amber→orange gradient banner (offers/coupons). */
+export function PromoCard({
+  title, body, action, media, className,
+}: {
+  title: ReactNode;
+  body?: ReactNode;
+  action?: ReactNode;
+  media?: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cx('relative overflow-hidden rounded-xl bg-promo-gradient p-5 text-onColor shadow-card', className)}>
+      <div className="relative z-[1] flex items-center gap-4">
+        <div className="min-w-0 flex-1">
+          <p className="text-h2 font-extrabold">{title}</p>
+          {body ? <p className="mt-1 text-sm text-onColor/90">{body}</p> : null}
+          {action ? <div className="mt-3">{action}</div> : null}
+        </div>
+        {media ? <div className="shrink-0">{media}</div> : null}
+      </div>
+    </div>
+  );
+}
