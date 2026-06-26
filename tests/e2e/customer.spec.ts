@@ -24,9 +24,9 @@ test.describe('Customer journey — order (delivery, COD)', () => {
     test.skip(!(await add.count()), 'item not available to add');
     await add.first().click();
 
-    // View cart → checkout CTA exists.
+    // View cart → the place-order CTA exists (R-6: cart CTA is now `place_order`, #10).
     await page.goto('/cart');
-    await expect(page.getByText(new RegExp(en.checkout, 'i')).first()).toBeVisible();
+    await expect(page.getByText(new RegExp(en.place_order, 'i')).first()).toBeVisible();
   });
 
   test('an empty cart shows the empty state', async ({ page }) => {
