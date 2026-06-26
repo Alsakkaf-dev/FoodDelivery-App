@@ -26,6 +26,8 @@ export const ERROR_STATUS: Record<string, number> = {
   item_unavailable: 422,
   empty_cart: 422,
   rate_limited: 429,
+  maps_unconfigured: 503,
+  maps_upstream: 502,
   internal: 500,
 };
 

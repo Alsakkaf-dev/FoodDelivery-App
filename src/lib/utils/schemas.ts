@@ -51,6 +51,19 @@ export const menuUpsertSchema = z.object({
   sort_order: z.number().int().default(0),
 });
 
+// Google Maps place-search input (server route + domain). `q` is the user's
+// query; lat/lng/zoom are the optional search origin (browser geolocation, else
+// the Johor default applied server-side). Coordinates are range-checked here so
+// a malformed querystring is rejected before it reaches SerpApi.
+export const placeSearchSchema = z.object({
+  q: z.string().trim().min(3, 'query_too_short').max(120),
+  lat: z.coerce.number().min(-90).max(90).optional(),
+  lng: z.coerce.number().min(-180).max(180).optional(),
+  zoom: z.coerce.number().int().min(3).max(21).optional(),
+});
+
+export type PlaceSearchInput = z.infer<typeof placeSearchSchema>;
+
 export const addressSchema = z.object({
   zone_id: z.string().uuid(),
   label: z.string().max(40).nullable().optional(),
