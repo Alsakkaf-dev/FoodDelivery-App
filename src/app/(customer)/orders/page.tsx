@@ -53,3 +53,38 @@ export default async function OrdersPage({ searchParams }: { searchParams: { tab
   );
 }
 
+function OrdersList({
+  orders,
+  tab,
+  locale,
+  t,
+}: {
+  orders: Order[];
+  tab: 'ongoing' | 'history';
+  locale: 'en' | 'ar';
+  t: ReturnType<typeof getI18n>['t'];
+}) {
+  const list = orders.filter((o) =>
+    tab === 'ongoing' ? ONGOING.includes(o.status) : !ONGOING.includes(o.status),
+  );
+
+  if (list.length === 0) {
+    return (
+      <EmptyState
+        title={tab === 'ongoing' ? t.no_ongoing_orders : t.no_past_orders}
+        hint={tab === 'ongoing' ? t.no_ongoing_orders_hint : t.no_past_orders_hint}
+        icon="🧾"
+      />
+    );
+  }
+
+  return (
+    <ul className="space-y-4">
+      {list.map((o) => (
+        <li key={o.id}>
+          <OrderCard order={o} variant={tab} locale={locale} t={t} />
+        </li>
+      ))}
+    </ul>
+  );
+}
