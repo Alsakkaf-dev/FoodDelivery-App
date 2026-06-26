@@ -7,3 +7,65 @@ import { EmptyState } from '@/components/ui/states';
 // picking one sets the checkout draft `zone_id`. Radio rows, ≥44px tap targets,
 // RTL-safe via logical `text-start`. Bilingual inline (matches the other customer
 // screens). Imports ONLY ui/states so checkout-gate.test.ts runs standalone.
+export function ZonePicker({
+  zones,
+  value,
+  onChange,
+  lang,
+}: {
+  zones: Zone[];
+  value: string | null;
+  onChange: (zoneId: string) => void;
+  lang: 'en' | 'ar';
+}) {
+  const ar = lang === 'ar';
+
+  // Empty state — delivery is effectively closed when no zone is active.
+  if (zones.length === 0) {
+    return (
+      <EmptyState
+        title={ar ? 'التوصيل مغلق حالياً' : 'Delivery is closed right now'}
+        hint={
+          ar
+            ? 'لا توجد مناطق توصيل مفعّلة. اختر الاستلام من المحل بدلاً من ذلك.'
+            : 'No delivery zones are active. Choose Walk-in / Pickup instead.'
+        }
+      />
+    );
+  }
+
+  return (
+    <fieldset>
+      <legend className="mb-2 text-title font-bold text-ink">
+        {ar ? 'اختر منطقة التوصيل' : 'Choose delivery zone'}
+      </legend>
+      <div className="flex flex-col gap-2" role="radiogroup" aria-label={ar ? 'منطقة التوصيل' : 'Delivery zone'}>
+        {zones.map((z) => {
+          const selected = z.id === value;
+          return (
+            <button
+              key={z.id}
+              type="button"
+              role="radio"
+              aria-checked={selected}
+              onClick={() => onChange(z.id)}
+              className={`flex min-h-tap w-full items-center gap-3 rounded-md border px-3 py-2 text-start transition ${
+                selected ? 'border-brand bg-brand-tint' : 'border-line bg-surface hover:bg-surface-alt'
+              }`}
+            >
+              <span
+                className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 ${
+                  selected ? 'border-brand' : 'border-line'
+                }`}
+                aria-hidden
+              >
+                {selected ? <span className="h-2.5 w-2.5 rounded-full bg-brand" /> : null}
+              </span>
+              <span className="font-medium text-ink">{z.name}</span>
+            </button>
+          );
+        })}
+      </div>
+    </fieldset>
+  );
+}
