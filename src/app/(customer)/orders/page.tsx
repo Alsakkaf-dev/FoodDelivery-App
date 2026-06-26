@@ -1,10 +1,19 @@
-import { redirect } from 'next/navigation';
+import Link from 'next/link';
+import { listMyOrders } from '@/lib/domain/orders';
+import { getI18n } from '@/lib/i18n/server';
+import type { Order, OrderStatus } from '@/types/db';
+import { EmptyState, ErrorState } from '@/components/ui/states';
+import { Icon } from '@/components/icons';
+import { OrdersTabs } from '@/components/customer/order-list/orders-tabs';
+import { OrderCard } from '@/components/customer/order-list/order-card';
 
-// The customer bottom-nav "Orders" tab points at /orders, and an order's live
-// tracking lives at /orders/[id] — but there was no /orders index, so the tab
-// 404'd. Until the order-list route is consolidated here, send customers to their
-// existing order list (/history). See BUILD/PROGRESS.md Notes log for the planned
-// consolidation (canonical /orders list + a dedicated Account screen).
-export default function OrdersIndexPage() {
-  redirect('/history');
-}
+// SCR-C-07 — My Orders (Engineer #13). Splits the former redirect-only /orders into a
+// real surface: Ongoing / History underline tabs over the same listMyOrders() result.
+// Server Component, URL-driven (?tab=ongoing default | history) so it stays SSR and
+// shareable. Each row links to live tracking /orders/[id]. The (customer) group owns
+// the shell `main` + the frozen bottom nav; /history redirects here (ruling R-4).
+export const dynamic = 'force-dynamic';
+
+// Ongoing vs History derived from the frozen OrderStatus union (no domain change).
+const ONGOING: OrderStatus[] = ['new', 'confirmed', 'preparing', 'ready', 'out_for_delivery'];
+
