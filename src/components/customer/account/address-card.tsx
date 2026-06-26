@@ -24,3 +24,35 @@ export function addressKind(label: string | null): AddressKind {
   return 'other';
 }
 
+export function AddressCard({
+  kind,
+  label,
+  line1,
+  editLabel,
+  deleteLabel,
+  onEdit,
+  onDelete,
+}: {
+  kind: AddressKind;
+  label: string;
+  line1: string;
+  editLabel: string;
+  deleteLabel: string;
+  onEdit: () => void;
+  onDelete: () => void;
+}) {
+  const style = KIND_STYLE[kind];
+  return (
+    <div className="flex items-start gap-3 rounded-2xl bg-surface-alt p-4">
+      <IconChip icon={style.icon} tone={style.tone} />
+      <div className="min-w-0 flex-1">
+        <p className="text-title font-bold uppercase text-ink">{label}</p>
+        <p className="mt-1 text-body text-muted">{line1}</p>
+      </div>
+      <div className="flex shrink-0 items-center gap-1">
+        <IconButton variant="nav" icon="edit" aria-label={editLabel} onClick={onEdit} className="text-brand" />
+        <IconButton variant="nav" icon="trash" aria-label={deleteLabel} onClick={onDelete} className="text-danger" />
+      </div>
+    </div>
+  );
+}
