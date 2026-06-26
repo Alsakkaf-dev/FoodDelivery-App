@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { createAdminClient } from '@/lib/supabase/admin';
 import { otpVerifySchema } from '@/lib/utils/schemas';
-import { CONSENT_VERSION } from '@/lib/utils/consent';
+import { ensureProfile } from '@/lib/auth/provision';
 
 // POST /api/auth/otp/verify — verify the OTP, create the session, and provision a
 // customer profile with PDPA consent on first sign-in (FR-C-01, US-007).
@@ -27,13 +26,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: { code: 'unauthorized', message: error?.message ?? 'Invalid code' } }, { status: 401 });
   }
   // Provision profile row (role defaults to customer; operator/rider set by admin).
-  const admin = createAdminClient();
-  await admin
-    .from('users')
-    .upsert(
-      { id: data.user.id, phone: parsed.data.phone, consent_at: new Date().toISOString(), consent_version: CONSENT_VERSION },
-      { onConflict: 'id', ignoreDuplicates: false },
-    );
-  const { data: profile } = await admin.from('users').select('role, lang').eq('id', data.user.id).single();
-  return NextResponse.json({ ok: true, data: { role: profile?.role ?? 'customer', lang: profile?.lang ?? 'en' } }, { status: 201 });
+  // Tolerant: the session is valid even if provisioning hiccups.
+  const prof = await ensureProfile({ id: data.user.id, phone: parsed.data.phone, recordConsent: true }).catch(
+    () => ({ role: 'customer', lang: 'en' }),
+  );
+  return NextResponse.json({ ok: true, data: { role: prof.role, lang: prof.lang } }, { status: 201 });
 }
