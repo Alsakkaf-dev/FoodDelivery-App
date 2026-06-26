@@ -5,6 +5,7 @@ import { listMyOrders } from '@/lib/domain/orders';
 import { PageHeader } from '@/components/customer/account/page-header';
 import { ProfileHero, type HeroStat } from '@/components/customer/account/profile-hero';
 import { SettingsList, type SettingsItem } from '@/components/customer/account/settings-list';
+import { LogoutButton } from '@/components/customer/account/logout-button';
 
 // SCR-C — Account hub (My Account). Identity hero (real name/phone + real
 // order/address counts — no fabricated wallet, see TEAM_STATUS.md) + a settings
@@ -30,7 +31,6 @@ export default async function AccountPage() {
     { key: 'addresses', icon: 'home-address', tone: 'info.blue', title: t.my_addresses, href: '/account/addresses' },
     { key: 'notifications', icon: 'bell', tone: 'info.purple', title: t.notifications, href: '/notifications' },
     { key: 'messages', icon: 'message', tone: 'success', title: t.messages, href: '/messages' },
-    { key: 'logout', icon: 'arrow-left', tone: 'danger', title: t.logout, href: '/login' },
   ];
 
   return (
@@ -38,6 +38,7 @@ export default async function AccountPage() {
       <PageHeader title={t.my_account} backLabel={t.back} />
       <ProfileHero name={profile?.name || t.app_name} phone={profile?.phone || ''} stats={stats} />
       <SettingsList items={items} />
+      <LogoutButton t={t} />
     </div>
   );
 }
