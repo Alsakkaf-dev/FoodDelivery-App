@@ -1,4 +1,5 @@
 'use client';
+import { useRouter } from 'next/navigation';
 import { Stepper } from '@/components/ui/controls';
 import { PrimaryButton } from '@/components/ui';
 import { useCart } from '@/lib/cart/store';
@@ -24,6 +25,7 @@ export function AddToCart({
   t: Dictionary;
   className?: string;
 }) {
+  const router = useRouter();
   const { lines, hydrated, add, increment, decrement } = useCart();
   const qty = lines.find((l) => l.menu_item_id === item.id)?.qty ?? 0;
 
@@ -43,7 +45,7 @@ export function AddToCart({
         max={50}
         onChange={(v) => (v > qty ? increment(item.id) : decrement(item.id))}
       />
-      <PrimaryButton href="/cart">{t.view_cart}</PrimaryButton>
+      <PrimaryButton onClick={() => router.push('/cart')}>{t.view_cart}</PrimaryButton>
     </div>
   );
 }
