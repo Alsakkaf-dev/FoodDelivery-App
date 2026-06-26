@@ -43,3 +43,35 @@ export const CATEGORIES: CategoryDef[] = [
   { id: 'drinks', key: 'cat_drinks', match: /drink|juice|cola|soda|water|عصير|مشروب|ماء/i },
 ];
 
+export function matchesCategory(item: MenuItem, id: string): boolean {
+  if (id === 'all') return true;
+  const def = CATEGORIES.find((c) => c.id === id);
+  if (!def?.match) return true;
+  return def.match.test(item.name_en) || def.match.test(item.name_ar);
+}
+
+// Map $/$$/$$$ to even thirds of the live menu's price range.
+function priceBounds(items: MenuItem[]): [number, number] {
+  const prices = items.map((i) => i.price).filter((p) => p > 0);
+  if (prices.length === 0) return [0, 0];
+  return [Math.min(...prices), Math.max(...prices)];
+}
+
+export function matchesPricing(item: MenuItem, tier: PriceTier, items: MenuItem[]): boolean {
+  const [min, max] = priceBounds(items);
+  if (max <= min) return true;
+  const third = (max - min) / 3;
+  const lo = min + third * (tier - 1);
+  const hi = tier === 3 ? Infinity : min + third * tier;
+  return item.price >= lo && item.price <= hi;
+}
+
+// Only `pricing` narrows the real menu; the other dimensions are intentional no-ops.
+export function applyFilters(items: MenuItem[], f: Filters): MenuItem[] {
+  if (!f.pricing) return items;
+  return items.filter((i) => matchesPricing(i, f.pricing as PriceTier, items));
+}
+
+export function activeFilterCount(f: Filters): number {
+  return f.offers.length + (f.deliverTime ? 1 : 0) + (f.pricing ? 1 : 0) + (f.rating > 0 ? 1 : 0);
+}
