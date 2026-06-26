@@ -32,18 +32,15 @@ export function SplashLogo() {
     <main className="relative mx-auto flex min-h-dvh max-w-md items-center justify-center overflow-hidden bg-surface">
       <FoodDoodles
         aria-hidden
-        className="pointer-events-none absolute inset-0 h-full w-full transition-opacity duration-700"
-        style={{ opacity: 0.08 }}
+        className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.08] transition-opacity duration-700"
       />
       <Sunburst
         aria-hidden
-        className="pointer-events-none absolute -top-10 start-1/2 h-72 w-72 -translate-x-1/2 transition-all duration-700"
-        style={{ opacity: phase >= 2 ? 1 : 0, transform: `translateX(-50%) scale(${phase >= 2 ? 1 : 0.8})` }}
+        className={`pointer-events-none absolute -top-10 start-1/2 h-72 w-72 -translate-x-1/2 transition-all duration-700 ${phase >= 2 ? 'scale-100 opacity-100' : 'scale-[0.8] opacity-0'}`}
       />
       <Logo
         aria-label="Fahman Orders"
-        className="relative h-16 transition-all duration-500"
-        style={{ opacity: phase >= 1 ? 1 : 0, transform: `scale(${phase >= 1 ? 1 : 0.92})` }}
+        className={`relative h-16 transition-all duration-500 ${phase >= 1 ? 'scale-100 opacity-100' : 'scale-[0.92] opacity-0'}`}
       />
     </main>
   );
