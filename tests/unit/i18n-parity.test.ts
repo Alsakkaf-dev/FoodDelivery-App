@@ -51,3 +51,30 @@ describe('i18n parity: en.json <-> ar.json key sets are identical', () => {
   });
 });
 
+describe('LangSwitch: accessible >=44px switcher with current-vs-target labels', () => {
+  const render = (current: 'en' | 'ar') => renderToStaticMarkup(createElement(LangSwitch, { current }));
+
+  it('names both the current and the target language (en -> العربية, ar -> English)', () => {
+    const fromEn = render('en');
+    expect(fromEn).toContain('English'); // current
+    expect(fromEn).toContain('العربية'); // target
+    const fromAr = render('ar');
+    expect(fromAr).toContain('العربية'); // current
+    expect(fromAr).toContain('English'); // target
+  });
+
+  it('carries the 44px tap-target utilities (EP-13)', () => {
+    expect(render('en')).toContain('min-h-tap');
+    expect(render('en')).toContain('min-w-tap');
+  });
+
+  it('is a real button with a stable switch-language accessible label', () => {
+    const out = render('en');
+    expect(out).toContain('type="button"');
+    expect(out.toLowerCase()).toContain('switch language');
+  });
+
+  it('exposes the shared cookie mechanism (single source of truth)', () => {
+    expect(typeof setLocaleCookie).toBe('function');
+  });
+});
