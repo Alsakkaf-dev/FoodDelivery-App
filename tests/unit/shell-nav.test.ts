@@ -48,3 +48,49 @@ import { AUTH_DISABLED } from '@/lib/auth/dev-bypass';
 
 const redirectMock = vi.mocked(redirect);
 
+beforeEach(() => {
+  h.state.locale = '';
+  h.state.user = null;
+  h.state.role = null;
+  redirectMock.mockClear();
+});
+
+describe('shell nav: per-role bottom-nav config (CMP-U-14)', () => {
+  it('customer nav lists Home · Menu · Orders · History with EN labels', () => {
+    const items = customerNav(getDictionary('en'));
+    expect(items.map((i) => i.href)).toEqual(['/', '/menu', '/orders', '/history']);
+    expect(items.map((i) => i.label)).toEqual(['Home', 'Menu', 'Orders', 'Order history']);
+    expect(items.length).toBeLessThanOrEqual(4);
+  });
+
+  it('customer nav labels mirror in Arabic', () => {
+    const labels = customerNav(getDictionary('ar')).map((i) => i.label);
+    expect(labels).toEqual(['الرئيسية', 'القائمة', 'الطلبات', 'سجل الطلبات']);
+  });
+
+  it('operator nav lists Board · Setup · Menu · End of day with EN labels', () => {
+    const items = operatorNav(getDictionary('en'));
+    expect(items.map((i) => i.href)).toEqual([
+      '/operator/board',
+      '/operator/setup',
+      '/operator/menu',
+      '/operator/end-of-day',
+    ]);
+    expect(items.map((i) => i.label)).toEqual(['Order board', 'Daily setup', 'Menu manager', 'End of day']);
+    expect(items.length).toBeLessThanOrEqual(4);
+  });
+
+  it('operator nav labels mirror in Arabic', () => {
+    const labels = operatorNav(getDictionary('ar')).map((i) => i.label);
+    expect(labels).toEqual(['لوحة الطلبات', 'إعداد اليوم', 'إدارة القائمة', 'نهاية اليوم']);
+  });
+
+  it('each role nav is role-appropriate — disjoint, operator-only routes are scoped (US-002)', () => {
+    const cust = customerNav(getDictionary('en')).map((i) => i.href);
+    const op = operatorNav(getDictionary('en')).map((i) => i.href);
+    expect(op.every((href) => href.startsWith('/operator'))).toBe(true);
+    expect(cust.some((href) => href.startsWith('/operator'))).toBe(false);
+    expect(cust.filter((href) => op.includes(href))).toHaveLength(0);
+  });
+});
+
