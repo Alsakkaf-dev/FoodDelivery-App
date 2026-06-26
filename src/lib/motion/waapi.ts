@@ -119,3 +119,14 @@ export function flyToCart(
     { once: true },
   );
 }
+
+function defaultGhost(): HTMLElement {
+  const dot = document.createElement('span');
+  dot.style.width = '20px';
+  dot.style.height = '20px';
+  dot.style.borderRadius = '9999px';
+  // Themeable: uses the brand CSS var when #01 exposes one, else the spec orange as a fallback.
+  dot.style.background = 'var(--brand, #F5811F)';
+  dot.style.boxShadow = '0 4px 12px rgba(245,129,31,0.25)';
+  return dot;
+}
