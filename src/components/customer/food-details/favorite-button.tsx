@@ -1,7 +1,6 @@
 'use client';
 import { useState } from 'react';
 import { FloatingIconButton } from '@/components/ui';
-import { Icon } from '@/components/icons';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 
 // Favourite heart — a LOCAL, non-persisted visual affordance. The data model has no
@@ -13,9 +12,9 @@ export function FavoriteButton({ t }: { t: Dictionary }) {
     <FloatingIconButton
       aria-label={t.favorite}
       aria-pressed={fav}
+      icon={fav ? 'heart-filled' : 'heart'}
+      active={fav}
       onClick={() => setFav((v) => !v)}
-    >
-      <Icon name={fav ? 'heart-filled' : 'heart'} className={fav ? 'text-brand' : 'text-ink'} />
-    </FloatingIconButton>
+    />
   );
 }
