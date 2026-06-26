@@ -361,3 +361,63 @@ export function PulseRings({
 
 /* ───────────────────────── (9) Splash sequence ─────────────────────── */
 /** Orchestrated splash: doodle fade → logo reveal → sunburst sweep → `onComplete`. */
+export function SplashSequence({
+  doodle,
+  logo,
+  sunburst,
+  onComplete,
+  className,
+}: {
+  doodle?: ReactNode;
+  logo?: ReactNode;
+  sunburst?: ReactNode;
+  onComplete?: () => void;
+  className?: string;
+}) {
+  const reduced = useReducedMotion();
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
+  const doodleRef = useRef<HTMLDivElement>(null);
+  const logoRef = useRef<HTMLDivElement>(null);
+  const sunburstRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (reduced) {
+      const t = window.setTimeout(() => onCompleteRef.current?.(), 600);
+      return () => window.clearTimeout(t);
+    }
+    animateVariant(doodleRef.current, {
+      keyframes: [{ opacity: 0 }, { opacity: 1 }],
+      options: { duration: 400, easing: EASE.out, fill: 'both' },
+    });
+    animateVariant(logoRef.current, {
+      keyframes: [
+        { opacity: 0, transform: 'scale(0.9)' },
+        { opacity: 1, transform: 'scale(1)' },
+      ],
+      options: { duration: 500, delay: 300, easing: EASE.spring, fill: 'both' },
+    });
+    animateVariant(sunburstRef.current, {
+      keyframes: [
+        { opacity: 0, transform: 'rotate(-20deg) scale(0.8)' },
+        { opacity: 1, transform: 'rotate(0deg) scale(1)' },
+      ],
+      options: { duration: 700, delay: 700, easing: EASE.out, fill: 'both' },
+    });
+    const t = window.setTimeout(() => onCompleteRef.current?.(), DURATION.splash);
+    return () => window.clearTimeout(t);
+  }, [reduced]);
+  const initial = reduced ? 1 : 0;
+  return (
+    <div className={cx('relative h-full w-full', className)}>
+      <div ref={sunburstRef} className="absolute inset-0 grid place-items-center" style={{ opacity: initial }} aria-hidden>
+        {sunburst}
+      </div>
+      <div ref={doodleRef} className="absolute inset-0" style={{ opacity: initial }} aria-hidden>
+        {doodle}
+      </div>
+      <div ref={logoRef} className="relative grid h-full place-items-center" style={{ opacity: initial }}>
+        {logo}
+      </div>
+    </div>
+  );
+}
