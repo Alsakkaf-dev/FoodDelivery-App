@@ -91,3 +91,5 @@ export function FilledInput({
     </div>
   );
 }
+
+/** OtpInput — N rounded cells bound to a single string value + a Resend countdown. */
