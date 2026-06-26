@@ -68,3 +68,48 @@ export const GhostOnColor = makeButton('ghostOnColor', 'GhostOnColor');
  * TextAction — uppercase orange/green link action (e.g. "EDIT", "SIGN UP", "DONE").
  * Renders an <a> when `href` is set, else a <button>. Trailing icon auto-mirrors (RTL).
  */
+export function TextAction({
+  tone = 'brand',
+  underline,
+  trailingIcon,
+  href,
+  className,
+  children,
+  ...rest
+}: {
+  tone?: 'brand' | 'success';
+  underline?: boolean;
+  trailingIcon?: IconName;
+  href?: string;
+  className?: string;
+  children: ReactNode;
+} & ButtonHTMLAttributes<HTMLButtonElement>) {
+  const cls = cx(
+    'inline-flex min-h-tap items-center gap-1 text-link font-bold uppercase tracking-wide',
+    tone === 'success' ? 'text-success' : 'text-brand',
+    underline && 'underline underline-offset-2',
+    className,
+  );
+  const inner = (
+    <>
+      {children}
+      {trailingIcon ? <Icon name={trailingIcon} className="h-4 w-4" aria-hidden /> : null}
+    </>
+  );
+  if (href) {
+    return <a href={href} className={cls}>{inner}</a>;
+  }
+  return <button type="button" className={cls} {...rest}>{inner}</button>;
+}
+
+type IconButtonVariant = 'nav' | 'dark' | 'add';
+const ICON_BTN: Record<IconButtonVariant, string> = {
+  nav: 'rounded-md bg-surface-alt text-ink hover:bg-surface-input',
+  dark: 'rounded-full bg-dark-cta text-onColor hover:opacity-90',
+  add: 'rounded-full bg-brand text-onColor shadow-floating hover:bg-brand-deep',
+};
+
+/**
+ * IconButton — gray rounded-square (nav) / dark circle (cart) / orange circle ("+").
+ * `aria-label` is required (icon-only). Directional icons auto-mirror under RTL.
+ */
