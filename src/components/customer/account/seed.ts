@@ -48,3 +48,49 @@ export interface MessageVM {
   unread: number; // 0 = read
   presence: 'online' | 'offline';
 }
+
+export interface ChatMessageVM {
+  id: string;
+  side: 'in' | 'out';
+  text: Localized;
+  time: string;
+  receipt?: 'sent' | 'delivered' | 'read';
+}
+
+export const NOTIFICATIONS_SEED: NotificationVM[] = [
+  { id: 'n1', person: 'Tanbir Ahmed', action: { en: 'placed a new order', ar: 'أجرى طلباً جديداً' }, minsAgo: 20 },
+  { id: 'n2', person: 'Salim Smith', action: { en: 'left a 5 star review', ar: 'ترك تقييماً بخمس نجوم' }, minsAgo: 32 },
+  { id: 'n3', person: 'Royal Bengol', action: { en: 'agreed to cancel', ar: 'وافق على الإلغاء' }, minsAgo: 96 },
+  { id: 'n4', person: 'Pabel Vuiya', action: { en: 'placed a new order', ar: 'أجرى طلباً جديداً' }, minsAgo: 140 },
+];
+
+export const MESSAGES_SEED: MessageVM[] = [
+  { id: 'm1', threadId: 't1', person: 'Royal Parvej', preview: { en: 'Sounds awesome!', ar: 'يبدو رائعاً!' }, at: '19:37', unread: 1, presence: 'online' },
+  { id: 'm2', threadId: 't2', person: 'Cameron Williamson', preview: { en: 'Ok, just hurry up a little bit…', ar: 'حسناً، فقط أسرع قليلاً…' }, at: '19:37', unread: 2, presence: 'online' },
+  { id: 'm3', threadId: 't3', person: 'Ralph Edwards', preview: { en: 'Thanks dude.', ar: 'شكراً يا صديقي.' }, at: '19:37', unread: 0, presence: 'online' },
+  { id: 'm4', threadId: 't4', person: 'Cody Fisher', preview: { en: 'How is it going…?', ar: 'كيف تسير الأمور…؟' }, at: '19:37', unread: 0, presence: 'online' },
+  { id: 'm5', threadId: 't5', person: 'Eleanor Pena', preview: { en: 'Thanks for the awesome food man…!', ar: 'شكراً على الطعام الرائع يا رجل…!' }, at: '19:37', unread: 0, presence: 'offline' },
+];
+
+/** Demo conversation for any thread id (no chat backend yet). */
+export function chatSeed(threadId: string): ChatMessageVM[] {
+  return [
+    { id: `${threadId}-1`, side: 'in', text: { en: 'Hi! I am on the way with your order.', ar: 'مرحباً! أنا في الطريق مع طلبك.' }, time: '19:31' },
+    { id: `${threadId}-2`, side: 'out', text: { en: 'Great, thank you!', ar: 'رائع، شكراً لك!' }, time: '19:32', receipt: 'read' },
+    { id: `${threadId}-3`, side: 'in', text: { en: 'Could you share the gate number?', ar: 'هل يمكنك إرسال رقم البوابة؟' }, time: '19:35' },
+    { id: `${threadId}-4`, side: 'out', text: { en: 'Sure — gate 3, near the lobby.', ar: 'بالتأكيد — البوابة ٣، بجانب الردهة.' }, time: '19:36', receipt: 'delivered' },
+  ];
+}
+
+export function findConversation(threadId: string): MessageVM | undefined {
+  return MESSAGES_SEED.find((m) => m.threadId === threadId);
+}
+
+export const TOTAL_UNREAD = MESSAGES_SEED.filter((m) => m.unread > 0).length;
+
+// Profile fields the design shows but the frozen `users` table has no column for
+// (email/bio/avatar). Preview-only placeholders so Personal Info / Edit Profile
+// render complete; name + phone remain the REAL getProfile() values. Drop these
+// once users.email/bio land (consolidated backend request in TEAM_STATUS.md).
+export const DEMO_EMAIL = 'hello@example.com';
+export const DEMO_BIO: Localized = { en: 'I love fast food', ar: 'أحب الطعام السريع' };
