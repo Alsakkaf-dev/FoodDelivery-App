@@ -11,10 +11,18 @@ export const metadata: Metadata = {
   description: 'Real-time shawarma ordering & home delivery — Johor, Malaysia.',
   manifest: '/manifest.webmanifest',
   appleWebApp: { capable: true, title: 'Fahman Orders', statusBarStyle: 'default' },
+  icons: {
+    icon: [
+      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [{ url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' }],
+  },
 };
 
 export const viewport: Viewport = {
-  themeColor: '#C0451F',
+  // Synced with manifest.webmanifest theme_color (#F5811F brand orange, value owned by Plan 01).
+  themeColor: '#F5811F',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
