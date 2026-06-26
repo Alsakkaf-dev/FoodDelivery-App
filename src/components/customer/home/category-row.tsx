@@ -21,3 +21,46 @@ export type HomeCategory = {
   active?: boolean;
 };
 
+export function CategoryRow({
+  categories,
+  variant = 'chip',
+}: {
+  categories: HomeCategory[];
+  variant?: 'chip' | 'photo';
+}) {
+  const router = useRouter();
+  return (
+    <div
+      role="list"
+      className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    >
+      {categories.map((c) =>
+        variant === 'photo' ? (
+          <CategoryPhotoCard
+            key={c.key}
+            href={c.href}
+            media={c.media}
+            name={
+              c.subtitle ? (
+                <span className="flex flex-col">
+                  <span>{c.label}</span>
+                  <span className="text-caption text-muted">{c.subtitle}</span>
+                </span>
+              ) : (
+                c.label
+              )
+            }
+          />
+        ) : (
+          <CategoryChip
+            key={c.key}
+            icon={c.icon ?? 'utensils'}
+            label={c.label}
+            active={c.active}
+            onClick={() => router.push(c.href)}
+          />
+        ),
+      )}
+    </div>
+  );
+}
