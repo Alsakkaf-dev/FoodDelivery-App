@@ -48,3 +48,12 @@ Columns: **Vis** visual-vs-spec · **Tok** tokens+primitives reused (no hardcode
 | `/rider` | #17 (shell #04) | yes | Running Orders | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | `/rider/[id]` | #17 | yes | Delivery Man Call / Message | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
+## Foundation (cross-cutting — verified via primitive/token/nav tests, not a screen)
+| Area | Owner | Gate |
+|---|---|---|
+| Tokens (`tailwind.config.ts` / `globals.css`) | #01 | `a11y-contrast.test.ts` + visual token audit |
+| Primitives (`ui/*`) | #02 | `ui-primitives.test.ts` (tap targets, AR/EN, roles) |
+| Dictionary parity (`messages/*.json`) | #03 | `i18n-parity.test.ts` + `node scripts/i18n-parity.mjs` |
+| App shell / BottomNav / CartBadge | #04 | `shell-nav.test.ts` + nav RTL/badge checks |
+| Icons / illustrations / FoodImage | #05 | icon-name → SVG mapping, RTL mirror |
+| PWA / manifest / theme-color | #19 | `pwa.spec.ts` (manifest, SW, theme_color=#F5811F) |
