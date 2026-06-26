@@ -3,17 +3,18 @@ import { EmptyState } from '@/components/ui';
 import { PageHeader } from '@/components/customer/account/page-header';
 import { TabHeader } from '@/components/customer/account/tab-header';
 import { NotificationRow } from '@/components/customer/account/notification-row';
-import { NOTIFICATIONS_SEED, TOTAL_UNREAD, localize, relTime } from '@/components/customer/account/seed';
+import { TOTAL_UNREAD, relTime } from '@/components/customer/account/seed';
+import { listMyNotifications } from '@/lib/domain/notifications';
 
-// SCR-C — Notifications (tab 1 of the Notifications/Messages feed). Demo content
-// for now (the notifications table is a dispatch/delivery log, not a customer
-// feed — backend request in TEAM_STATUS.md); rows are backend-shaped so a live
-// read drops in later. The (customer) layout owns the shell frame + bottom nav.
+// SCR-C — Notifications (tab 1 of the Notifications/Messages feed). Real per-user
+// read (RLS-scoped to the signed-in user); each row is an order-status event
+// rendered to a short localized label. Messages stays demo (no messages backend).
 export const dynamic = 'force-dynamic';
 
 export default async function NotificationsPage() {
   const { locale, t } = getI18n();
-  const items = NOTIFICATIONS_SEED;
+  const res = await listMyNotifications(locale);
+  const items = res.ok ? res.data : [];
 
   return (
     <div className="space-y-4">
@@ -26,7 +27,7 @@ export default async function NotificationsPage() {
         <ul className="divide-y divide-line">
           {items.map((n) => (
             <li key={n.id}>
-              <NotificationRow person={n.person} action={localize(locale, n.action)} time={relTime(t, n.minsAgo)} />
+              <NotificationRow person={t.app_name} action={n.label} time={relTime(t, n.minsAgo)} />
             </li>
           ))}
         </ul>
