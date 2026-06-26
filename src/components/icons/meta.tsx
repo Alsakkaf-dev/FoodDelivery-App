@@ -95,3 +95,48 @@ export function MailIcon(props: IconProps) {
   );
 }
 
+export function PhoneIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M6.5 4h3l1.5 4-2 1.5a11 11 0 0 0 4.5 4.5l1.5-2 4 1.5v3a1.5 1.5 0 0 1-1.6 1.5C12 22 4 14 3.9 5.6A1.5 1.5 0 0 1 5.4 4Z" />
+    </IconBase>
+  );
+}
+
+export function MessageIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M5 4.5h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H10l-4 3.5V15.5H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2Z" />
+    </IconBase>
+  );
+}
+
+export function InfoIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M12 11v5" />
+      <path d="M12 7.8h.01" />
+    </IconBase>
+  );
+}
+
+export function AlertIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M12 4 21 19H3Z" />
+      <path d="M12 10v4" />
+      <path d="M12 16.6h.01" />
+    </IconBase>
+  );
+}
+
+export function CheckCircleIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="m8.5 12 2.5 2.5 4.5-5" />
+    </IconBase>
+  );
+}
+
