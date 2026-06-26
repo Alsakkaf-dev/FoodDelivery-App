@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+  <!-- Circular map illustration (design-spec §7 MapKit) — pastel basemap, white
+       roads, orange route, orange destination pin, red origin dot. -->
+  <defs>
+    <clipPath id="fahman-map-clip"><circle cx="100" cy="100" r="92"/></clipPath>
+  </defs>
+  <g clip-path="url(#fahman-map-clip)">
+    <rect width="200" height="200" fill="#EEF1F4"/>
+    <rect x="18" y="22" width="46" height="42" rx="6" fill="#E2E7EC"/>
+    <rect x="120" y="18" width="58" height="48" rx="6" fill="#E2E7EC"/>
+    <rect x="22" y="120" width="52" height="58" rx="6" fill="#E2E7EC"/>
+    <rect x="118" y="118" width="64" height="62" rx="6" fill="#E2E7EC"/>
+    <rect x="80" y="80" width="40" height="40" rx="8" fill="#D6EAD9"/>
+    <path d="M0 100h200M100 0v200" stroke="#FFFFFF" stroke-width="10"/>
+    <path d="M48 150Q70 100 100 100T150 52" stroke="#F5811F" stroke-width="5" fill="none" stroke-linecap="round"/>
+  </g>
+  <circle cx="100" cy="100" r="92" fill="none" stroke="#E6E7EB" stroke-width="3"/>
+  <path d="M150 36c-8 0-14 6-14 14 0 10 14 22 14 22s14-12 14-22c0-8-6-14-14-14Z" fill="#F5811F"/>
+  <circle cx="150" cy="50" r="5" fill="#FFFFFF"/>
+  <circle cx="48" cy="150" r="8" fill="#EF4444" stroke="#FFFFFF" stroke-width="2"/>
+</svg>
