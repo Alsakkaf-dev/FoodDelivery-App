@@ -156,3 +156,41 @@ export function useSheetTransition(open: boolean): { mounted: boolean; state: 'o
 }
 
 /** Sheet surface wrapper (slides up from the bottom). Compose your grabber/CTA inside. */
+export function SheetMotion({
+  state,
+  className,
+  children,
+}: {
+  state: 'open' | 'closed';
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <div data-state={state} className={cx(SHEET_SURFACE_CLASS, className)}>
+      {children}
+    </div>
+  );
+}
+
+/** Scrim/overlay that fades with the sheet. Absolutely positioned in the sheet's portal/container. */
+export function Scrim({
+  state,
+  onClick,
+  className,
+}: {
+  state: 'open' | 'closed';
+  onClick?: () => void;
+  className?: string;
+}) {
+  return (
+    <div
+      data-state={state}
+      onClick={onClick}
+      className={cx('absolute inset-0 bg-ink/40', SHEET_SCRIM_CLASS, className)}
+      aria-hidden
+    />
+  );
+}
+
+/* ─────────────────── (5) Promo / success + confetti ────────────────── */
+/** Scale-in entrance for promo/success cards. */
