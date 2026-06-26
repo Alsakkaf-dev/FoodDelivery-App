@@ -15,3 +15,40 @@ function timeGreeting(hour: number, t: Dictionary): string {
 // (links to the address book #14), trailing live cart (CartBadge, #04, import
 // only), and the greeting line. All copy from the dictionary; logical props mirror
 // the whole row under dir=rtl.
+export function HomeHeader({ t, hour }: { t: Dictionary; hour: number }) {
+  return (
+    <header className="space-y-4">
+      <div className="flex items-center justify-between gap-3">
+        {/* Navigational menu → /account (R-4). IconButton (#02) is button-only, so
+            this uses an accessible styled Link, not a forked button primitive. */}
+        <Link
+          href="/account"
+          aria-label={t.account}
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-surface-alt text-ink"
+        >
+          <Icon name="menu" aria-hidden />
+        </Link>
+
+        <Link
+          href="/account/addresses"
+          aria-label={t.home_deliver_to}
+          className="flex flex-1 flex-col items-center"
+        >
+          <span className="text-label uppercase text-brand">{t.home_deliver_to}</span>
+          <span className="flex items-center gap-1 text-title text-ink">
+            {t.home_location_default}
+            <Icon name="chevron-down" className="text-muted" aria-hidden />
+          </span>
+        </Link>
+
+        {/* Live cart (#04, import only). Inline (non-floating) for the header slot. */}
+        <CartBadge openLabel={t.cart_open} countLabel={t.cart_items_count} floating={false} />
+      </div>
+
+      <p className="text-h2 text-ink">
+        <span className="font-medium text-body">{t.greet_lead} </span>
+        <span className="font-bold">{timeGreeting(hour, t)}</span>
+      </p>
+    </header>
+  );
+}
