@@ -358,3 +358,6 @@ export function PulseRings({
     </div>
   );
 }
+
+/* ───────────────────────── (9) Splash sequence ─────────────────────── */
+/** Orchestrated splash: doodle fade → logo reveal → sunburst sweep → `onComplete`. */
