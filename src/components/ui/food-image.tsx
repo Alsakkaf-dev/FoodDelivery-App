@@ -38,3 +38,25 @@ export interface FoodImageProps {
   className?: string;
 }
 
+function Surface({
+  src,
+  alt,
+  shape,
+  fallbackIcon,
+  className,
+}: Required<Pick<FoodImageProps, 'alt' | 'shape' | 'fallbackIcon'>> &
+  Pick<FoodImageProps, 'src' | 'className'>) {
+  return (
+    <div
+      role="img"
+      aria-label={alt}
+      className={`flex items-center justify-center overflow-hidden bg-surface-alt bg-cover bg-center ${SHAPE_RADIUS[shape]} ${className ?? ''}`}
+      style={src ? { backgroundImage: `url(${src})` } : undefined}
+    >
+      {src ? null : (
+        <Icon name={fallbackIcon} size="45%" className="text-muted/40" />
+      )}
+    </div>
+  );
+}
+
