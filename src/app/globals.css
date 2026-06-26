@@ -1,13 +1,20 @@
+/* Brand fonts — loaded in-lane (Plan 01) so no layout.tsx change is needed.
+   Poppins = rounded geometric sans (--font-sans); Cairo = Arabic (--font-arabic).
+   Must precede the @tailwind directives. font-display: swap (set by Google CSS). */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Cairo:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-sans: Arial, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-arabic: 'Tahoma', 'Segoe UI', Arial, sans-serif;
-  --rust: #c0451f;
-  --slate: #1f2933;
-  --cream: #f4f1ee;
+  /* var names preserved; Arabic swap via html[dir='rtl'] (only place). */
+  --font-sans: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-arabic: 'Cairo', 'Tahoma', 'Segoe UI', Arial, sans-serif;
+  /* Legacy CSS vars recolored in place to the new orange / ink palette. */
+  --rust: #f5811f;
+  --slate: #1b1c2a;
+  --cream: #fffbf7;
 }
 
 html { -webkit-text-size-adjust: 100%; }
@@ -15,21 +22,13 @@ body {
   background: #ffffff;
   color: var(--slate);
   font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
   min-height: 100dvh;
 }
 html[dir='rtl'] body { font-family: var(--font-arabic); }
 
-/* Reusable component classes (mobile-first; tap targets >= 44px, D-15) */
-@layer components {
-  .btn {
-    @apply inline-flex min-h-tap items-center justify-center gap-2 rounded-control px-4 py-2 font-semibold transition active:scale-[.98] disabled:opacity-50;
-  }
-  .btn-primary { @apply btn bg-rust text-white hover:bg-rust-dark; }
-  .btn-secondary { @apply btn border border-line bg-white text-slate hover:bg-cream; }
-  .btn-open { @apply btn bg-open text-white; }
-  .btn-ghost { @apply btn bg-cream text-slate hover:bg-line; }
-  .card { @apply rounded-card border border-line bg-white p-4 shadow-sm; }
-  .field { @apply min-h-tap w-full rounded-control border border-line bg-white px-3 py-2 outline-none focus:border-rust; }
-  .badge { @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-semibold; }
-  .chip { @apply inline-flex min-h-tap items-center rounded-full border px-3 py-1 text-sm; }
-}
+/* Reusable component classes (mobile-first; tap targets >= 44px).
+   NEW orange/amber design system — re-skinned @apply bodies, class NAMES preserved
+   (FOUNDATION_CONTRACTS.md §1e). Every legacy consumer keeps working; do not rename.
+   Tokens only — no hardcoded hex/px-radii/shadow. */
