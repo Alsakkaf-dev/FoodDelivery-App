@@ -27,3 +27,28 @@ function write(list: string[]): void {
   }
 }
 
+export function useRecentSearches() {
+  const [recent, setRecent] = useState<string[]>([]);
+
+  // Hydrate after mount so SSR markup matches the first client render.
+  useEffect(() => {
+    setRecent(read());
+  }, []);
+
+  const push = useCallback((term: string) => {
+    const t = term.trim();
+    if (!t) return;
+    setRecent((prev) => {
+      const next = [t, ...prev.filter((x) => x.toLowerCase() !== t.toLowerCase())].slice(0, MAX);
+      write(next);
+      return next;
+    });
+  }, []);
+
+  const clear = useCallback(() => {
+    setRecent([]);
+    write([]);
+  }, []);
+
+  return { recent, push, clear };
+}
