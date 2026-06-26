@@ -39,3 +39,48 @@ import { requestErasure, eraseUserById } from '@/lib/domain/privacy';
 import { CONSENT_VERSION } from '@/lib/utils/consent';
 import LoginPage from '@/app/login/page';
 
+function makeAdmin() {
+  const rec = {
+    deletes: [] as string[],
+    updates: [] as { table: string; payload: Record<string, unknown> }[],
+    inserts: [] as { table: string; payload: Record<string, unknown> }[],
+  };
+  function from(table: string) {
+    const b = {
+      delete: () => {
+        rec.deletes.push(table);
+        return b;
+      },
+      update: (p: Record<string, unknown>) => {
+        rec.updates.push({ table, payload: p });
+        return b;
+      },
+      insert: (p: Record<string, unknown>) => {
+        rec.inserts.push({ table, payload: p });
+        return b;
+      },
+      eq: () => b,
+      then: (res: (v: unknown) => unknown, rej?: (e: unknown) => unknown) => Promise.resolve({ error: null }).then(res, rej),
+    };
+    return b;
+  }
+  return { client: { from }, rec };
+}
+
+beforeEach(() => {
+  requireRole.mockClear();
+  requireRole.mockResolvedValue({ id: 'u-1', role: 'customer' });
+});
+
+describe('requestErasure — self-service PDPA erasure (US-057)', () => {
+  it('deletes addresses, scrubs phone/name, and writes an audit row', async () => {
+    const a = makeAdmin();
+    holder.admin = a.client;
+    const res = await requestErasure();
+    expect(res.ok).toBe(true);
+    expect(a.rec.deletes).toContain('addresses');
+    expect(a.rec.updates).toContainEqual({ table: 'users', payload: { phone: 'deleted-u-1', name: null } });
+    expect(a.rec.inserts).toContainEqual({ table: 'erasure_audit', payload: { user_id: 'u-1', fields: 'phone,name,addresses' } });
+  });
+});
+
