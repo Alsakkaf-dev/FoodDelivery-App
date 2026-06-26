@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { getI18n } from '@/lib/i18n/server';
 import { MapIllustration } from '@/components/brand'; // AWAITING #05: confirm export name
 import { TextAction } from '@/components/ui';
@@ -15,7 +14,7 @@ export default function LocationAccessPage() {
       <div className="w-full space-y-4">
         <LocationPrimer label={t.access_location} />
         <p className="text-body text-muted">{t.location_access_body}</p>
-        <TextAction as={Link} href="/login" tone="brand" className="mx-auto block">
+        <TextAction href="/login" tone="brand" className="mx-auto block">
           {t.skip}
         </TextAction>
       </div>
