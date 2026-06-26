@@ -42,3 +42,94 @@ type Props = {
   labels: OrderActionLabels;
 };
 
+export function OrderActions({ orderId, orderNo, status, variant, shopName, labels }: Props) {
+  const router = useRouter();
+  const [pending, startTransition] = useTransition();
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  function doCancel() {
+    setError(null);
+    startTransition(async () => {
+      const res = await cancelOrder(orderId);
+      if (res.ok) {
+        setConfirmOpen(false);
+        router.refresh();
+      } else {
+        // 'conflict' = the order advanced past the cancel window between render and tap.
+        setError(res.error.code === 'conflict' ? labels.tooLate : labels.error);
+      }
+    });
+  }
+
+  if (variant === 'history') {
+    return (
+      <>
+        <div className="grid grid-cols-2 gap-3">
+          <button type="button" className="btn-secondary min-h-tap" onClick={() => setReviewOpen(true)}>
+            {labels.rate}
+          </button>
+          <Link href="/menu" className="btn-primary min-h-tap">
+            {labels.reorder}
+          </Link>
+        </div>
+        <ReviewComposer
+          open={reviewOpen}
+          onClose={() => setReviewOpen(false)}
+          orderNo={orderNo}
+          shopName={shopName}
+          labels={labels.composer}
+        />
+      </>
+    );
+  }
+
+  const canCancel = CANCELLABLE.includes(status);
+
+  return (
+    <>
+      <div className={canCancel ? 'grid grid-cols-2 gap-3' : 'grid'}>
+        <Link href={`/orders/${orderId}`} className="btn-primary min-h-tap">
+          {labels.track}
+        </Link>
+        {canCancel ? (
+          <button type="button" className="btn-secondary min-h-tap" onClick={() => setConfirmOpen(true)}>
+            {labels.cancel}
+          </button>
+        ) : null}
+      </div>
+
+      <BottomSheet
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        title={labels.confirmTitle}
+        closeLabel={labels.keep}
+      >
+        {error ? (
+          <p className="mb-2 text-caption text-danger" role="alert">
+            {error}
+          </p>
+        ) : null}
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            className="btn-secondary min-h-tap"
+            onClick={() => setConfirmOpen(false)}
+            disabled={pending}
+          >
+            {labels.keep}
+          </button>
+          <button
+            type="button"
+            className="btn-primary min-h-tap !bg-danger"
+            onClick={doCancel}
+            disabled={pending}
+          >
+            {labels.confirmCancel}
+          </button>
+        </div>
+      </BottomSheet>
+    </>
+  );
+}
