@@ -132,13 +132,33 @@ export function AccountAddressForm({
 
   return (
     <form onSubmit={onSubmit} className="space-y-5">
-      <AddressMapField
-        hint={t.move_to_edit_location}
-        useLocationLabel={t.use_my_location}
-        locating={locating}
-        located={lat !== null && lng !== null}
-        onUseLocation={useMyLocation}
-      />
+      <div className="space-y-3">
+        <PlaceSearch t={t} onSelect={handlePlace} />
+
+        {lat !== null && lng !== null ? (
+          <StaticMap lat={lat} lng={lng} title={placeTitle} viewLabel={t.view_on_map} />
+        ) : (
+          <AddressMapField
+            hint={t.move_to_edit_location}
+            useLocationLabel={t.use_my_location}
+            locating={locating}
+            located={false}
+            onUseLocation={useMyLocation}
+          />
+        )}
+
+        <div className="flex items-center justify-between gap-2">
+          <TextAction tone="brand" trailingIcon="navigation" onClick={useMyLocation} disabled={locating}>
+            {locating ? t.locating : t.use_my_location}
+          </TextAction>
+          {lat !== null && lng !== null ? (
+            <span className="inline-flex items-center gap-1 text-caption text-success" dir="ltr">
+              <Icon name="check-circle" className="h-4 w-4" aria-hidden />
+              {lat}, {lng}
+            </span>
+          ) : null}
+        </div>
+      </div>
 
       <FilledInput label={t.field_address} trailingIcon="map-pin" value={address} onChange={(e) => setAddress(e.target.value)} />
 
