@@ -43,3 +43,42 @@ export function WrapIcon(props: IconProps) {
   );
 }
 
+export function PizzaIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M4 8 12 21l8-13a16 16 0 0 0-16 0Z" />
+      <path d="M4 8a16 16 0 0 1 16 0" />
+      <path d="M10 11h.01M13 13.5h.01" />
+    </IconBase>
+  );
+}
+
+export function DrinkIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M6 8h12l-1.2 11.5a1.5 1.5 0 0 1-1.5 1.3H8.7a1.5 1.5 0 0 1-1.5-1.3Z" />
+      <path d="M9 8 10 4h4l1 4" />
+      <path d="M13 8 15 3" />
+      <path d="M7.5 12h9" />
+    </IconBase>
+  );
+}
+
+export function BowlIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M3.5 11h17a8.5 8.5 0 0 1-17 0Z" />
+      <path d="M9 7.5c0-1 1-1.5 1-2.5M13 7c0-1 1-1.5 1-2.5" />
+    </IconBase>
+  );
+}
+
+export function CoffeeIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M5 8h12v5a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5Z" />
+      <path d="M17 9.5h2a2.5 2.5 0 0 1 0 5h-2" />
+      <path d="M8 4.5c0 1-1 1.5-1 2.5M12 4c0 1-1 1.5-1 2.5" />
+    </IconBase>
+  );
+}
