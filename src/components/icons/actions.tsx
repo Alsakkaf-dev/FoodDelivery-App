@@ -137,3 +137,46 @@ export function EyeOffIcon(props: IconProps) {
   );
 }
 
+export function ChevronLeftIcon(props: IconProps) {
+  return (
+    <IconBase mirror {...props}>
+      <path d="m15 6-6 6 6 6" />
+    </IconBase>
+  );
+}
+
+export function ChevronRightIcon(props: IconProps) {
+  return (
+    <IconBase mirror {...props}>
+      <path d="m9 6 6 6-6 6" />
+    </IconBase>
+  );
+}
+
+export function ChevronDownIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="m6 9 6 6 6-6" />
+    </IconBase>
+  );
+}
+
+// Logical "start" chevron — always points to the inline-start edge (left in
+// LTR, right in RTL). Use for back affordances that must follow reading order.
+export function ChevronStartIcon(props: IconProps) {
+  return (
+    <IconBase mirror {...props}>
+      <path d="m15 6-6 6 6 6" />
+    </IconBase>
+  );
+}
+
+export function ArrowLeftIcon(props: IconProps) {
+  return (
+    <IconBase mirror {...props}>
+      <path d="M20 12H4" />
+      <path d="m10 6-6 6 6 6" />
+    </IconBase>
+  );
+}
+
