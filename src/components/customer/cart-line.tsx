@@ -14,3 +14,49 @@ import type { Dictionary } from '@/lib/i18n/dictionaries';
 // The stepper emits an ABSOLUTE qty; the parent maps the +/- delta onto the
 // store's increment/decrement actions (no separate "set" action). That contract
 // is preserved here untouched — this component never talks to the store.
+export function CartLine({
+  line,
+  lang,
+  t,
+  editing,
+  onQty,
+  onRemove,
+}: {
+  line: CartLineModel;
+  lang: 'en' | 'ar';
+  t: Dictionary;
+  editing: boolean;
+  onQty: (qty: number) => void;
+  onRemove: () => void;
+}) {
+  const name = lang === 'ar' ? line.name_ar : line.name_en;
+  const subtotal = line.qty * line.unit_price;
+
+  return (
+    <div className="relative flex items-start gap-3 py-4">
+      <FoodImage shape="rounded" alt="" className="h-20 w-20 shrink-0 rounded-md" />
+
+      <div className="min-w-0 flex-1">
+        <h3 className="line-clamp-2 text-title font-bold text-onColor">{name}</h3>
+        <p className="mt-1 text-body font-bold text-onColor">{formatMYR(line.unit_price, lang)}</p>
+        <p className="mt-1 text-caption text-muted">
+          {t.subtotal}:{' '}
+          <span className="font-semibold text-onColor">{formatMYR(subtotal, lang)}</span>
+        </p>
+      </div>
+
+      <div className="flex shrink-0 flex-col items-end gap-3">
+        {editing ? (
+          <IconButton
+            variant="dark"
+            icon="close"
+            className="!bg-danger"
+            aria-label={`${t.remove} — ${name}`}
+            onClick={onRemove}
+          />
+        ) : null}
+        <Stepper value={line.qty} min={1} max={50} onChange={onQty} />
+      </div>
+    </div>
+  );
+}
