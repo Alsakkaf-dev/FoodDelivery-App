@@ -92,3 +92,12 @@ export function BottomSheet({
 }
 
 /** PinnedBar — always-visible sticky bottom bar (#09 add-bar, #10 summary). Non-modal. */
+export function PinnedBar({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <div className={cx('sticky bottom-0 z-30 rounded-t-2xl border-t border-line bg-surface p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-sheet', className)}>
+      {children}
+    </div>
+  );
+}
+
+/** Modal — centered dialog (confirmations, promos). */
