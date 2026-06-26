@@ -107,3 +107,30 @@ function CircleBtn({
   );
 }
 
+export function CallControls({
+  muted, onToggleMute, onEnd, speaker, onToggleSpeaker,
+  muteLabel = 'Mute', endLabel = 'End call', speakerLabel = 'Speaker',
+}: {
+  muted?: boolean;
+  onToggleMute?: () => void;
+  onEnd?: () => void;
+  speaker?: boolean;
+  onToggleSpeaker?: () => void;
+  muteLabel?: string;
+  endLabel?: string;
+  speakerLabel?: string;
+}) {
+  return (
+    <div className="flex items-center justify-center gap-6">
+      <CircleBtn onClick={onToggleMute} ariaLabel={muteLabel} pressed={muted} tone="neutral">
+        <Icon name={muted ? 'mic-off' : 'mic'} className="h-6 w-6" aria-hidden />
+      </CircleBtn>
+      <CircleBtn onClick={onEnd} ariaLabel={endLabel} tone="danger" big>
+        <Icon name="phone-off" className="h-7 w-7" aria-hidden />
+      </CircleBtn>
+      <CircleBtn onClick={onToggleSpeaker} ariaLabel={speakerLabel} pressed={speaker} tone="neutral">
+        <Icon name={speaker ? 'volume' : 'speaker'} className="h-6 w-6" aria-hidden />
+      </CircleBtn>
+    </div>
+  );
+}
