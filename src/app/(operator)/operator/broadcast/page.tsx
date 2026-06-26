@@ -13,7 +13,7 @@ export default function BroadcastPage() {
   return (
     <section className="space-y-4">
       <header>
-        <h1 className="text-h1 font-bold text-slate">{t.broadcast}</h1>
+        <h1 className="text-h1 font-bold text-ink">{t.broadcast}</h1>
       </header>
       <BroadcastForm t={t} send={broadcast} />
     </section>
