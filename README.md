@@ -150,6 +150,9 @@ All config comes from env vars — **no secret is ever hard-coded**. `.env*` is 
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | public | Web Push public key for the browser subscription. |
 | `VAPID_PRIVATE_KEY` | server | Web Push private key the server signs with. Secret. |
 | `VAPID_SUBJECT` | server | `mailto:` contact identifying the push sender. |
+| `SERPAPI_API_KEY` | server | SerpApi key for Google Maps place search (`/api/maps/search`). Server-only; the browser never sees it. Optional — without it the address picker falls back to manual entry + geolocation. |
+| `NEXT_PUBLIC_MAP_DEFAULT_LAT` | public | Default map search-origin latitude when geolocation is unavailable (Johor Bahru). |
+| `NEXT_PUBLIC_MAP_DEFAULT_LNG` | public | Default map search-origin longitude when geolocation is unavailable (Johor Bahru). |
 | `NEXT_PUBLIC_DEFAULT_LOCALE` | public | Default UI locale (`en` or `ar`); AR mirrors EN. |
 | `NEXT_PUBLIC_APP_URL` | public | The app's base URL (used by e2e + links). |
 | `OTP_RATE_LIMIT_PER_HOUR` | server | OTP requests per phone per hour (FR-S-14). |
