@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none" aria-hidden="true">
+  <!-- Onboarding 1 — discover delicious food (bowl on peach blob). -->
+  <path fill="#FCE3D3" d="M120 28c44 0 86 26 92 70 6 44-18 84-58 100-40 16-92 10-114-26-22-36-14-84 16-110 20-18 42-34 64-34Z"/>
+  <ellipse cx="120" cy="178" rx="64" ry="14" fill="#FFF4EC"/>
+  <path d="M70 130h100a50 50 0 0 1-100 0Z" fill="#F5811F"/>
+  <path d="M68 130h104" stroke="#E5721A" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="98" cy="124" r="14" fill="#FFB347"/>
+  <circle cx="124" cy="120" r="16" fill="#FFD23F"/>
+  <circle cx="148" cy="125" r="13" fill="#27AE60"/>
+  <path d="M104 96c0-8 8-8 8-16M128 92c0-8 8-8 8-16" stroke="#E6C9B5" stroke-width="4" fill="none" stroke-linecap="round"/>
+</svg>
