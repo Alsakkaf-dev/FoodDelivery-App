@@ -205,3 +205,41 @@ export function Checkbox({
 }
 
 /** UploadTile — dashed drop tile wrapping a hidden file input (proof #11, photo #16). */
+export function UploadTile({
+  onFiles, accept, multiple, label, hint, preview, disabled, className,
+}: {
+  onFiles?: (files: FileList) => void;
+  accept?: string;
+  multiple?: boolean;
+  label?: string;
+  hint?: string;
+  preview?: ReactNode;
+  disabled?: boolean;
+  className?: string;
+}) {
+  return (
+    <label
+      className={cx(
+        'flex min-h-[120px] w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-line bg-surface-alt p-6 text-center text-muted transition hover:border-brand hover:bg-brand-faint',
+        disabled && 'pointer-events-none opacity-50',
+        className,
+      )}
+    >
+      <input
+        type="file"
+        className="sr-only"
+        accept={accept}
+        multiple={multiple}
+        disabled={disabled}
+        onChange={(e) => { if (e.target.files && e.target.files.length) onFiles?.(e.target.files); }}
+      />
+      {preview ?? (
+        <>
+          <Icon name="cloud-upload" className="h-7 w-7" aria-hidden />
+          {label ? <span className="text-sm font-semibold text-ink">{label}</span> : null}
+          {hint ? <span className="text-caption">{hint}</span> : null}
+        </>
+      )}
+    </label>
+  );
+}
