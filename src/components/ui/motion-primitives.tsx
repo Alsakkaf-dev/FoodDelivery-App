@@ -421,3 +421,30 @@ export function SplashSequence({
     </div>
   );
 }
+
+/* ──────────────── (10) Onboarding slide + carousel dots ─────────────── */
+/** Slides its children in (horizontal, RTL-mirrored) when it becomes the active slide. */
+export function OnboardingSlide({
+  active,
+  children,
+  className,
+}: {
+  active: boolean;
+  children: ReactNode;
+  className?: string;
+}) {
+  const { sign } = useDirection();
+  const ref = useRef<HTMLDivElement>(null);
+  const prev = useRef(active);
+  useEffect(() => {
+    if (active && !prev.current) animateVariant(ref.current, slideInVariant(DISTANCE.slide * sign));
+    prev.current = active;
+  }, [active, sign]);
+  return (
+    <div ref={ref} className={className}>
+      {children}
+    </div>
+  );
+}
+
+/** Carousel page dots; the active dot grows. Pass `onDotClick` for tappable (≥44px) dots. */
