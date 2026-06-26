@@ -1,16 +1,13 @@
 'use client';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { Avatar, FilledInput, PrimaryButton, IconButton } from '@/components/ui';
+import { updateProfile } from '@/lib/domain/profile';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 
 // Edit Profile — centered avatar with an orange edit-FAB (overlaid, RTL-anchored
 // to the logical end/bottom) + filled inputs (name/email/phone/bio) + a SAVE CTA.
-//
-// There is NO updateProfile server action and no email/bio/avatar column (frozen
-// domain — consolidated backend request filed in TEAM_STATUS.md). So SAVE is an
-// honest client-side optimistic stub: it confirms inline ("saved_demo") without
-// claiming a real write. Phone is read-only (it's the account identity key).
-// When the backend lands, wire `onSave` to the real action; the UI is unchanged.
+// SAVE calls the real `updateProfile` server action (RLS-scoped to the caller's
+// own row). Phone is read-only here — it is changed via the OTP re-verify flow.
 export function ProfileForm({
   t,
   initial,
@@ -22,18 +19,24 @@ export function ProfileForm({
   const [email, setEmail] = useState(initial.email);
   const [bio, setBio] = useState(initial.bio);
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState('');
+  const [pending, startTransition] = useTransition();
 
   function dirty<T>(setter: (v: T) => void) {
     return (v: T) => {
       setSaved(false);
+      setError('');
       setter(v);
     };
   }
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // Optimistic, preview-only: no server write exists yet.
-    setSaved(true);
+    startTransition(async () => {
+      const res = await updateProfile({ name, email: email || undefined, bio });
+      if (res.ok) setSaved(true);
+      else setError(t.error_generic);
+    });
   }
 
   return (
@@ -58,11 +61,15 @@ export function ProfileForm({
 
       {saved ? (
         <p role="status" className="text-body font-medium text-success">
-          {t.saved_demo}
+          {t.done}
+        </p>
+      ) : error ? (
+        <p role="alert" className="text-body font-medium text-danger">
+          {error}
         </p>
       ) : null}
 
-      <PrimaryButton type="submit" fullWidth>
+      <PrimaryButton type="submit" fullWidth loading={pending}>
         {t.save}
       </PrimaryButton>
     </form>
