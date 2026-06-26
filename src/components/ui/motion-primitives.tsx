@@ -230,3 +230,50 @@ export function SuccessCheck({ children, className }: { children?: ReactNode; cl
 }
 
 /** Confetti burst (SUCCESS only — spec §6 palette). Render inside a `relative` container. */
+export function Confetti({
+  fire = true,
+  count,
+  className,
+}: {
+  fire?: boolean;
+  count?: number;
+  className?: string;
+}) {
+  const host = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!fire) return;
+    return burstConfetti(host.current, count !== undefined ? { count } : undefined);
+  }, [fire, count]);
+  return (
+    <div
+      ref={host}
+      className={cx('pointer-events-none absolute inset-0 overflow-visible', className)}
+      aria-hidden
+    />
+  );
+}
+
+/* ────────────────── (6) Add-to-cart fly + badge pop ────────────────── */
+/** Pops its children whenever `count` increases (badge count bump). */
+export function BadgePop({
+  count,
+  children,
+  className,
+}: {
+  count: number;
+  children: ReactNode;
+  className?: string;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const prev = useRef(count);
+  useEffect(() => {
+    if (count > prev.current) animateVariant(ref.current, badgePopVariant);
+    prev.current = count;
+  }, [count]);
+  return (
+    <span ref={ref} className={cx('inline-flex', className)}>
+      {children}
+    </span>
+  );
+}
+
