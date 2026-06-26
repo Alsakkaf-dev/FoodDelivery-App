@@ -308,3 +308,53 @@ export function TickNumber({ value, className }: { value: number; className?: st
 
 /* ─────────────────── (8) Live-tracking pulse rings ─────────────────── */
 /** Concentric rings that pulse outward (loop) behind a destination pin. Static when reduced. */
+export function PulseRings({
+  rings = 3,
+  size = 80,
+  color = 'bg-brand/30',
+  className,
+}: {
+  rings?: number;
+  size?: number;
+  color?: string;
+  className?: string;
+}) {
+  const reduced = useReducedMotion();
+  const hostRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (reduced) return;
+    const host = hostRef.current;
+    if (!host || typeof Element.prototype.animate !== 'function') return;
+    const anims = Array.from(host.children).map((ring, i) =>
+      ring.animate(
+        [
+          { transform: 'scale(0.4)', opacity: 0.6 },
+          { transform: 'scale(1)', opacity: 0 },
+        ],
+        {
+          duration: DURATION.pulse,
+          easing: EASE.out,
+          iterations: Infinity,
+          delay: (i * DURATION.pulse) / Math.max(1, rings),
+        },
+      ),
+    );
+    return () => anims.forEach((a) => a.cancel());
+  }, [reduced, rings]);
+  return (
+    <div
+      ref={hostRef}
+      className={cx('pointer-events-none relative', className)}
+      style={{ width: size, height: size }}
+      aria-hidden
+    >
+      {Array.from({ length: rings }).map((_, i) => (
+        <span
+          key={i}
+          className={cx('absolute inset-0 rounded-full', color)}
+          style={{ opacity: reduced ? 0.25 : 0 }}
+        />
+      ))}
+    </div>
+  );
+}
