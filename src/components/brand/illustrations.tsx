@@ -96,3 +96,32 @@ export function ErrorIllustration({ className, title }: IllustrationProps) {
  * and Plan 18 can spring/animate it. Disc + sparkles use Plan 01 tokens; the
  * check uses `stroke-onColor` (white-on-brand).
  */
+export function SuccessLite({ className, title }: IllustrationProps) {
+  const labelled = typeof title === 'string' && title.length > 0;
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 200 200"
+      fill="none"
+      role={labelled ? 'img' : undefined}
+      aria-hidden={labelled ? undefined : true}
+      aria-label={labelled ? title : undefined}
+      className={className}
+    >
+      {labelled ? <title>{title}</title> : null}
+      <path className="fill-brand-tint" d="M52 47 55 57 65 60 55 63 52 73 49 63 39 60 49 57Z" />
+      <path className="fill-brand" d="M150 46 152 54 160 56 152 58 150 66 148 58 140 56 148 54Z" />
+      <path className="fill-brand-tint" d="M158 112 160 118 166 120 160 122 158 128 156 122 150 120 156 118Z" />
+      <path className="fill-brand" d="M44 121 46 128 53 130 46 132 44 139 42 132 35 130 42 128Z" />
+      <path className="fill-brand-tint" d="M128 145 129.5 150.5 135 152 129.5 153.5 128 159 126.5 153.5 121 152 126.5 150.5Z" />
+      <circle cx="100" cy="100" r="40" className="fill-brand" />
+      <path
+        d="M82 100 95 113 120 86"
+        className="stroke-onColor"
+        strokeWidth="8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
