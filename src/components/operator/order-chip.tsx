@@ -7,6 +7,7 @@ import type { Dictionary } from '@/lib/i18n/dictionaries';
 import type { ApiResult } from '@/lib/utils/api';
 import { formatMYR } from '@/lib/utils/money';
 import { OrderStatusChip } from '@/components/ui/status';
+import { REFUSABLE } from './payment-actions';
 
 // SCR-O-03 — one order chip on the live board (US-033/034, FR-O-10/11).
 // The Advance button only offers the legal next status computed from
@@ -32,82 +33,3 @@ export function canDispatch(order: Order): boolean {
   return order.status === 'ready' && order.type === 'delivery';
 }
 
-export function OrderChip({
-  order,
-  lang,
-  t,
-  advance,
-  dispatch,
-}: {
-  order: Order;
-  lang: 'en' | 'ar';
-  t: Dictionary;
-  advance: AdvanceAction;
-  dispatch: DispatchAction;
-}) {
-  const [pending, start] = useTransition();
-  const [error, setError] = useState<string | null>(null);
-  const next = forwardStatus(order);
-  const dispatchable = canDispatch(order);
-
-  function run(fn: () => Promise<ApiResult<Order>>) {
-    setError(null);
-    start(async () => {
-      const res = await fn();
-      // On success the board:orders UPDATE stream moves the chip to its new
-      // column within ~2s — no manual refresh. On failure show the reason.
-      if (!res.ok) {
-        setError(res.error.code === 'invalid_transition' ? t.err_invalid_transition : t.error_generic);
-      }
-    });
-  }
-
-  return (
-    <article className="card space-y-2" data-order-status={order.status}>
-      <div className="flex items-center justify-between gap-2">
-        <Link
-          href={`/operator/orders/${order.id}`}
-          className="font-bold tabular-nums text-slate underline-offset-2 hover:underline"
-        >
-          {order.order_no}
-        </Link>
-        <OrderStatusChip status={order.status} lang={lang} />
-      </div>
-      <div className="flex items-center justify-between text-sm text-muted">
-        <span>{order.type === 'pickup' ? t.pickup : t.delivery}</span>
-        <span className="tabular-nums">
-          {t.items_count.replace('{{n}}', String(order.item_count))} · {formatMYR(order.total, lang)}
-        </span>
-      </div>
-
-      {dispatchable ? (
-        <button
-          type="button"
-          className="btn-primary min-h-tap w-full"
-          disabled={pending}
-          onClick={() => run(() => dispatch(order.id))}
-          data-action="dispatch"
-        >
-          {t.dispatch}
-        </button>
-      ) : next ? (
-        <button
-          type="button"
-          className="btn-primary min-h-tap w-full"
-          disabled={pending}
-          onClick={() => run(() => advance({ id: order.id, to_status: next }))}
-          data-action="advance"
-          data-advance-to={next}
-        >
-          {t.advance}
-        </button>
-      ) : null}
-
-      {error ? (
-        <p className="text-sm text-soldout" role="alert">
-          {error}
-        </p>
-      ) : null}
-    </article>
-  );
-}
