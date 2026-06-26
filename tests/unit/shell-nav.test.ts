@@ -133,3 +133,18 @@ describe('shell nav: each group renders its own bottom nav', () => {
 
 // Prod-only: under AUTH_DISABLED (preview) `requireRole` returns the dev profile and never
 // throws, so these guard assertions can't hold. They run when auth is re-enabled. The guard
+// code (roles.ts / dev-bypass.ts) is FROZEN and unchanged by the redesign. (QA-013)
+describe.skipIf(AUTH_DISABLED)('shell nav: operator layout RBAC guard (US-004, FR-S-12)', () => {
+  it('denies a signed-in customer hitting an operator route → home', async () => {
+    h.state.user = { id: 'u1' };
+    h.state.role = 'customer';
+    await expect(OperatorLayout({ children: null })).rejects.toThrow();
+    expect(redirectMock).toHaveBeenCalledWith('/');
+  });
+
+  it('redirects an unauthenticated visitor to /login', async () => {
+    h.state.user = null;
+    await expect(OperatorLayout({ children: null })).rejects.toThrow();
+    expect(redirectMock).toHaveBeenCalledWith('/login');
+  });
+});
