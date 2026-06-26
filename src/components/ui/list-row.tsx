@@ -63,3 +63,6 @@ export function ListRow({
   }
   return <div className={cls}>{inner}</div>;
 }
+
+/** SettingsRow — same row, named for settings/account menus (composes ListRow). */
+export const SettingsRow = ListRow;
