@@ -255,3 +255,20 @@ export function PaymentSection({
     </section>
   );
 }
+
+/** Small DuitNow tile glyph — reuses the static QR asset (no extra icon dep). */
+function DuitNowMark() {
+  return (
+    <span
+      className="inline-flex h-10 w-10 shrink-0 rounded-full bg-white bg-contain bg-center bg-no-repeat ring-1 ring-line"
+      style={{ backgroundImage: 'url(/duitnow-qr.png)' }}
+      aria-hidden
+    />
+  );
+}
+
+/**
+ * Page wrapper — sources the cart lines + the task-2-3 fulfilment draft, then
+ * renders the core. On success it clears the cart and shows the Payment-Successful
+ * STATE; TRACK ORDER then routes to /orders/[id] (the existing #12 handshake).
+ */
