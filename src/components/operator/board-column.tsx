@@ -25,12 +25,12 @@ export function BoardColumn({
     <section className="w-64 shrink-0 space-y-3" data-column={status}>
       <header className="flex items-center justify-between">
         <OrderStatusChip status={status} lang={lang} />
-        <span className="badge bg-cream tabular-nums text-slate" aria-label={`${orders.length}`} data-count={orders.length}>
+        <span className="badge bg-surface-alt tabular-nums text-body" aria-label={`${orders.length}`} data-count={orders.length}>
           {orders.length}
         </span>
       </header>
       {orders.length === 0 ? (
-        <p className="rounded-control border border-dashed border-line py-6 text-center text-caption text-muted" aria-hidden>
+        <p className="rounded-lg border border-dashed border-line py-6 text-center text-caption text-muted" aria-hidden>
           —
         </p>
       ) : (
