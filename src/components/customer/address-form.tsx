@@ -168,22 +168,29 @@ export function AddressForm({
         </OutlineButton>
       ) : (
         <div className="space-y-4 rounded-lg border border-line bg-surface p-4 shadow-card">
-          {/* Map priming panel — taps trigger geolocation (no paid map API / Location-Access in-form). */}
-          <div className="relative overflow-hidden rounded-lg bg-surface-alt">
-            <button
-              type="button"
-              onClick={useMyLocation}
-              disabled={locating}
-              aria-label={t.access_location}
-              className="block w-full"
-            >
-              <MapIllustration className="h-32 w-full object-cover" />
-            </button>
-            <span className="pointer-events-none absolute inset-x-0 bottom-2 mx-auto flex w-max items-center gap-1 rounded-pill bg-dark-cta/85 px-3 py-1 text-caption font-semibold text-onColor backdrop-blur">
-              <Icon name="map-pin" className="h-3.5 w-3.5" aria-hidden />
-              {locating ? t.locating : t.move_to_edit_location}
-            </span>
-          </div>
+          {/* Search a place/landmark → exact pin (Google Maps via SerpApi). */}
+          <PlaceSearch t={t} onSelect={handlePlace} />
+
+          {/* Real preview once a pin exists; else the geolocation priming panel. */}
+          {hasPin ? (
+            <StaticMap lat={Number(lat)} lng={Number(lng)} title={placeTitle} viewLabel={t.view_on_map} />
+          ) : (
+            <div className="relative overflow-hidden rounded-lg bg-surface-alt">
+              <button
+                type="button"
+                onClick={useMyLocation}
+                disabled={locating}
+                aria-label={t.access_location}
+                className="block w-full"
+              >
+                <MapIllustration className="h-32 w-full object-cover" />
+              </button>
+              <span className="pointer-events-none absolute inset-x-0 bottom-2 mx-auto flex w-max items-center gap-1 rounded-pill bg-dark-cta/85 px-3 py-1 text-caption font-semibold text-onColor backdrop-blur">
+                <Icon name="map-pin" className="h-3.5 w-3.5" aria-hidden />
+                {locating ? t.locating : t.move_to_edit_location}
+              </span>
+            </div>
+          )}
           <p className="text-caption text-muted">{t.location_usage_note}</p>
 
           <FilledInput
