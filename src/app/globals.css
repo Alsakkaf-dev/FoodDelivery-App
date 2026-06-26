@@ -32,3 +32,20 @@ html[dir='rtl'] body { font-family: var(--font-arabic); }
    NEW orange/amber design system — re-skinned @apply bodies, class NAMES preserved
    (FOUNDATION_CONTRACTS.md §1e). Every legacy consumer keeps working; do not rename.
    Tokens only — no hardcoded hex/px-radii/shadow. */
+@layer components {
+  .btn {
+    @apply inline-flex min-h-tap items-center justify-center gap-2 rounded-lg px-5 py-3 font-semibold transition active:scale-[.98] disabled:opacity-50;
+  }
+  .btn-primary { @apply btn bg-brand text-onColor hover:bg-brand-deep; }
+  .btn-secondary { @apply btn border border-line bg-white text-ink hover:bg-surface-alt; }
+  .btn-open { @apply btn bg-success text-onColor hover:opacity-95; }
+  .btn-ghost { @apply btn bg-surface-alt text-ink hover:bg-brand-faint; }
+  .btn-dark { @apply btn bg-dark-cta text-onColor hover:opacity-95; }
+  .card { @apply rounded-lg border border-line bg-white p-4 shadow-card; }
+  .field {
+    @apply min-h-tap w-full rounded-md border border-transparent bg-surface-input px-4 py-3 text-ink outline-none transition placeholder:text-muted focus:border-brand focus:bg-white;
+  }
+  .badge { @apply inline-flex items-center gap-1 rounded-pill px-3 py-1 text-sm font-semibold; }
+  .chip { @apply inline-flex min-h-tap items-center rounded-pill border border-line px-4 py-1.5 text-sm; }
+  .chip-active { @apply chip border-brand bg-brand text-onColor; }
+}
