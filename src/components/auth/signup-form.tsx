@@ -11,3 +11,44 @@ import { FilledInput, PrimaryButton, TextAction } from '@/components/ui';
 import { SocialRow } from './social-row';
 import { Divider, PreviewNote } from './auth-bits';
 
+export function SignupForm({ locale }: { locale: Locale }) {
+  const t = getDictionary(locale);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [notice, setNotice] = useState(false);
+
+  const incomplete = !name || !email || !password || password !== confirm;
+
+  return (
+    <div className="space-y-5">
+      <FilledInput label={t.full_name} placeholder="John Doe" value={name} onChange={setName} />
+      <FilledInput
+        label={t.email}
+        type="email"
+        inputMode="email"
+        placeholder="you@example.com"
+        value={email}
+        onChange={setEmail}
+      />
+      <FilledInput label={t.password} type="password" value={password} onChange={setPassword} />
+      <FilledInput label={t.retype_password} type="password" value={confirm} onChange={setConfirm} />
+
+      <PrimaryButton onClick={() => setNotice(true)} disabled={incomplete}>
+        {t.sign_up}
+      </PrimaryButton>
+      {notice ? <PreviewNote>{t.preview_only_note}</PreviewNote> : null}
+
+      <Divider label={t.or} />
+      <SocialRow comingSoonLabel={t.social_coming_soon} />
+
+      <p className="text-center text-caption text-body">
+        {t.have_account}{' '}
+        <TextAction as={Link} href="/login" tone="brand">
+          {t.login}
+        </TextAction>
+      </p>
+    </div>
+  );
+}
