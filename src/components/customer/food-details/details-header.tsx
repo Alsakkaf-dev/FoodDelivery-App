@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { IconButton } from '@/components/ui';
+import Link from 'next/link';
 import { Icon } from '@/components/icons';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 
@@ -17,9 +17,13 @@ export function DetailsHeader({
 }) {
   return (
     <header className="flex items-center justify-between gap-3">
-      <IconButton variant="nav" href={backHref} aria-label={t.back}>
+      <Link
+        href={backHref}
+        aria-label={t.back}
+        className="inline-flex min-h-tap min-w-tap items-center justify-center rounded-md bg-surface-alt text-ink transition hover:bg-surface-input active:scale-95 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
+      >
         <Icon name="chevron-start" />
-      </IconButton>
+      </Link>
       <h1 className="text-headerTitle text-ink">{t.details}</h1>
       {action ?? <span className="min-h-tap min-w-tap inline-block" aria-hidden />}
     </header>
