@@ -37,3 +37,39 @@ type IconBaseProps = IconProps & {
  * Internal <svg> wrapper. Not a glyph on its own — exported only so the
  * category files (nav/actions/meta/social/food) can build on it.
  */
+export function IconBase({
+  size = 24,
+  strokeWidth = 1.75,
+  title,
+  mirror = false,
+  filled = false,
+  className,
+  children,
+  ...rest
+}: IconBaseProps) {
+  const labelled = typeof title === 'string' && title.length > 0;
+  const classes = [mirror ? 'rtl:-scale-x-100' : '', className ?? '']
+    .filter(Boolean)
+    .join(' ');
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill={filled ? 'currentColor' : 'none'}
+      stroke={filled ? 'none' : 'currentColor'}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role={labelled ? 'img' : undefined}
+      aria-hidden={labelled ? undefined : true}
+      aria-label={labelled ? title : undefined}
+      className={classes || undefined}
+      {...rest}
+    >
+      {labelled ? <title>{title}</title> : null}
+      {children}
+    </svg>
+  );
+}
