@@ -4,7 +4,6 @@
 // never forks a button. Default action is router.back(); pass href to override.
 import { useRouter } from 'next/navigation';
 import { FloatingIconButton } from '@/components/ui';
-import { Icon } from '@/components/icons';
 
 export function BackButton({
   label,
@@ -20,9 +19,8 @@ export function BackButton({
     <FloatingIconButton
       aria-label={label}
       className={className}
+      icon="chevron-start"
       onClick={() => (href ? router.push(href) : router.back())}
-    >
-      <Icon name="chevron-start" />
-    </FloatingIconButton>
+    />
   );
 }
