@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import type { Locale } from '@/lib/i18n/config';
 import { CarouselDots, LangToggle, PrimaryButton, TextAction } from '@/components/ui';
-import { OnbIllustration, PeachBlob } from '@/components/brand'; // AWAITING #05: confirm names/props
+import { OnboardingIllustration, PeachBlob } from '@/components/brand';
 
 export function OnboardingCarousel({ locale }: { locale: Locale }) {
   const t = getDictionary(locale);
@@ -84,8 +84,8 @@ export function OnboardingCarousel({ locale }: { locale: Locale }) {
             aria-label={`${i + 1} / ${slides.length}`}
           >
             <div className="relative mb-10 flex h-64 w-64 items-center justify-center">
-              <PeachBlob aria-hidden className="absolute inset-0 h-full w-full" />
-              <OnbIllustration step={s.step} aria-hidden className="relative h-48 w-48" />
+              <PeachBlob className="absolute inset-0 h-full w-full" />
+              <OnboardingIllustration step={s.step as 1 | 2 | 3 | 4} className="relative h-48 w-48" />
             </div>
             <h1 className="text-h1 font-bold text-ink">{s.title}</h1>
             <p className="mt-3 max-w-xs text-body text-muted">{s.body}</p>
@@ -94,7 +94,7 @@ export function OnboardingCarousel({ locale }: { locale: Locale }) {
       </ul>
 
       <div className="flex flex-col items-center gap-6 p-6">
-        <CarouselDots count={slides.length} active={active} onSelect={goTo} />
+        <CarouselDots count={slides.length} index={active} onDotClick={goTo} />
         <PrimaryButton onClick={next}>{isLast ? t.get_started : t.next}</PrimaryButton>
       </div>
     </main>
