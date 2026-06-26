@@ -182,3 +182,40 @@ export function MicOffIcon(props: IconProps) {
   );
 }
 
+export function SpeakerIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M4 9.5v5h3l4.5 3.5v-12L7 9.5Z" />
+      <path d="M16 8.5a5 5 0 0 1 0 7" />
+      <path d="M18.5 6a8 8 0 0 1 0 12" />
+    </IconBase>
+  );
+}
+
+export function VolumeIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M4 9.5v5h3l4.5 3.5v-12L7 9.5Z" />
+      <path d="M16 9.8a4 4 0 0 1 0 4.4" />
+    </IconBase>
+  );
+}
+
+export function PhoneOffIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M4 4 20 20" />
+      <path d="M10.5 5.5 9.5 4H6.5L5 8l2 1.5a11 11 0 0 0 .9 1.5" />
+      <path d="M13.8 14a11 11 0 0 0 1.5.9l1.5-2 4 1.5v3a1.5 1.5 0 0 1-1.6 1.5 16 16 0 0 1-6.6-2.1" />
+    </IconBase>
+  );
+}
+
+// "Hot / popular" accent for the active All category chip (requested by #07).
+export function FlameIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M12 21a6 6 0 0 0 6-6c0-4-4-6.5-4-6.5s.5 2-1 3c0 0-.4-4.6-3.5-7.5 0 0 .5 4-2 6.5A6 6 0 0 0 6 15a6 6 0 0 0 6 6Z" />
+    </IconBase>
+  );
+}
