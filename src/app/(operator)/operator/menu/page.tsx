@@ -16,7 +16,8 @@ export default async function MenuManagerPage() {
   return (
     <section className="space-y-4">
       <header>
-        <h1 className="text-h1 font-bold text-slate">{t.menu_manager}</h1>
+        <h1 className="text-h1 font-bold text-ink">{t.my_food_list}</h1>
+        <p className="text-body text-muted">{t.menu_manager}</p>
       </header>
 
       {itemsRes.ok ? (
