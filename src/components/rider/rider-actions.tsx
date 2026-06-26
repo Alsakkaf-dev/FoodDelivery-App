@@ -13,3 +13,76 @@ import { riderPickup, riderDeliver } from '@/lib/domain/rider';
  * Action calls + `.ok` handling + post-action routing are FROZEN — only the buttons
  * are restyled (orange CTA for pickup; success-green for delivered).
  */
+export function RiderActions({
+  orderId,
+  status,
+  pickedUpLabel,
+  deliveredLabel,
+  errorLabel,
+}: {
+  orderId: string;
+  status: OrderStatus;
+  pickedUpLabel: string;
+  deliveredLabel: string;
+  errorLabel: string;
+}) {
+  const router = useRouter();
+  const [pending, start] = useTransition();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+
+  function run(action: (id: string) => Promise<{ ok: boolean }>) {
+    setBusy(true);
+    setError('');
+    action(orderId)
+      .then((res) => {
+        if (!res.ok) {
+          setBusy(false);
+          setError(errorLabel);
+          return;
+        }
+        start(() => {
+          router.push('/rider');
+          router.refresh();
+        });
+      })
+      .catch(() => {
+        setBusy(false);
+        setError(errorLabel);
+      });
+  }
+
+  const disabled = busy || pending;
+
+  if (status !== 'ready' && status !== 'out_for_delivery') return null;
+
+  return (
+    <div className="space-y-2">
+      {status === 'ready' ? (
+        <PrimaryButton
+          fullWidth
+          loading={disabled}
+          leadingIcon="check"
+          onClick={() => run(riderPickup)}
+        >
+          {pickedUpLabel}
+        </PrimaryButton>
+      ) : (
+        <PrimaryButton
+          fullWidth
+          loading={disabled}
+          leadingIcon="check-circle"
+          className="!bg-success hover:!bg-success"
+          onClick={() => run(riderDeliver)}
+        >
+          {deliveredLabel}
+        </PrimaryButton>
+      )}
+      {error ? (
+        <p className="rounded-lg bg-danger/10 p-3 text-center text-sm text-danger" role="alert">
+          {error}
+        </p>
+      ) : null}
+    </div>
+  );
+}
