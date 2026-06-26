@@ -48,3 +48,32 @@ Icons come from Plan 05 via `<Icon name="…"/>` (`IconName` union). Where a pro
 - `SelectTile` — `{ selected?; onSelect?; title; subtitle?; leading?; trailing?; role?='radio' }` (orange-border + check).
 - `CategoryChip` — `{ icon: IconName; label; active?; onClick? }` (active = gradient disc).
 - `OverlayChip` — `{ leadingIcon?: IconName }` dark translucent over imagery.
+
+## Cards (`cards.tsx`)
+- `Card` — base surface (`.card`).
+- `ProductCard` — `{ item: { name; price?; media? }; subtitle?; onAdd?; addLabel?; qty?; href?; cornerAction?; disabled? }` (floating "+").
+- `CategoryPhotoCard` — `{ name; media?; href?; onClick? }`.
+- `RestaurantHeroCard` — `{ name; media?; subtitle?; meta?; trailing?; href?; onClick? }` (pass `<MetaStat/>` as `meta`).
+- `ReviewCard` (R-7) — `{ author; avatar?; rating; comment?; date? }`. #13's `review-card.tsx` composes this.
+- `PromoCard` — `{ title; body?; action?; media? }` (amber→orange gradient).
+
+## Overlays (`sheet.tsx`) — `'use client'`
+- `BottomSheet` — `{ open; onClose; title?; footer?; closeLabel?; children }` (scrim, grabber, focus-trap, Esc, `aria-modal`, **z-40**).
+- `PinnedBar` — `{ children }` static non-modal sticky bar (**z-30**) for #09 add-bar / #10 summary.
+- `Modal` — `{ open; onClose; title?; footer?; closeLabel?; children }` (centered dialog).
+
+## Display
+- `MetaStat` — `{ items?: { icon: IconName; label; tone? }[] }` (renders nothing if empty).
+- `IconChip` — `{ icon: IconName; tone?: 'brand'|'info.blue'|'info.purple'|'success'|'danger'; size?; filled? }`.
+- `IconTile` — `{ icon: IconName; caption?; subCaption? }` (peach circle).
+- `RatingRow` — `{ value; max?=5; onChange?; size?; label? }` (interactive when `onChange` set).
+- `ListRow` / `SettingsRow` — `{ leading?; title; subtitle?; value?; trailing?; href?; onClick?; chevron?; selectable?; selected? }`.
+- `UnderlineTabs` — `{ tabs: { key; label; href? }[]; value; onChange? }`.
+- `CarouselDots` — `{ count; index; onDotClick?; label? }`.
+- `Avatar` — `{ src?; name?; alt?; size?; presence?; backdrop?; editAction? }` (CSS background-image; presence dot at logical bottom-end).
+
+## Communication (R-3 — `chat.tsx` `'use client'`, `success.tsx`)
+- `ChatBubble` — `{ side: 'in'|'out'; text; time?; receipt?: 'sent'|'delivered'|'read' }` (mirrors side+tail under RTL).
+- `Composer` — `{ value; onChange; onSend; placeholder?; emojiSlot?; sendLabel?; disabled? }`.
+- `CallControls` — `{ muted?; onToggleMute?; onEnd?; speaker?; onToggleSpeaker?; muteLabel?; endLabel?; speakerLabel? }`.
+- `SuccessScreen` — `{ title; subtitle?; action?; illustration?; tier?: 'rich'|'lite' }`.
