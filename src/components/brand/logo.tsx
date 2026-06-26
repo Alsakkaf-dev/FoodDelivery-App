@@ -36,3 +36,39 @@ function ClocheMark({ size }: { size: number }) {
   );
 }
 
+export function Logo({
+  variant = 'wordmark',
+  size = 32,
+  className,
+  label = 'Fahman',
+  title,
+}: LogoProps) {
+  const name = title ?? label;
+  const a11y = name
+    ? { role: 'img' as const, 'aria-label': name }
+    : { 'aria-hidden': true };
+
+  if (variant === 'mark') {
+    return (
+      <span {...a11y} className={`inline-flex ${className ?? ''}`}>
+        <ClocheMark size={size} />
+      </span>
+    );
+  }
+  return (
+    <span
+      {...a11y}
+      dir="ltr"
+      className={`inline-flex items-center gap-1.5 ${className ?? ''}`}
+    >
+      <ClocheMark size={size} />
+      <span
+        aria-hidden
+        className="font-sans font-extrabold lowercase tracking-tight text-ink"
+        style={{ fontSize: Math.round(size * 0.7) }}
+      >
+        {label}
+      </span>
+    </span>
+  );
+}
