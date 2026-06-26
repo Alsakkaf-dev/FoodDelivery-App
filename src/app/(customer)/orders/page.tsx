@@ -17,3 +17,39 @@ export const dynamic = 'force-dynamic';
 // Ongoing vs History derived from the frozen OrderStatus union (no domain change).
 const ONGOING: OrderStatus[] = ['new', 'confirmed', 'preparing', 'ready', 'out_for_delivery'];
 
+export default async function OrdersPage({ searchParams }: { searchParams: { tab?: string } }) {
+  const { locale, t } = getI18n();
+  const tab: 'ongoing' | 'history' = searchParams?.tab === 'history' ? 'history' : 'ongoing';
+  const res = await listMyOrders();
+
+  return (
+    <>
+      <header className="flex items-center justify-between gap-3">
+        <Link
+          href="/"
+          aria-label={t.back}
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-pill bg-surface-alt text-ink"
+        >
+          <Icon name="chevron-start" />
+        </Link>
+        <h1 className="text-h1 font-bold text-ink">{t.my_orders}</h1>
+        <Link
+          href="/reviews"
+          aria-label={t.reviews}
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-pill bg-surface-alt text-ink"
+        >
+          <Icon name="star" />
+        </Link>
+      </header>
+
+      <OrdersTabs active={tab} ongoingLabel={t.tab_ongoing} historyLabel={t.tab_history} />
+
+      {!res.ok ? (
+        <ErrorState message={t.error_generic} />
+      ) : (
+        <OrdersList orders={res.data} tab={tab} locale={locale} t={t} />
+      )}
+    </>
+  );
+}
+
