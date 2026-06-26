@@ -44,3 +44,51 @@ function useOverlay(open: boolean, onClose: () => void, panelRef: React.RefObjec
 }
 
 /** BottomSheet — top-rounded modal with grabber, scrim, pinned footer. */
+export function BottomSheet({
+  open, onClose, title, footer, closeLabel = 'Close', children, className,
+}: {
+  open: boolean;
+  onClose: () => void;
+  title?: ReactNode;
+  footer?: ReactNode;
+  closeLabel?: string;
+  children: ReactNode;
+  className?: string;
+}) {
+  const panelRef = useRef<HTMLDivElement>(null);
+  const entered = useOverlay(open, onClose, panelRef);
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-40">
+      <div
+        className={cx('absolute inset-0 bg-black/50 transition-opacity duration-200 motion-reduce:transition-none', entered ? 'opacity-100' : 'opacity-0')}
+        onClick={onClose}
+        aria-hidden
+      />
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={typeof title === 'string' ? title : undefined}
+        tabIndex={-1}
+        className={cx(
+          'absolute inset-x-0 bottom-0 flex max-h-[90dvh] flex-col rounded-t-2xl bg-surface shadow-sheet outline-none transition-transform duration-200 ease-out motion-reduce:transition-none',
+          entered ? 'translate-y-0' : 'translate-y-full',
+          className,
+        )}
+      >
+        <div className="mx-auto mt-3 h-1.5 w-10 rounded-pill bg-line" aria-hidden />
+        {title ? (
+          <div className="flex items-center justify-between px-5 pb-2 pt-3">
+            <h2 className="text-h2 font-bold text-ink">{title}</h2>
+            <IconButton variant="nav" icon="close" aria-label={closeLabel} onClick={onClose} />
+          </div>
+        ) : null}
+        <div className="overflow-y-auto px-5 pb-4 pt-2">{children}</div>
+        {footer ? <div className="border-t border-line p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">{footer}</div> : null}
+      </div>
+    </div>
+  );
+}
+
+/** PinnedBar — always-visible sticky bottom bar (#09 add-bar, #10 summary). Non-modal. */
