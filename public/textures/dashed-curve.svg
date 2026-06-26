@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120" fill="none" aria-hidden="true">
+  <!-- Faint dashed accent curve (design-spec §7) — hero/empty/success flourish. -->
+  <path d="M2 92C70 18 230 18 298 92" stroke="#F5811F" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="0.5 13" opacity="0.55"/>
+</svg>
