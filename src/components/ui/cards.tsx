@@ -54,7 +54,7 @@ export function ProductCard({
         ) : null}
         <p className="truncate text-title font-bold text-ink">{item.name}</p>
         {subtitle ? <p className="mt-0.5 truncate text-caption text-muted">{subtitle}</p> : null}
-        {item.price != null ? <p className="mt-2 text-h2 font-extrabold text-ink">{item.price}</p> : null}
+        {item.price !== undefined && item.price !== null ? <p className="mt-2 text-h2 font-extrabold text-ink">{item.price}</p> : null}
       </Surface>
       <div className="absolute bottom-3 end-3">
         {cornerAction ?? (onAdd ? (
