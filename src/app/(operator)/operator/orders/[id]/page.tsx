@@ -15,3 +15,96 @@ import type { MenuItem, PaymentStatus } from '@/types/db';
 // the shell; operator RLS restricts who can read the order.
 export const dynamic = 'force-dynamic';
 
+export default async function OperatorOrderDetail({ params }: { params: { id: string } }) {
+  const { locale, t } = getI18n();
+  const ar = locale === 'ar';
+
+  const [orderRes, menuRes] = await Promise.all([getOrder(params.id), listMenu()]);
+  if (!orderRes.ok) {
+    if (orderRes.error.code === 'not_found') notFound();
+    return <ErrorState message={t.error_generic} />;
+  }
+  const { order, items } = orderRes.data;
+
+  const menu = new Map<string, MenuItem>();
+  if (menuRes.ok) menuRes.data.forEach((m) => menu.set(m.id, m));
+  const nameFor = (id: string) => {
+    const m = menu.get(id);
+    return m ? (ar ? m.name_ar : m.name_en) : ar ? 'صنف' : 'Item';
+  };
+
+  const payLabel: Record<PaymentStatus, string> = {
+    pending: t.pay_pending,
+    submitted: t.pay_submitted,
+    verified: t.pay_verified,
+    rejected: t.pay_rejected,
+  };
+
+  return (
+    <section className="space-y-4">
+      <header className="flex items-center justify-between gap-3">
+        <div>
+          <h1 className="text-h1 font-bold text-ink">{t.order_detail}</h1>
+          <p className="text-caption tabular-nums text-muted">
+            {t.order_no} {order.order_no} · {order.type === 'pickup' ? t.pickup : t.delivery}
+          </p>
+        </div>
+        <OrderStatusChip status={order.status} lang={locale} />
+      </header>
+
+      {order.status === 'cancelled' && order.cancel_reason ? (
+        <p className="rounded-lg bg-danger/10 p-3 text-body text-danger">{order.cancel_reason}</p>
+      ) : null}
+
+      {/* Items + total */}
+      <div className="card space-y-2">
+        <h2 className="text-title font-bold text-ink">{t.items}</h2>
+        <ul className="divide-y divide-line">
+          {items.map((it) => (
+            <li key={it.id} className="flex items-center justify-between gap-3 py-2">
+              <span className="text-body">
+                <span className="font-bold text-ink">{it.qty}×</span> {nameFor(it.menu_item_id)}
+              </span>
+              <span className="shrink-0 tabular-nums text-muted">{formatMYR(it.qty * it.unit_price, locale)}</span>
+            </li>
+          ))}
+        </ul>
+        <div className="flex items-center justify-between border-t border-line pt-2 font-bold text-ink">
+          <span>{t.order_total}</span>
+          <span className="text-brand">{formatMYR(order.total, locale)}</span>
+        </div>
+      </div>
+
+      {/* Payment method + status */}
+      <div className="card flex items-center justify-between text-body">
+        <span className="text-muted">{t.payment}</span>
+        <span className="font-semibold text-ink">
+          {order.payment_method === 'cod' ? t.cod : t.duitnow} · {payLabel[order.payment_status]}
+        </span>
+      </div>
+
+      {/* DuitNow proof image */}
+      {order.payment_method === 'duitnow_qr' && order.proof_url ? (
+        <div className="card space-y-2">
+          <h2 className="text-title font-bold text-ink">{t.payment_proof}</h2>
+          <div
+            className="h-56 w-full rounded-lg border border-line bg-surface-alt bg-contain bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${order.proof_url})` }}
+            role="img"
+            aria-label={t.payment_proof}
+          />
+        </div>
+      ) : null}
+
+      <PaymentActions
+        orderId={order.id}
+        paymentMethod={order.payment_method}
+        paymentStatus={order.payment_status}
+        status={order.status}
+        t={t}
+        verify={verifyPayment}
+        refuse={refuseOrder}
+      />
+    </section>
+  );
+}
