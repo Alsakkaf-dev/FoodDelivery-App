@@ -167,3 +167,41 @@ export function OtpInput({
     </div>
   );
 }
+
+/** Checkbox — rounded-square with an orange fill + white check when selected. */
+export function Checkbox({
+  checked, onChange, label, disabled, id, className,
+}: {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  label?: ReactNode;
+  disabled?: boolean;
+  id?: string;
+  className?: string;
+}) {
+  const autoId = useId();
+  return (
+    <label htmlFor={id ?? autoId} className={cx('inline-flex min-h-tap cursor-pointer select-none items-center gap-2.5', disabled && 'opacity-50', className)}>
+      <input
+        id={id ?? autoId}
+        type="checkbox"
+        className="peer sr-only"
+        checked={checked}
+        disabled={disabled}
+        onChange={(e) => onChange(e.target.checked)}
+      />
+      <span
+        className={cx(
+          'flex h-5 w-5 items-center justify-center rounded-sm border-2 transition peer-focus-visible:ring-2 peer-focus-visible:ring-brand/40',
+          checked ? 'border-brand bg-brand text-onColor' : 'border-line bg-white',
+        )}
+        aria-hidden
+      >
+        {checked ? <Icon name="check" className="h-3.5 w-3.5" /> : null}
+      </span>
+      {label ? <span className="text-sm text-body">{label}</span> : null}
+    </label>
+  );
+}
+
+/** UploadTile — dashed drop tile wrapping a hidden file input (proof #11, photo #16). */
