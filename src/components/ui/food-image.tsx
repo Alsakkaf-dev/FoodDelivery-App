@@ -60,3 +60,35 @@ function Surface({
   );
 }
 
+export function FoodImage({
+  src,
+  alt,
+  shape = 'rounded',
+  plate = false,
+  overhang = false,
+  fallbackIcon = 'burger',
+  className,
+}: FoodImageProps) {
+  if (!plate) {
+    return (
+      <Surface
+        src={src}
+        alt={alt}
+        shape={shape}
+        fallbackIcon={fallbackIcon}
+        className={className}
+      />
+    );
+  }
+  return (
+    <div className="flex justify-center rounded-xl bg-hero-gradient p-5 shadow-card">
+      <Surface
+        src={src}
+        alt={alt}
+        shape={shape}
+        fallbackIcon={fallbackIcon}
+        className={`shadow-card ${overhang ? '-mt-9' : ''} ${className ?? ''}`}
+      />
+    </div>
+  );
+}
