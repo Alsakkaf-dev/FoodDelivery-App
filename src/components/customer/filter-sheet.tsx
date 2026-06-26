@@ -28,3 +28,93 @@ function Group({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
+export function FilterSheet({
+  open,
+  onClose,
+  value,
+  onApply,
+  t,
+}: {
+  open: boolean;
+  onClose: () => void;
+  value: Filters;
+  onApply: (f: Filters) => void;
+  t: Dictionary;
+}) {
+  const [draft, setDraft] = useState<Filters>(value);
+  useEffect(() => {
+    if (open) setDraft(value);
+  }, [open, value]);
+
+  const toggleOffer = (id: string) =>
+    setDraft((d) => ({
+      ...d,
+      offers: d.offers.includes(id) ? d.offers.filter((x) => x !== id) : [...d.offers, id],
+    }));
+
+  return (
+    <BottomSheet
+      open={open}
+      onClose={onClose}
+      title={t.filter_title}
+      footer={
+        <PrimaryButton
+          className="w-full"
+          onClick={() => {
+            onApply(draft);
+            onClose();
+          }}
+        >
+          {t.filter_cta}
+        </PrimaryButton>
+      }
+    >
+      <div className="space-y-7 pb-2">
+        <Group label={t.offers}>
+          {OFFER_IDS.map((id) => (
+            <Chip key={id} selected={draft.offers.includes(id)} onToggle={() => toggleOffer(id)}>
+              {t[id] as string}
+            </Chip>
+          ))}
+        </Group>
+
+        <Group label={t.deliver_time}>
+          {DELIVER_TIMES.map((opt) => (
+            <Chip
+              key={opt}
+              selected={draft.deliverTime === opt}
+              onToggle={() =>
+                setDraft((d) => ({ ...d, deliverTime: d.deliverTime === opt ? null : opt }))
+              }
+            >
+              {translate(t, 'meta_minutes', { n: opt })}
+            </Chip>
+          ))}
+        </Group>
+
+        <Group label={t.pricing}>
+          {PRICE_TIERS.map((tier) => (
+            <SelectChip
+              key={tier}
+              selected={draft.pricing === tier}
+              onToggle={() =>
+                setDraft((d) => ({ ...d, pricing: d.pricing === tier ? null : tier }))
+              }
+              aria-label={PRICE_SYMBOL[tier]}
+            >
+              {PRICE_SYMBOL[tier]}
+            </SelectChip>
+          ))}
+        </Group>
+
+        <Group label={t.rating}>
+          <RatingRow value={draft.rating} onChange={(r) => setDraft((d) => ({ ...d, rating: r }))} />
+        </Group>
+
+        <div className="flex justify-center">
+          <TextAction onClick={() => setDraft(EMPTY_FILTERS)}>{t.reset}</TextAction>
+        </div>
+      </div>
+    </BottomSheet>
+  );
+}
