@@ -398,3 +398,11 @@
   "write_message": "Write a message…",
   "you": "You",
   "customer": "Customer",
+  "rider_deliveries": "Deliveries",
+  "rider_profile": "Profile",
+
+  "nav_new": "New order",
+  "cart_open": "Open cart",
+  "cart_items_count": "{{n}} items in cart",
+  "notifications_hint": "Order updates and offers will appear here."
+}
