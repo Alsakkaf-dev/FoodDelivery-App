@@ -21,7 +21,7 @@ export function ForgotForm({ locale }: { locale: Locale }) {
         inputMode="email"
         placeholder="you@example.com"
         value={email}
-        onChange={setEmail}
+        onChange={(e) => setEmail(e.target.value)}
       />
       <PrimaryButton onClick={() => setNotice(true)} disabled={!email}>
         {t.send_code}
