@@ -16,7 +16,7 @@ export function MenuCard({ item, lang }: { item: MenuItem; lang: 'en' | 'ar' }) 
 
   return (
     <ProductCard
-      item={{ name, price: formatMYR(item.price, lang), photoUrl: item.photo_url }}
+      item={{ name, price: formatMYR(item.price, lang), photoUrl: item.photo_url ?? undefined }}
       href={item.available ? `/menu/${item.id}` : undefined}
       subtitle={item.available ? desc ?? undefined : t.unavailable}
       disabled={!item.available}
