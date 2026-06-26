@@ -1,12 +1,18 @@
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { listMenu } from '@/lib/domain/menu';
 import { getI18n } from '@/lib/i18n/server';
-import { formatMYR } from '@/lib/utils/money';
-import { AddToCart } from '@/components/customer/add-to-cart';
+import { DetailsHeader } from '@/components/customer/food-details/details-header';
+import { FavoriteButton } from '@/components/customer/food-details/favorite-button';
+import { FoodHero } from '@/components/customer/food-details/food-hero';
+import { VendorPill } from '@/components/customer/food-details/vendor-pill';
+import { MetaRow } from '@/components/customer/food-details/meta-row';
+import { SizeSelector } from '@/components/customer/food-details/size-selector';
+import { IngredientsRow } from '@/components/customer/food-details/ingredients-row';
+import { StickyAddBar } from '@/components/customer/food-details/sticky-add-bar';
 
-// SCR-C-03 — menu item detail (FR-C-04). Add-to-cart is wired into the client
-// cart store (task-2-2). Public; no auth required.
+// SCR-C-03 — menu item detail (FR-C-04). Add-to-cart is wired into the client cart
+// store (task-2-2) via StickyAddBar -> AddToCart. Public; no auth required. The
+// listMenu().find single-item lookup + notFound() pattern is preserved.
 export const dynamic = 'force-dynamic';
 
 export default async function ItemPage({ params }: { params: { id: string } }) {
@@ -21,31 +27,16 @@ export default async function ItemPage({ params }: { params: { id: string } }) {
 
   return (
     // The (customer) group layout owns the shell `main` frame + bottom nav.
-    <>
-      <Link href="/menu" className="inline-block text-sm text-muted">
-        {ar ? '→ المنيو' : '← Menu'}
-      </Link>
-
-      <div
-        className="flex aspect-square w-full items-center justify-center overflow-hidden rounded-card bg-cream bg-cover bg-center text-6xl"
-        style={item.photo_url ? { backgroundImage: `url(${item.photo_url})` } : undefined}
-        aria-hidden
-      >
-        {item.photo_url ? '' : '🌯'}
-      </div>
-
-      <div className="flex items-start justify-between gap-3">
-        <h1 className="text-2xl font-bold text-slate">{name}</h1>
-        <span className="shrink-0 text-xl font-bold text-rust">{formatMYR(item.price, locale)}</span>
-      </div>
-
-      {desc ? <p className="text-muted">{desc}</p> : null}
-
-      {item.available ? (
-        <AddToCart item={item} lang={locale} t={t} />
-      ) : (
-        <p className="badge bg-muted/15 text-muted">{ar ? 'غير متوفر حاليًا' : 'Currently unavailable'}</p>
-      )}
-    </>
+    <div className="space-y-5">
+      <DetailsHeader t={t} backHref="/menu" action={<FavoriteButton t={t} />} />
+      <FoodHero item={item} alt={name} />
+      <VendorPill t={t} />
+      <h1 className="text-h1 text-ink">{name}</h1>
+      {desc ? <p className="text-body">{desc}</p> : null}
+      <MetaRow t={t} />
+      <SizeSelector t={t} />
+      <IngredientsRow t={t} />
+      <StickyAddBar item={item} lang={locale} t={t} />
+    </div>
   );
 }
