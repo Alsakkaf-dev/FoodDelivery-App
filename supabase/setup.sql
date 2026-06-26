@@ -401,3 +401,40 @@ on conflict do nothing;
 insert into daily_session (session_date, status, qty_total, qty_remaining, cutoff_time, delivery_window)
 values ((now() at time zone 'Asia/Kuala_Lumpur')::date, 'closed', 40, 40, time '18:00', '1:00–7:00 PM')
 on conflict (session_date) do nothing;
+
+-- ========================= migrations/0007_auth_multi_method.sql =========================
+-- Multi-method identity: email/password + Google OAuth alongside phone/email OTP.
+alter table users add column if not exists email      text;
+alter table users add column if not exists avatar_url text;
+alter table users add column if not exists bio        text;
+alter table users alter column phone drop not null;
+create unique index if not exists uq_users_email_ci on users (lower(email)) where email is not null;
+alter table users drop constraint if exists users_contact_present;
+alter table users add  constraint users_contact_present
+  check (phone is not null or email is not null);
+
+-- ========================= migrations/0008_cart_favorites.sql =========================
+-- Per-user server-synced cart + saved favorites (RLS-isolated by auth.uid()).
+create table if not exists cart_items (
+  user_id      uuid not null references users(id) on delete cascade,
+  menu_item_id uuid not null references menu_items(id) on delete cascade,
+  qty          int  not null check (qty > 0 and qty <= 50),
+  updated_at   timestamptz not null default now(),
+  primary key (user_id, menu_item_id)
+);
+create index if not exists idx_cart_items_user on cart_items(user_id);
+create table if not exists favorites (
+  user_id      uuid not null references users(id) on delete cascade,
+  menu_item_id uuid not null references menu_items(id) on delete cascade,
+  created_at   timestamptz not null default now(),
+  primary key (user_id, menu_item_id)
+);
+create index if not exists idx_favorites_user on favorites(user_id);
+alter table cart_items enable row level security;
+alter table favorites  enable row level security;
+drop policy if exists cart_owner on cart_items;
+create policy cart_owner on cart_items for all
+  using (user_id = auth.uid()) with check (user_id = auth.uid());
+drop policy if exists fav_owner on favorites;
+create policy fav_owner on favorites for all
+  using (user_id = auth.uid()) with check (user_id = auth.uid());

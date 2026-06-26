@@ -13,7 +13,7 @@ import type { Lang } from '@/types/db';
 export async function dispatchOrderEvent(opts: {
   orderId: string;
   userId: string;
-  phone: string;
+  phone: string | null;
   lang: Lang;
   event: EventCode;
   vars?: Record<string, string>;
@@ -33,8 +33,10 @@ export async function dispatchOrderEvent(opts: {
 
   const body = render(opts.event, opts.lang, opts.vars);
 
-  // 2) try WhatsApp
-  const wa = await sendWhatsApp(opts.phone, body);
+  // 2) try WhatsApp (skipped when the user has no phone — e.g. email/OAuth sign-up)
+  const wa = opts.phone
+    ? await sendWhatsApp(opts.phone, body)
+    : { ok: false as const, reason: 'no_phone' };
   if (wa.ok) {
     await db
       .from('notifications')

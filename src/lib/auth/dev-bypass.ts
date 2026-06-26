@@ -26,8 +26,11 @@ export function devProfile(role: Role = 'customer'): UserProfile {
   return {
     id: '00000000-0000-0000-0000-000000000000',
     phone: '+0000000000',
+    email: null,
     role,
     name: 'Preview User',
+    avatar_url: null,
+    bio: null,
     lang: 'en',
     consent_at: null,
     consent_version: null,

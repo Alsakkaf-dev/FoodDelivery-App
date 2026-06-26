@@ -11,7 +11,8 @@ export type PaymentStatus = 'pending' | 'submitted' | 'verified' | 'rejected';
 export type Channel = 'whatsapp' | 'web_push';
 
 export interface UserProfile {
-  id: string; phone: string; role: Role; name: string | null; lang: Lang;
+  id: string; phone: string | null; email: string | null; role: Role; name: string | null;
+  avatar_url: string | null; bio: string | null; lang: Lang;
   consent_at: string | null; consent_version: string | null; created_at: string;
 }
 export interface Zone { id: string; name: string; active: boolean; sort_order: number; }
@@ -44,6 +45,10 @@ export interface Notification {
   channel: Channel; template: string; lang: Lang; status: 'queued' | 'sent' | 'delivered' | 'failed';
   retry_count: number; provider_message_id: string | null; sent_at: string | null; created_at: string;
 }
+export interface CartItem {
+  user_id: string; menu_item_id: string; qty: number; updated_at: string;
+}
+export interface Favorite { user_id: string; menu_item_id: string; created_at: string; }
 
 // Order lifecycle transitions (mirrors SDD §4.1; enforced in domain + DB).
 export const ORDER_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
