@@ -68,3 +68,53 @@ export function useChipSelect<T extends HTMLElement = HTMLElement>(selected: boo
 }
 
 /** Pops its children whenever `trigger` changes (skips the initial mount). */
+export function Pop({
+  trigger,
+  children,
+  className,
+}: {
+  trigger: unknown;
+  children: ReactNode;
+  className?: string;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const first = useRef(true);
+  useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    animateVariant(ref.current, popVariant);
+  }, [trigger]);
+  return (
+    <span ref={ref} className={cx('inline-flex', className)}>
+      {children}
+    </span>
+  );
+}
+
+/* ─────────────────────── (3) Tab underline slide ───────────────────── */
+/** A sliding underline that moves to the active segment. RTL-mirrored via the direction sign. */
+export function TabUnderline({
+  activeIndex,
+  count,
+  className,
+}: {
+  activeIndex: number;
+  count: number;
+  className?: string;
+}) {
+  const { sign } = useDirection();
+  const widthPct = 100 / Math.max(1, count);
+  const offsetPct = activeIndex * 100 * sign; // % of the underline's own width; flips for RTL
+  return (
+    <div className={cx('relative h-0.5 w-full', className)} aria-hidden>
+      <span
+        className="absolute top-0 h-0.5 rounded-pill bg-brand transition-transform duration-[250ms] ease-out motion-reduce:transition-none"
+        style={{ width: `${widthPct}%`, insetInlineStart: 0, transform: `translateX(${offsetPct}%)` }}
+      />
+    </div>
+  );
+}
+
+/* ──────────────────── (4) Bottom sheet slide + scrim ───────────────── */
