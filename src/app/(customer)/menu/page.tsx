@@ -1,6 +1,5 @@
-import Link from 'next/link';
 import { listMenu } from '@/lib/domain/menu';
-import { getLocale } from '@/lib/i18n/server';
+import { getI18n } from '@/lib/i18n/server';
 import { MenuCard } from '@/components/customer/menu-card';
 import { EmptyState, ErrorState } from '@/components/ui/states';
 
@@ -8,31 +7,22 @@ import { EmptyState, ErrorState } from '@/components/ui/states';
 export const dynamic = 'force-dynamic';
 
 export default async function MenuPage() {
-  const locale = getLocale();
-  const ar = locale === 'ar';
+  const { locale, t } = getI18n();
   const res = await listMenu();
 
   return (
     // The (customer) group layout owns the shell `main` frame + bottom nav.
     <>
-      <header className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-rust">{ar ? 'المنيو' : 'Menu'}</h1>
-        <Link href="/" className="text-sm text-muted">
-          {ar ? 'الرئيسية' : 'Home'}
-        </Link>
+      <header>
+        <h1 className="text-h1 text-ink">{t.menu}</h1>
       </header>
 
       {!res.ok ? (
-        <ErrorState
-          message={ar ? 'تعذّر تحميل المنيو. تأكّد من إعداد قاعدة البيانات.' : 'Couldn’t load the menu. Check the database setup.'}
-        />
+        <ErrorState message={t.error_generic} />
       ) : res.data.length === 0 ? (
-        <EmptyState
-          title={ar ? 'لا يوجد منيو بعد' : 'No items yet'}
-          hint={ar ? 'شغّل supabase/setup.sql لإضافة المنيو والبيانات.' : 'Run supabase/setup.sql to add the menu and data.'}
-        />
+        <EmptyState title={t.no_items} hint={t.no_items_hint} />
       ) : (
-        <div className="space-y-3">
+        <div className="grid grid-cols-2 gap-4">
           {res.data.map((item) => (
             <MenuCard key={item.id} item={item} lang={locale} />
           ))}
