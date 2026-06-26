@@ -398,3 +398,11 @@
   "write_message": "اكتب رسالة…",
   "you": "أنت",
   "customer": "العميل",
+  "rider_deliveries": "التوصيلات",
+  "rider_profile": "الملف الشخصي",
+
+  "nav_new": "طلب جديد",
+  "cart_open": "فتح السلة",
+  "cart_items_count": "{{n}} عنصر في السلة",
+  "notifications_hint": "ستظهر تحديثات الطلب والعروض هنا."
+}
