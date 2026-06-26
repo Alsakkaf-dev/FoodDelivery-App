@@ -44,3 +44,18 @@ const ERR_KEY: Record<string, keyof Dictionary> = {
   empty_cart: 'empty_cart',
 };
 
+type CoreProps = {
+  items: OrderLine[];
+  draft: CheckoutDraft;
+  initialStatus: StatusSeed;
+  cutoffTime: string | null;
+  lang: 'en' | 'ar';
+  itemTotal?: number;
+  initialMethod?: UiMethod;
+  onPlaced: (orderId: string) => void;
+};
+
+/**
+ * The presentational + logic core — fully prop-driven so it is unit-testable and
+ * reusable. `CheckoutPayment` below wires it to the live cart + draft.
+ */
