@@ -14,6 +14,18 @@ export default defineConfig({
   projects: [
     { name: 'android', use: { ...devices['Pixel 5'] } },
     { name: 'desktop', use: { ...devices['Desktop Chrome'] } },
+    // #20 responsive sweep — narrow phone (320) + tablet (768). These projects run the
+    // cross-viewport specs ONLY (testMatch), so the existing specs stay on android+desktop.
+    {
+      name: 'mobile-narrow',
+      testMatch: /(responsive|a11y|rtl-parity)\.spec\.ts/,
+      use: { browserName: 'chromium', viewport: { width: 320, height: 640 }, hasTouch: true, isMobile: true },
+    },
+    {
+      name: 'tablet',
+      testMatch: /(responsive|a11y|rtl-parity)\.spec\.ts/,
+      use: { browserName: 'chromium', viewport: { width: 768, height: 1024 }, hasTouch: true },
+    },
   ],
   webServer: {
     command: 'npm run start',
