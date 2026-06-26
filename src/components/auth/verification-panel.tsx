@@ -25,16 +25,18 @@ export function VerificationPanel({
 }) {
   return (
     <div className="space-y-6">
-      <OtpInput
-        length={6}
-        value={code}
-        onChange={onChange}
-        label={t.code_label}
-        onResend={onResend}
-        resendSeconds={30}
-        resendLabel={t.resend}
-        resendInLabel={t.resend_in}
-      />
+      <div>
+        <p className="mb-2 text-center text-label font-semibold uppercase tracking-wide text-muted">{t.code_label}</p>
+        <OtpInput
+          length={6}
+          value={code}
+          onChange={onChange}
+          onResend={onResend}
+          resendSeconds={30}
+          resendLabel={t.resend}
+          formatResendIn={(s) => t.resend_in.replace('{{s}}', String(s))}
+        />
+      </div>
       <PrimaryButton onClick={onVerify} disabled={busy || code.length !== 6}>
         {busy ? t.loading : t.verify}
       </PrimaryButton>
