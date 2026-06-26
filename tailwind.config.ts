@@ -1,44 +1,16 @@
 import type { Config } from 'tailwindcss';
 
 /**
- * Design tokens mirror the UI/UX Design System (D-15) and the document house style.
- * Brand rust #C0451F, slate text #1F2933, etc.
+ * Fahman Orders — design tokens (NEW orange/amber design system).
+ * SINGLE SOURCE OF TRUTH — Plan 01. Consumers use Tailwind token classes only;
+ * no component hardcodes hex / px radii / shadows.
+ * Frozen interface: The_Master_Plan/FOUNDATION_CONTRACTS.md §1.
+ * Human-readable map: The_Master_Plan/TOKENS_REFERENCE.md.
+ *
+ * Legacy keys (rust / slate / muted / cream / line) are RECOLORED IN PLACE to the
+ * new palette so existing `text-rust` / `bg-cream` / `border-line` consumers adopt
+ * the new look with ZERO component edits. `rust` is NOT renamed to `brand`
+ * (cross-surface refs preserved per Contract §B); `brand` is added as the canonical
+ * new alias. Legacy status keys (open / soldout / teal) are kept untouched —
+ * status.tsx still consumes them; migrating their semantics is #02's call.
  */
-const config: Config = {
-  content: ['./src/**/*.{ts,tsx}'],
-  theme: {
-    extend: {
-      colors: {
-        rust: { DEFAULT: '#C0451F', dark: '#9E3416', soft: '#F4E3DD' },
-        slate: { DEFAULT: '#1F2933', 2: '#323F4B' },
-        muted: '#52606D',
-        cream: '#F4F1EE',
-        line: '#D9D2CC',
-        open: '#2F8F4F',
-        soldout: '#C9821F',
-        teal: '#2E8B7B',
-      },
-      borderRadius: {
-        card: '12px',
-        control: '8px',
-      },
-      // D-15 type scale (Fig. 16-2). Existing default sizes (text-xs/sm/lg…) remain.
-      fontSize: {
-        h1: ['22px', { lineHeight: '28px', fontWeight: '700' }],
-        h2: ['17px', { lineHeight: '24px', fontWeight: '700' }],
-        title: ['15px', { lineHeight: '22px', fontWeight: '700' }],
-        body: ['13px', { lineHeight: '20px' }],
-        caption: ['11px', { lineHeight: '16px' }],
-      },
-      fontFamily: {
-        sans: ['var(--font-sans)', 'system-ui', 'Arial', 'sans-serif'],
-        arabic: ['var(--font-arabic)', 'Tahoma', 'Arial', 'sans-serif'],
-      },
-      minHeight: { tap: '44px' },
-      minWidth: { tap: '44px' },
-    },
-  },
-  plugins: [],
-};
-
-export default config;
