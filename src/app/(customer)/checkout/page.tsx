@@ -2,7 +2,9 @@ import Link from 'next/link';
 import { listZones } from '@/lib/domain/zones';
 import { listAddresses } from '@/lib/domain/addresses';
 import { getLocale } from '@/lib/i18n/server';
+import { getDictionary } from '@/lib/i18n/dictionaries';
 import { ErrorState } from '@/components/ui/states';
+import { Icon } from '@/components/icons';
 import { CheckoutFlow } from '@/components/customer/checkout-flow';
 import type { Address } from '@/types/db';
 
@@ -15,7 +17,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function CheckoutPage() {
   const locale = getLocale();
-  const ar = locale === 'ar';
+  const t = getDictionary(locale);
 
   const zonesRes = await listZones(true);
   // Saved addresses are best-effort (requires a session); fall back to none.
@@ -24,17 +26,21 @@ export default async function CheckoutPage() {
 
   return (
     <>
-      <header className="flex items-center justify-between gap-2">
-        <Link href="/cart" className="inline-block text-sm text-muted">
-          {ar ? '→ السلة' : '← Cart'}
+      <header className="mb-6 flex items-center gap-3">
+        <Link
+          href="/cart"
+          aria-label={t.back}
+          className="inline-flex min-h-tap min-w-tap items-center justify-center rounded-md bg-surface-alt text-ink transition hover:bg-surface-input active:scale-95"
+        >
+          <Icon name="chevron-left" className="h-5 w-5" aria-hidden />
         </Link>
-        <h1 className="text-2xl font-bold text-slate">{ar ? 'إتمام الطلب' : 'Checkout'}</h1>
+        <h1 className="text-headerTitle font-bold text-ink">{t.checkout}</h1>
       </header>
 
       {zonesRes.ok ? (
         <CheckoutFlow zones={zonesRes.data} addresses={addresses} lang={locale} />
       ) : (
-        <ErrorState message={ar ? 'حدث خطأ ما. حاول مرة أخرى.' : 'Something went wrong. Please try again.'} />
+        <ErrorState message={t.error_generic} />
       )}
     </>
   );
