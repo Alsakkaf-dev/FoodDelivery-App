@@ -7,6 +7,9 @@ import { getDictionary } from '@/lib/i18n/dictionaries';
 import { Icon, type IconName } from '@/components/icons';
 import { MapIllustration } from '@/components/brand';
 import { Chip, FilledInput, IconChip, ListRow, OutlineButton, PrimaryButton, TextAction } from '@/components/ui';
+import type { PlaceSelection } from '@/lib/maps/types';
+import { PlaceSearch } from '@/components/customer/account/place-search';
+import { StaticMap } from '@/components/customer/account/static-map';
 
 // SCR-C-05 step 1 — delivery address entry/save + saved-address reuse
 // (US-015 / FR-C-07). Saving goes through the `createAddress` server action,
@@ -52,6 +55,7 @@ export function AddressForm({
   const [label, setLabel] = useState<string | null>(null);
   const [lat, setLat] = useState('');
   const [lng, setLng] = useState('');
+  const [placeTitle, setPlaceTitle] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [locating, setLocating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -63,6 +67,15 @@ export function AddressForm({
     const pc = postcode.trim();
     if (pc) line1 = line1 ? `${line1} ${pc}` : pc;
     return line1;
+  }
+
+  // A Google Maps pick fills the address line + exact pin in one tap.
+  function handlePlace(sel: PlaceSelection) {
+    setError(null);
+    setAddressLine(sel.address ?? sel.title);
+    setLat(String(sel.lat));
+    setLng(String(sel.lng));
+    setPlaceTitle(sel.title);
   }
 
   function useMyLocation() {
