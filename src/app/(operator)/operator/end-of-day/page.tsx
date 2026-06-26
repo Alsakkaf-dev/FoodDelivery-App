@@ -7,3 +7,47 @@ import { ErrorState, EmptyState } from '@/components/ui/states';
 // delivered orders only (count, items sold, MYR revenue) from `endOfDay()`.
 export const dynamic = 'force-dynamic';
 
+export default async function EndOfDayPage() {
+  const { locale, t } = getI18n();
+  const res = await endOfDay();
+
+  if (!res.ok) {
+    return (
+      <section className="space-y-4">
+        <header>
+          <h1 className="text-h1 font-bold text-ink">{t.end_of_day}</h1>
+        </header>
+        <ErrorState message={t.error_generic} />
+      </section>
+    );
+  }
+
+  const { orders, items_sold, revenue } = res.data;
+  const stats = [
+    { label: t.completed_orders, value: String(orders) },
+    { label: t.items_sold, value: String(items_sold) },
+    { label: t.revenue, value: formatMYR(revenue, locale) },
+  ];
+
+  return (
+    <section className="space-y-4">
+      <header>
+        <h1 className="text-h1 font-bold text-ink">{t.end_of_day}</h1>
+        <p className="text-caption text-muted">{t.eod_hint}</p>
+      </header>
+
+      {orders === 0 ? (
+        <EmptyState title={t.eod_empty} icon="📊" />
+      ) : (
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          {stats.map((s) => (
+            <div key={s.label} className="card text-center">
+              <p className="text-display font-extrabold tabular-nums text-ink">{s.value}</p>
+              <p className="text-label uppercase tracking-wide text-muted">{s.label}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
