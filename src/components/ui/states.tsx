@@ -80,3 +80,22 @@ export function ErrorState({ message, onRetry, retryLabel }: { message: string; 
   );
 }
 
+export function OfflineBanner({ label = 'You are offline. Showing the last known status.' }: { label?: string }) {
+  const [offline, setOffline] = useState(false);
+  useEffect(() => {
+    const up = () => setOffline(!navigator.onLine);
+    up();
+    window.addEventListener('online', up);
+    window.addEventListener('offline', up);
+    return () => {
+      window.removeEventListener('online', up);
+      window.removeEventListener('offline', up);
+    };
+  }, []);
+  if (!offline) return null;
+  return (
+    <div className="sticky top-0 z-50 bg-warning px-4 py-2 text-center text-sm font-semibold text-ink">
+      {label}
+    </div>
+  );
+}
