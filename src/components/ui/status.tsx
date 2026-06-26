@@ -40,3 +40,16 @@ export function QtyCounter({ remaining, total, lang = 'en' }: { remaining: numbe
 
 // CMP-U-02 — Order status chip. Active states → brand orange, done → success green,
 // cancelled → danger red, new → neutral. Exhaustive over OrderStatus; EN/AR preserved.
+const ORDER: Record<OrderStatus, { cls: string; en: string; ar: string }> = {
+  new: { cls: 'bg-surface-alt text-body', en: 'New', ar: 'جديد' },
+  confirmed: { cls: 'bg-brand-tint text-brand', en: 'Confirmed', ar: 'مؤكد' },
+  preparing: { cls: 'bg-brand-tint text-brand', en: 'Preparing', ar: 'قيد التحضير' },
+  ready: { cls: 'bg-success/10 text-success', en: 'Ready', ar: 'جاهز' },
+  out_for_delivery: { cls: 'bg-brand-tint text-brand', en: 'On the way', ar: 'في الطريق' },
+  delivered: { cls: 'bg-success/10 text-success', en: 'Delivered', ar: 'تم التوصيل' },
+  cancelled: { cls: 'bg-danger/10 text-danger', en: 'Cancelled', ar: 'ملغى' },
+};
+export function OrderStatusChip({ status, lang = 'en' }: { status: OrderStatus; lang?: 'en' | 'ar' }) {
+  const s = ORDER[status];
+  return <span className={cx('badge', s.cls)}>{lang === 'ar' ? s.ar : s.en}</span>;
+}
