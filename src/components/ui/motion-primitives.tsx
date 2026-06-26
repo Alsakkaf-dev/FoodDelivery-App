@@ -39,3 +39,32 @@ export const PRESS_CLASS =
   'transition-transform duration-150 ease-out active:scale-[.97] motion-reduce:transition-none motion-reduce:active:scale-100';
 
 /** Wraps exactly one element child and merges {@link PRESS_CLASS} into its className. */
+export function Pressable({
+  children,
+  className,
+}: {
+  children: ReactElement<{ className?: string }>;
+  className?: string;
+}) {
+  return cloneElement(children, {
+    className: cx(children.props.className, PRESS_CLASS, className),
+  });
+}
+
+/* ─────────────────────── (2) Chip / tab select ─────────────────────── */
+/** Colour crossfade for a chip/tab fill change. Pair with {@link useChipSelect} for the check pop. */
+export const CROSSFADE_CLASS =
+  'transition-colors duration-200 ease-out motion-reduce:transition-none';
+
+/** Returns a ref to attach to a chip; pops it (scale 0.95→1 spring) when `selected` becomes true. */
+export function useChipSelect<T extends HTMLElement = HTMLElement>(selected: boolean) {
+  const ref = useRef<T>(null);
+  const prev = useRef(selected);
+  useEffect(() => {
+    if (selected && !prev.current) animateVariant(ref.current, popVariant);
+    prev.current = selected;
+  }, [selected]);
+  return ref;
+}
+
+/** Pops its children whenever `trigger` changes (skips the initial mount). */
