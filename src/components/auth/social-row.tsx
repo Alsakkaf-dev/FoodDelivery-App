@@ -1,39 +1,34 @@
 'use client';
-// Social sign-in circles (Facebook / Twitter / Apple). PREVIEW-ONLY: there is no
-// social-auth backend and AUTH_DISABLED is on, so these never navigate or fetch —
-// a click surfaces an honest "coming soon" notice. Faithful to the reference look
-// using #01 social tokens + #05 glyphs (composed, not a forked primitive).
-import { useState } from 'react';
+// Continue-with-Google (Supabase OAuth). The browser kicks off the OAuth redirect;
+// the session is finalized server-side at /api/auth/callback, which provisions the
+// profile and routes by role. `next` is threaded through so post-login lands right.
+import { useSearchParams } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
+import { getDictionary } from '@/lib/i18n/dictionaries';
+import type { Locale } from '@/lib/i18n/config';
 import { Icon } from '@/components/icons';
 
-const SOCIALS = [
-  { name: 'facebook', cls: 'bg-social-facebook' },
-  { name: 'twitter', cls: 'bg-social-twitter' },
-  { name: 'apple', cls: 'bg-social-apple' },
-] as const;
+export function SocialRow({ locale }: { locale?: Locale; comingSoonLabel?: string }) {
+  const params = useSearchParams();
+  const label = locale ? getDictionary(locale).continue_with_google : 'Continue with Google';
 
-export function SocialRow({ comingSoonLabel }: { comingSoonLabel: string }) {
-  const [notice, setNotice] = useState(false);
+  async function google() {
+    const sb = createClient();
+    const next = params.get('next') ?? '/';
+    await sb.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/api/auth/callback?next=${encodeURIComponent(next)}` },
+    });
+  }
+
   return (
-    <div className="space-y-3 text-center">
-      <div className="flex justify-center gap-4">
-        {SOCIALS.map((s) => (
-          <button
-            key={s.name}
-            type="button"
-            aria-label={s.name}
-            onClick={() => setNotice(true)}
-            className={`flex h-14 w-14 items-center justify-center rounded-full text-onColor transition active:scale-95 ${s.cls}`}
-          >
-            <Icon name={s.name} />
-          </button>
-        ))}
-      </div>
-      {notice ? (
-        <p role="status" className="text-caption text-muted">
-          {comingSoonLabel}
-        </p>
-      ) : null}
-    </div>
+    <button
+      type="button"
+      onClick={google}
+      className="flex min-h-tap w-full items-center justify-center gap-2 rounded-lg border border-line bg-surface text-button font-bold text-ink transition hover:bg-surface-alt active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
+    >
+      <Icon name="google" className="h-5 w-5" aria-hidden />
+      {label}
+    </button>
   );
 }
