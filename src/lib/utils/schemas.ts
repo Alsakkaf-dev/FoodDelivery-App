@@ -21,6 +21,17 @@ export const profileUpdateSchema = z.object({
   avatar_url: z.string().url().optional(),
 });
 
+// Email + password auth (signup / sign-in / reset). Supabase caps passwords at 72 bytes.
+const password = z.string().min(8, 'password_too_short').max(72);
+export const signupSchema = z.object({
+  name: z.string().trim().min(1, 'name_required').max(80),
+  email: z.string().email(),
+  password,
+});
+export const passwordLoginSchema = z.object({ email: z.string().email(), password: z.string().min(1) });
+export const resetRequestSchema = z.object({ email: z.string().email() });
+export const resetUpdateSchema = z.object({ password });
+
 export const cartItemSchema = z.object({
   menu_item_id: z.string().uuid(),
   qty: z.number().int().positive().max(50),
