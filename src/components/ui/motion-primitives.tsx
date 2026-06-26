@@ -118,3 +118,41 @@ export function TabUnderline({
 }
 
 /* ──────────────────── (4) Bottom sheet slide + scrim ───────────────── */
+export const SHEET_SURFACE_CLASS =
+  'transition-transform duration-[280ms] ease-out will-change-transform motion-reduce:transition-none data-[state=closed]:translate-y-full data-[state=open]:translate-y-0';
+export const SHEET_SCRIM_CLASS =
+  'transition-opacity duration-[280ms] ease-out motion-reduce:transition-none data-[state=closed]:opacity-0 data-[state=open]:opacity-100';
+
+/**
+ * Drives a bottom-sheet enter/exit. Returns `mounted` (keep the node rendered while it animates
+ * out) and `state` ('open'|'closed') to feed `SheetMotion`/`Scrim` (or your own `data-state` node).
+ */
+export function useSheetTransition(open: boolean): { mounted: boolean; state: 'open' | 'closed' } {
+  const reduced = useReducedMotion();
+  const [mounted, setMounted] = useState(open);
+  const [state, setState] = useState<'open' | 'closed'>(open ? 'open' : 'closed');
+  useEffect(() => {
+    if (open) {
+      setMounted(true);
+      // Two rAFs so the browser paints the closed state before flipping to open (the transition runs).
+      let raf2 = 0;
+      const raf1 = requestAnimationFrame(() => {
+        raf2 = requestAnimationFrame(() => setState('open'));
+      });
+      return () => {
+        cancelAnimationFrame(raf1);
+        cancelAnimationFrame(raf2);
+      };
+    }
+    setState('closed');
+    if (reduced) {
+      setMounted(false);
+      return;
+    }
+    const t = window.setTimeout(() => setMounted(false), DURATION.base);
+    return () => window.clearTimeout(t);
+  }, [open, reduced]);
+  return { mounted, state };
+}
+
+/** Sheet surface wrapper (slides up from the bottom). Compose your grabber/CTA inside. */
