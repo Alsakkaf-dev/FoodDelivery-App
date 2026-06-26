@@ -48,3 +48,33 @@ export function ChatBubble({
   );
 }
 
+export function Composer({
+  value, onChange, onSend, placeholder, emojiSlot, sendLabel = 'Send', disabled,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  onSend: () => void;
+  placeholder?: string;
+  emojiSlot?: ReactNode;
+  sendLabel?: string;
+  disabled?: boolean;
+}) {
+  return (
+    <form
+      onSubmit={(e) => { e.preventDefault(); if (value.trim() && !disabled) onSend(); }}
+      className="flex items-center gap-2"
+    >
+      <div className="flex flex-1 items-center gap-2 rounded-pill bg-surface-input px-4">
+        {emojiSlot}
+        <input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          className="min-h-tap flex-1 bg-transparent text-body text-ink outline-none placeholder:text-muted"
+        />
+      </div>
+      <IconButton variant="add" icon="send" type="submit" aria-label={sendLabel} disabled={disabled || !value.trim()} />
+    </form>
+  );
+}
+
