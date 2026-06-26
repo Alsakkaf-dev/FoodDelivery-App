@@ -414,5 +414,22 @@
   "nav_new": "طلب جديد",
   "cart_open": "فتح السلة",
   "cart_items_count": "{{n}} عنصر في السلة",
-  "notifications_hint": "ستظهر تحديثات الطلب والعروض هنا."
+  "notifications_hint": "ستظهر تحديثات الطلب والعروض هنا.",
+  "password_mismatch": "كلمتا المرور غير متطابقتين",
+  "password_too_short": "استخدم ٨ أحرف على الأقل",
+  "check_your_email": "تحقّق من بريدك الإلكتروني لتأكيد حسابك.",
+  "reset_link_sent": "إذا كان هذا البريد مسجلاً، فسيصلك رابط إعادة التعيين.",
+  "invalid_credentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+  "email_taken": "هذا البريد الإلكتروني لديه حساب بالفعل.",
+  "new_password": "كلمة المرور الجديدة",
+  "update_password": "تحديث كلمة المرور",
+  "password_updated": "تم تحديث كلمة المرور — سجّل الدخول.",
+  "reset_password": "إعادة تعيين كلمة المرور",
+  "use_password": "استخدام كلمة المرور",
+  "use_code": "أرسل لي رمزاً بدلاً من ذلك",
+  "continue_with_google": "المتابعة باستخدام Google",
+  "signed_out": "تم تسجيل خروجك.",
+  "complete_profile": "أكمل ملفك الشخصي",
+  "welcome_add_name": "أضف اسمك لنخصّص تجربتك.",
+  "create_account": "إنشاء حساب"
 }
