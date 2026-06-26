@@ -277,3 +277,34 @@ export function BadgePop({
   );
 }
 
+/**
+ * Returns a `fly(from, to, onArrive?)` callback that arcs a ghost from a source element (e.g. the
+ * product image) to the cart. No-op under reduced motion — `onArrive` still fires so you can bump
+ * the badge regardless. Mirrors under RTL automatically (uses live element rects).
+ */
+export function useFlyToCart() {
+  return useCallback((from: Element | null, to: Element | null, onArrive?: () => void) => {
+    flyToCart(from, to, onArrive ? { onArrive } : undefined);
+  }, []);
+}
+
+/* ───────────────────────── (7) Stepper tick ────────────────────────── */
+/** Renders a number and rolls it (up/down) when the value changes. Compose ± with `Pressable`. */
+export function TickNumber({ value, className }: { value: number; className?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const prev = useRef(value);
+  useEffect(() => {
+    if (value !== prev.current) {
+      animateVariant(ref.current, tickVariant(value > prev.current ? 'up' : 'down'));
+      prev.current = value;
+    }
+  }, [value]);
+  return (
+    <span ref={ref} className={cx('inline-block tabular-nums', className)}>
+      {value}
+    </span>
+  );
+}
+
+/* ─────────────────── (8) Live-tracking pulse rings ─────────────────── */
+/** Concentric rings that pulse outward (loop) behind a destination pin. Static when reduced. */
