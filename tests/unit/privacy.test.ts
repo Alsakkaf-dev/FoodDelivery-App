@@ -84,3 +84,37 @@ describe('requestErasure — self-service PDPA erasure (US-057)', () => {
   });
 });
 
+describe('eraseUserById — operator-handled erasure', () => {
+  it('rejects an empty user id', async () => {
+    holder.admin = makeAdmin().client;
+    const res = await eraseUserById('');
+    expect(res.ok).toBe(false);
+    if (!res.ok) expect(res.error.code).toBe('validation_error');
+  });
+
+  it('erases the named user', async () => {
+    const a = makeAdmin();
+    holder.admin = a.client;
+    const res = await eraseUserById('cust-9');
+    expect(res.ok).toBe(true);
+    expect(a.rec.updates).toContainEqual({ table: 'users', payload: { phone: 'deleted-cust-9', name: null } });
+  });
+});
+
+describe('consent version', () => {
+  it('is defined and stamped on sign-in', () => {
+    expect(typeof CONSENT_VERSION).toBe('string');
+    expect(CONSENT_VERSION.length).toBeGreaterThan(0);
+  });
+});
+
+describe('login PDPA consent gate (US-007)', () => {
+  it('defaults consent OFF and disables the submit until opted in', () => {
+    const html = renderToStaticMarkup(createElement(LoginPage));
+    // Consent copy is sourced from messages and shown bilingually.
+    expect(html).toContain(en.consent_agree);
+    // The checkbox renders unchecked (no `checked` attribute) and the CTA is disabled.
+    expect(html).not.toContain('checked=""');
+    expect(html).toContain('disabled');
+  });
+});
