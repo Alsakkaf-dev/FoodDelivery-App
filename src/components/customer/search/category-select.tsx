@@ -19,7 +19,7 @@ export function CategorySelect({
   t: Dictionary;
 }) {
   const [open, setOpen] = useState(false);
-  const current = CATEGORIES.find((c) => c.id === value) ?? CATEGORIES[0];
+  const current = CATEGORIES.find((c) => c.id === value) ?? CATEGORIES[0]!;
 
   return (
     <>
