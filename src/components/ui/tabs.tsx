@@ -38,3 +38,29 @@ export function UnderlineTabs({
   );
 }
 
+export function CarouselDots({
+  count, index, onDotClick, label = 'carousel', className,
+}: {
+  count: number;
+  index: number;
+  onDotClick?: (i: number) => void;
+  label?: string;
+  className?: string;
+}) {
+  return (
+    <div className={cx('flex items-center justify-center gap-2', className)} role="tablist" aria-label={label}>
+      {Array.from({ length: count }).map((_, i) => {
+        const active = i === index;
+        const dot = <span className={cx('h-2 rounded-pill transition-all motion-reduce:transition-none', active ? 'w-5 bg-brand' : 'w-2 bg-line')} />;
+        if (onDotClick) {
+          return (
+            <button key={i} type="button" role="tab" aria-selected={active} aria-label={`${i + 1}`} onClick={() => onDotClick(i)} className="flex min-h-tap min-w-tap items-center justify-center">
+              {dot}
+            </button>
+          );
+        }
+        return <span key={i} aria-hidden>{dot}</span>;
+      })}
+    </div>
+  );
+}
