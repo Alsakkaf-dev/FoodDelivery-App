@@ -67,6 +67,15 @@ export function AccountAddressForm({
     );
   }
 
+  // A Google Maps pick fills the address line + exact pin in one tap.
+  function handlePlace(sel: PlaceSelection) {
+    setError(null);
+    setAddress(sel.address ?? sel.title);
+    setLat(sel.lat);
+    setLng(sel.lng);
+    setPlaceTitle(sel.title);
+  }
+
   function labelValue(): string {
     if (kind === 'home') return t.label_home;
     if (kind === 'work') return t.label_work;
