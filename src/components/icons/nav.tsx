@@ -94,3 +94,48 @@ export function UtensilsIcon(props: IconProps) {
     </IconBase>
   );
 }
+
+export function MoonIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M20 14.5A8 8 0 0 1 9.5 4 7 7 0 1 0 20 14.5Z" />
+    </IconBase>
+  );
+}
+
+export function ScooterIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="6" cy="17.5" r="2.5" />
+      <circle cx="18" cy="17.5" r="2.5" />
+      <path d="M8.5 17.5h7" />
+      <path d="M6 17.5 8.5 11H13l2 4" />
+      <path d="M13 11l1.5-4H17" />
+      <path d="M15.5 17.5 17 9" />
+    </IconBase>
+  );
+}
+
+export function BikeIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="6" cy="16.5" r="3.2" />
+      <circle cx="18" cy="16.5" r="3.2" />
+      <path d="M6 16.5 10.5 8H15" />
+      <path d="M18 16.5 13.5 8" />
+      <path d="M9 16.5 13.5 8" />
+      <path d="M9.5 8H12" />
+    </IconBase>
+  );
+}
+
+export function StoreIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M4 9.5 5.2 5h13.6L20 9.5" />
+      <path d="M4 9.5a2.2 2.2 0 0 0 4 0 2.2 2.2 0 0 0 4 0 2.2 2.2 0 0 0 4 0 2.2 2.2 0 0 0 4 0" />
+      <path d="M5 11v9h14v-9" />
+      <path d="M9.5 20v-5h5v5" />
+    </IconBase>
+  );
+}
