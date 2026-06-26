@@ -272,3 +272,71 @@ function DuitNowMark() {
  * renders the core. On success it clears the cart and shows the Payment-Successful
  * STATE; TRACK ORDER then routes to /orders/[id] (the existing #12 handshake).
  */
+export function CheckoutPayment({
+  initialStatus,
+  cutoffTime,
+  lang,
+}: {
+  initialStatus: StatusSeed;
+  cutoffTime: string | null;
+  lang: 'en' | 'ar';
+}) {
+  const t = getDictionary(lang);
+  const router = useRouter();
+  const cart = useCart();
+  const [draft, setDraft] = useState<CheckoutDraft>({ type: 'delivery', zone_id: null, address_id: null });
+  const [placedOrderId, setPlacedOrderId] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(DRAFT_KEY);
+      if (raw) {
+        const d = JSON.parse(raw) as Partial<CheckoutDraft>;
+        if (d.type === 'delivery' || d.type === 'pickup') {
+          setDraft({ type: d.type, zone_id: d.zone_id ?? null, address_id: d.address_id ?? null });
+        }
+      }
+    } catch {
+      // No readable draft — the gate will ask for the missing selections.
+    }
+  }, []);
+
+  // Payment-Successful is a STATE (not a route): the cart is already cleared on
+  // success, and TRACK ORDER navigates to the existing /orders/[id] handshake
+  // (owned by #12). Rendered above the core so the post-clear empty cart can't flash.
+  if (placedOrderId) {
+    return (
+      <SuccessScreen
+        tier="rich"
+        illustration={<SuccessWallet />}
+        title={t.payment_success_title}
+        subtitle={t.payment_success_subtitle}
+        action={
+          <PrimaryButton fullWidth onClick={() => router.push(`/orders/${placedOrderId}`)}>
+            {t.track_order}
+          </PrimaryButton>
+        }
+      />
+    );
+  }
+
+  // The cart streams in post-mount (SSR-safe); show loading until it hydrates.
+  if (!cart.hydrated) return <Loading label={t.loading} />;
+
+  const items = cart.lines.map((l) => ({ menu_item_id: l.menu_item_id, qty: l.qty }));
+
+  return (
+    <PaymentSection
+      items={items}
+      draft={draft}
+      initialStatus={initialStatus}
+      cutoffTime={cutoffTime}
+      lang={lang}
+      itemTotal={cart.total}
+      onPlaced={(id) => {
+        cart.clear();
+        setPlacedOrderId(id);
+      }}
+    />
+  );
+}
