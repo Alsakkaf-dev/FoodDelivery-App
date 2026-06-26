@@ -116,3 +116,47 @@ export function SelectTile({
 }
 
 /** CategoryChip — icon over label; active state = gradient disc + floating glow. */
+export function CategoryChip({
+  icon, label, active, onClick, className,
+}: {
+  icon: IconName;
+  label: ReactNode;
+  active?: boolean;
+  onClick?: () => void;
+  className?: string;
+}) {
+  return (
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onClick}
+      className={cx('flex min-w-tap flex-col items-center gap-2', className)}
+    >
+      <span
+        className={cx(
+          'flex h-14 w-14 items-center justify-center rounded-full transition',
+          active ? 'bg-hero-gradient text-onColor shadow-floating' : 'bg-surface-alt text-body',
+        )}
+      >
+        <Icon name={icon} className="h-6 w-6" aria-hidden />
+      </span>
+      <span className={cx('text-caption font-semibold', active ? 'text-ink' : 'text-muted')}>{label}</span>
+    </button>
+  );
+}
+
+/** OverlayChip — dark translucent chip for labels over imagery (e.g. "14''", time). */
+export function OverlayChip({
+  leadingIcon, className, children,
+}: {
+  leadingIcon?: IconName;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <span className={cx('inline-flex items-center gap-1 rounded-pill bg-black/55 px-2.5 py-1 text-caption font-semibold text-onColor backdrop-blur', className)}>
+      {leadingIcon ? <Icon name={leadingIcon} className="h-3.5 w-3.5" aria-hidden /> : null}
+      {children}
+    </span>
+  );
+}
