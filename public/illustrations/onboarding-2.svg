@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none" aria-hidden="true">
+  <!-- Onboarding 2 — fast home delivery (scooter on peach blob). -->
+  <path fill="#FCE3D3" d="M120 28c44 0 86 26 92 70 6 44-18 84-58 100-40 16-92 10-114-26-22-36-14-84 16-110 20-18 42-34 64-34Z"/>
+  <rect x="58" y="94" width="36" height="32" rx="5" fill="#E5721A"/>
+  <path d="M68 110h16" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+  <path d="M84 160 96 120h26l10 28" fill="none" stroke="#F5811F" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M122 120l8-22h16" fill="none" stroke="#F5811F" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M132 148 160 160" stroke="#F5811F" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="84" cy="160" r="20" fill="#1B1C2A"/>
+  <circle cx="84" cy="160" r="9" fill="#FFF4EC"/>
+  <circle cx="160" cy="160" r="20" fill="#1B1C2A"/>
+  <circle cx="160" cy="160" r="9" fill="#FFF4EC"/>
+  <path d="M40 132h22M46 146h16" stroke="#FFB347" stroke-width="4" stroke-linecap="round"/>
+</svg>
