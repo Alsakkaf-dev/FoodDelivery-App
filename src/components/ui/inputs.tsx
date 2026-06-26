@@ -28,3 +28,66 @@ type FilledInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
 
 /** FilledInput — gray filled field, uppercase label above, optional trailing icon /
  *  password eye-toggle, and a `multiline` textarea variant. */
+export function FilledInput({
+  label, hint, error, trailingIcon, multiline, rows = 4,
+  id, className, containerClassName, type = 'text',
+  showPasswordLabel = 'Show password', hidePasswordLabel = 'Hide password',
+  ...rest
+}: FilledInputProps) {
+  const autoId = useId();
+  const fieldId = id ?? autoId;
+  const [reveal, setReveal] = useState(false);
+  const isPassword = type === 'password';
+  const inputType = isPassword ? (reveal ? 'text' : 'password') : type;
+  const hasTrailing = isPassword || !!trailingIcon;
+  const descId = error || hint ? `${fieldId}-desc` : undefined;
+
+  return (
+    <div className={cx('w-full', containerClassName)}>
+      {label ? (
+        <label htmlFor={fieldId} className="mb-2 block text-label font-semibold uppercase tracking-wide text-muted">{label}</label>
+      ) : null}
+      <div className="relative">
+        {multiline ? (
+          <textarea
+            id={fieldId}
+            rows={rows}
+            aria-invalid={!!error || undefined}
+            aria-describedby={descId}
+            className={cx(FIELD, 'resize-none', error && 'ring-2 ring-danger/50', className)}
+            {...(rest as TextareaHTMLAttributes<HTMLTextAreaElement>)}
+          />
+        ) : (
+          <input
+            id={fieldId}
+            type={inputType}
+            aria-invalid={!!error || undefined}
+            aria-describedby={descId}
+            className={cx(FIELD, hasTrailing && 'pe-12', error && 'ring-2 ring-danger/50', className)}
+            {...rest}
+          />
+        )}
+        {isPassword ? (
+          <button
+            type="button"
+            onClick={() => setReveal((v) => !v)}
+            aria-label={reveal ? hidePasswordLabel : showPasswordLabel}
+            aria-pressed={reveal}
+            className="absolute inset-y-0 end-0 flex min-w-tap items-center justify-center pe-3 text-muted hover:text-ink"
+          >
+            <Icon name={reveal ? 'eye-off' : 'eye'} className="h-5 w-5" aria-hidden />
+          </button>
+        ) : trailingIcon ? (
+          <span className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-4 text-muted" aria-hidden>
+            <Icon name={trailingIcon} className="h-5 w-5" />
+          </span>
+        ) : null}
+      </div>
+      {error ? (
+        <p id={descId} className="mt-1.5 text-caption text-danger">{error}</p>
+      ) : hint ? (
+        <p id={descId} className="mt-1.5 text-caption text-muted">{hint}</p>
+      ) : null}
+    </div>
+  );
+}
