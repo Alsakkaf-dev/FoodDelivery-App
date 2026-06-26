@@ -1,12 +1,16 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { FilledInput, PrimaryButton, Chip, SelectTile, EmptyState } from '@/components/ui';
+import { FilledInput, PrimaryButton, Chip, SelectTile, EmptyState, TextAction } from '@/components/ui';
+import { Icon } from '@/components/icons';
 import { createAddress } from '@/lib/domain/addresses';
 import { addressSchema } from '@/lib/utils/schemas';
 import type { Address, Zone } from '@/types/db';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
+import type { PlaceSelection } from '@/lib/maps/types';
 import { AddressMapField } from './address-map-field';
+import { PlaceSearch } from './place-search';
+import { StaticMap } from './static-map';
 import { addressKind, type AddressKind } from './address-card';
 
 // Add/Edit Address form (account lane — distinct from #11's checkout address
@@ -38,6 +42,7 @@ export function AccountAddressForm({
   const [zoneId, setZoneId] = useState<string | null>(initial?.zone_id ?? (zones.length === 1 ? zones[0]?.id ?? null : null));
   const [lat, setLat] = useState<number | null>(initial?.pin_lat ?? null);
   const [lng, setLng] = useState<number | null>(initial?.pin_lng ?? null);
+  const [placeTitle, setPlaceTitle] = useState<string | null>(null);
   const [locating, setLocating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
