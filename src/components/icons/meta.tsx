@@ -140,3 +140,45 @@ export function CheckCircleIcon(props: IconProps) {
   );
 }
 
+export function HomeAddressIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M4 11 12 4l8 7" />
+      <path d="M6 10v9h12v-9" />
+      <path d="M10 19v-5h4v5" />
+    </IconBase>
+  );
+}
+
+export function BriefcaseIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <rect x="3.5" y="7.5" width="17" height="11" rx="2" />
+      <path d="M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5" />
+      <path d="M3.5 12.5h17" />
+    </IconBase>
+  );
+}
+
+export function MicIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <rect x="9" y="3" width="6" height="11" rx="3" />
+      <path d="M5.5 11a6.5 6.5 0 0 0 13 0" />
+      <path d="M12 17.5V21" />
+    </IconBase>
+  );
+}
+
+export function MicOffIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M4 4 20 20" />
+      <path d="M9 5.2A3 3 0 0 1 15 6v4" />
+      <path d="M15 13.6A3 3 0 0 1 9 12v-1.5" />
+      <path d="M5.5 11a6.5 6.5 0 0 0 9.6 5.7" />
+      <path d="M12 17.5V21" />
+    </IconBase>
+  );
+}
+
