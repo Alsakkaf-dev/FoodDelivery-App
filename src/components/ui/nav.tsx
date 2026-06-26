@@ -1,25 +1,19 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Icon } from '@/components/icons';
+import type { NavItem, NavFab } from '@/lib/nav/items';
 
-// CMP-U-14 — Bottom navigation (up to 4 destinations).
-export function BottomNav({ items }: { items: { href: string; label: string; icon: string }[] }) {
-  const path = usePathname();
-  return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 mx-auto flex max-w-md items-stretch justify-around border-t border-line bg-white">
-      {items.map((it) => {
-        const active = path === it.href || (it.href !== '/' && path.startsWith(it.href));
-        return (
-          <Link
-            key={it.href}
-            href={it.href}
-            className={`flex min-h-tap flex-1 flex-col items-center justify-center gap-0.5 py-2 text-xs ${active ? 'text-rust' : 'text-muted'}`}
-          >
-            <span className="text-lg" aria-hidden>{it.icon}</span>
-            {it.label}
-          </Link>
-        );
-      })}
-    </nav>
-  );
+// CMP-U-14 — Bottom navigation v2. A rounded white floating bar with real line icons,
+// a filled-orange active state, and an OPTIONAL center ringed-orange "+" FAB. The FAB
+// is a SEPARATE slot (not a NavItem), so the per-role configs in nav/items.ts stay at
+// four destinations and shell-nav.test.ts's frozen href/label set is preserved. Icons
+// come from Plan 05 (<Icon name/>); their colour is inherited via currentColor from the
+// tab's text-brand (active) / text-muted (inactive). Everything mirrors under dir=rtl
+// (logical layout + flex source-order; the FAB is centred with logical insets). The bar
+// sits at z-40 — below OfflineBanner (50) / InstallPrompt (60), per the frozen z-stack.
+
+function isActive(path: string, href: string): boolean {
+  return path === href || (href !== '/' && path.startsWith(href));
 }
+
