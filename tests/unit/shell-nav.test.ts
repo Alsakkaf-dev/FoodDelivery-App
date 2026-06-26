@@ -94,3 +94,42 @@ describe('shell nav: per-role bottom-nav config (CMP-U-14)', () => {
   });
 });
 
+describe('shell nav: each group renders its own bottom nav', () => {
+  it('customer layout renders the customer nav with 44px tap targets (EN + AR)', () => {
+    const en = renderToStaticMarkup(
+      createElement(CustomerLayout, { children: createElement('div', null, 'customer-page') }),
+    );
+    expect(en).toContain('customer-page');
+    expect(en).toContain('Home');
+    expect(en).toContain('href="/orders"');
+    expect(en).toContain('Order history');
+    expect(en).not.toContain('/operator');
+    expect(en).toContain('min-h-tap');
+    // The shell mounts the public language switcher (US-012, handed off by 1-4).
+    expect(en).toContain('Switch language to Arabic');
+
+    h.state.locale = 'ar';
+    const ar = renderToStaticMarkup(
+      createElement(CustomerLayout, { children: createElement('div', null, 'x') }),
+    );
+    expect(ar).toContain('الرئيسية');
+    expect(ar).toContain('سجل الطلبات');
+    expect(ar).toContain('Switch language to English');
+  });
+
+  it('operator layout renders the operator nav for an operator', async () => {
+    h.state.user = { id: 'u1' };
+    h.state.role = 'operator';
+    const el = await OperatorLayout({ children: createElement('div', null, 'operator-page') });
+    const html = renderToStaticMarkup(el);
+    expect(html).toContain('operator-page');
+    expect(html).toContain('Order board');
+    expect(html).toContain('href="/operator/board"');
+    expect(html).not.toContain('href="/menu"');
+    expect(html).toContain('Switch language');
+    expect(redirectMock).not.toHaveBeenCalled();
+  });
+});
+
+// Prod-only: under AUTH_DISABLED (preview) `requireRole` returns the dev profile and never
+// throws, so these guard assertions can't hold. They run when auth is re-enabled. The guard
