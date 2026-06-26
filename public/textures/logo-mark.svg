@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Fahman brand mark — orange food cloche (the "oo" of the wordmark). Source
+       glyph for #19's PWA app icons (transparent bg; #19 pads for maskable). -->
+  <circle cx="32" cy="13" r="3" fill="#F5811F"/>
+  <path d="M32 16v3.5" stroke="#F5811F" stroke-width="3" stroke-linecap="round"/>
+  <path d="M11 45a21 21 0 0 1 42 0Z" fill="#F5811F"/>
+  <rect x="7" y="45" width="50" height="6" rx="3" fill="#F5811F"/>
+</svg>
